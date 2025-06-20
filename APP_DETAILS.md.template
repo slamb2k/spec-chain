@@ -1,0 +1,171 @@
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                  WARNING                                     ║
+║                                                                              ║
+║  🚨 DO NOT EDIT THIS TEMPLATE FILE DIRECTLY! 🚨                             ║
+║                                                                              ║
+║  This is the master template for APP_DETAILS.md structure.                   ║
+║  Any changes made to this file will be OVERWRITTEN during updates.           ║
+║                                                                              ║
+║  To customize your app details:                                              ║
+║  1. Copy this file to APP_DETAILS.md                                         ║
+║  2. Edit APP_DETAILS.md with your specific information                       ║
+║  3. Never modify this .template file                                         ║
+║                                                                              ║
+║  This template is used by:                                                   ║
+║  - init-spec-chain.md (to create initial APP_DETAILS.md)                     ║
+║  - run-spec-chain.md (to validate and restore missing sections)              ║
+║  - validate-spec-chain.md (to check for missing sections)                    ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+
+# APP_DETAILS.md
+
+This file contains the core information needed to generate comprehensive documentation for your application.
+Fields marked as (REQUIRED) must be filled out. Fields marked as (OPTIONAL) can be left blank and will be auto-researched or use sensible defaults.
+
+## Basic Information (REQUIRED)
+
+**App Name:**
+[Your app name here]
+
+**App Idea:**
+[Brief description of what your app does and what problem it solves]
+
+**MVP Features:**
+[List the core features for your minimum viable product]
+- Feature 1: [description]
+- Feature 2: [description]
+- Feature 3: [description]
+
+## Target Users (REQUIRED)
+
+### Primary Users
+[Who are the main users of your app?]
+- User type 1: [description]
+- User type 2: [description]
+
+### Secondary Users (OPTIONAL)
+[Any additional user types - leave blank if none]
+
+## Business Context (OPTIONAL - will be auto-researched if not provided)
+
+### Market Context
+(Optional - will research competitors and market landscape if left blank)
+
+### Competition
+(Optional - will find similar solutions automatically if left blank)
+
+### Business Model
+(Optional - will suggest based on app type if left blank)
+
+### Constraints
+(Optional - list any specific constraints or requirements)
+
+## Technical Requirements (OPTIONAL - will use modern defaults if not provided)
+
+### Platform
+(Optional - will suggest one or more of the following: Web, Mobile, Desktop, Terminal/CLI based on app type and features if left blank)
+
+### Technology Preferences
+(Optional - will recommend modern stack if left blank)
+
+### Performance Requirements
+(Optional - will use industry standards if left blank)
+
+### Scale Requirements
+(Optional - will estimate based on user base if left blank)
+
+## Design Requirements (OPTIONAL - will use best practices if not provided)
+
+### Brand Personality
+(Optional - will generate based on app type and users if left blank)
+
+### Visual Style
+(Optional - will use modern, clean design if left blank)
+
+### Key Emotions
+(Optional - will infer from app purpose if left blank)
+
+### Accessibility Requirements
+(Optional - defaults to WCAG 2.1 AA compliance if left blank)
+
+## Feature Details (OPTIONAL - will be inferred from MVP if not provided)
+
+### Core Workflows
+(Optional - will be derived from MVP features if left blank)
+
+### Content Types
+(Optional - will be inferred from app description if left blank)
+
+### Feature Priorities
+(Optional - will prioritize based on MVP list if left blank)
+
+## Integration Requirements (OPTIONAL)
+
+### External Services
+[List any third-party services or APIs you need to integrate]
+
+### API Requirements
+(Optional - will generate standard REST API if left blank)
+
+## Success Metrics (OPTIONAL - will generate standard KPIs if not provided)
+
+### Business Metrics
+(Optional - will suggest relevant metrics based on app type)
+
+### Technical Metrics
+(Optional - will use industry standard metrics)
+
+### User Satisfaction
+(Optional - will include standard UX metrics)
+
+## Go-to-Market Strategy (OPTIONAL - will be researched if not provided)
+
+### Target Market
+(Optional - will be inferred from users and app type)
+
+### Value Proposition
+(Optional - will be generated from app idea and benefits)
+
+### Launch Strategy
+(Optional - will suggest phased approach)
+
+## Development Team (OPTIONAL - will use standard team if not provided)
+
+### Team Structure
+(Optional - will suggest appropriate team size and roles)
+
+### Timeline Estimates
+(Optional - will estimate based on feature complexity)
+
+## Additional Context (OPTIONAL)
+
+### Migration Strategy
+[If replacing existing system, describe migration needs]
+
+### Training Requirements
+(Optional - will suggest based on user types and complexity)
+
+### Security Considerations
+(Optional - will apply standard security best practices)
+
+### Future Roadmap
+[Any long-term vision or future features]
+
+---
+
+## Instructions for Use
+
+1. **Fill out all REQUIRED sections** - These are essential for generating documentation
+2. **OPTIONAL sections can be left blank** - The system will:
+   - Research market context and competitors
+   - Suggest appropriate technology stacks
+   - Generate design guidelines
+   - Create standard metrics and KPIs
+   - Propose go-to-market strategies
+
+3. **The more detail you provide, the more tailored the output** - While optional fields will be auto-filled, providing your specific requirements will result in more customized documentation
+
+4. **Save this file as APP_DETAILS.md** in your project root directory
