@@ -268,7 +268,88 @@ else
 fi
 ```
 
-### 6. Generate Summary Report
+### 6. Mode Detection Analysis
+
+```bash
+echo ""
+echo "# 🎯 Generation Mode Analysis"
+echo ""
+
+if [ -f "/APP_DETAILS.md" ]; then
+    content=$(cat "/APP_DETAILS.md")
+
+    # Count required fields that have substantial content
+    required_fields=(
+        "### App Name"
+        "### App Idea"
+        "### MVP Features"
+        "### Primary Users"
+    )
+
+    filled_count=0
+    total_required=${#required_fields[@]}
+
+    for field in "${required_fields[@]}"; do
+        if echo "$content" | grep -A 10 "$field" | grep -E "[A-Za-z0-9]{20,}" > /dev/null; then
+            if ! echo "$content" | grep -A 10 "$field" | grep -E "\[.*\]|Example:|INSTRUCTIONS:" > /dev/null; then
+                filled_count=$((filled_count + 1))
+            fi
+        fi
+    done
+
+    # Calculate completion percentage
+    completion_percent=$((filled_count * 100 / total_required))
+
+    echo "| Metric | Value | Status |"
+    echo "|--------|-------|---------|"
+    echo "| Required Fields Filled | $filled_count/$total_required | $completion_percent% |"
+
+    if [ $completion_percent -lt 50 ]; then
+        echo "| **Recommended Mode** | **COLLABORATIVE** | ✅ Best for iterative refinement |"
+        echo "| Mode Description | Interactive consultation | Refine through conversation |"
+        echo "| Process | Basic idea → Collaborative PRD → Iteration → Comprehensive docs | |"
+    else
+        echo "| **Recommended Mode** | **COMPREHENSIVE** | ✅ Ready for full generation |"
+        echo "| Mode Description | Complete documentation suite | One-shot comprehensive PRD |"
+        echo "| Process | Detailed input → Full PRD → All technical docs | |"
+    fi
+
+    echo ""
+    echo "### Mode-Specific Recommendations:"
+    echo ""
+
+    if [ $completion_percent -lt 50 ]; then
+        echo "**COLLABORATIVE MODE** is recommended because:"
+        echo "- You have a basic idea but need to refine requirements"
+        echo "- Interactive consultation will help clarify your vision"
+        echo "- You can iterate and improve the specification through conversation"
+        echo ""
+        echo "**Next Steps for Collaborative Mode:**"
+        echo "1. Ensure basic required fields (App Name, App Idea, MVP Features) are filled"
+        echo "2. Run \`run-spec-chain\` - it will detect collaborative mode automatically"
+        echo "3. Engage in the iterative refinement process"
+        echo "4. Graduate to comprehensive documentation when ready"
+    else
+        echo "**COMPREHENSIVE MODE** is recommended because:"
+        echo "- You have detailed requirements ready"
+        echo "- Your APP_DETAILS.md is substantially complete"
+        echo "- You can generate the full documentation suite immediately"
+        echo ""
+        echo "**Next Steps for Comprehensive Mode:**"
+        echo "1. Complete any remaining optional fields (or let auto-research handle them)"
+        echo "2. Run \`run-spec-chain\` for full documentation generation"
+        echo "3. Review and iterate on the generated comprehensive documentation"
+    fi
+else
+    echo "| Status | Value |"
+    echo "|--------|-------|"
+    echo "| APP_DETAILS.md | ❌ Not found |"
+    echo "| **Recommended Mode** | **COLLABORATIVE** |"
+    echo "| Reason | Start with basic idea input |"
+fi
+```
+
+### 7. Generate Summary Report
 
 ```bash
 echo ""
@@ -310,7 +391,10 @@ fi
 if [ $errors -eq 0 ] && [ $warnings -eq 0 ]; then
     echo "✅ **All validations passed!** Your Spec Chain setup is ready."
     echo ""
-    echo "You can now run the documentation generator with:"
+    echo "**Ready for Documentation Generation:**"
+    echo "- The system will automatically detect the appropriate mode (Collaborative/Comprehensive)"
+    echo "- Run \`run-spec-chain\` to begin the documentation generation process"
+    echo ""
     echo "\`\`\`"
     echo "run-spec-chain"
     echo "\`\`\`"

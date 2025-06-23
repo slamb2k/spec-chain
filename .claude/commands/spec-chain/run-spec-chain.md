@@ -36,11 +36,11 @@ Creates: `/specs/my-app/` with all documents
 ```
 Resumes generation from Phase 3 (Technical Architecture) in `/specs/my-app/`
 
-**Update existing spec from Phase 2:**
+**Update existing spec from Phase 3:**
 ```
-@run-spec-chain existing-spec 2
+@run-spec-chain existing-spec 3
 ```
-Overwrites Phase 2+ documents in `/specs/existing-spec/`
+Overwrites Phase 3+ documents in `/specs/existing-spec/`
 
 ## Overview
 
@@ -95,7 +95,55 @@ Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/
      - Development Team
      - Additional Context
 
-### Step 2: Gather Missing Required Fields
+### Step 2: Mode Detection and Initial Gathering
+
+**Mode Detection Logic:**
+- **COLLABORATIVE MODE**: If user provides only basic idea/concept (minimal APP_DETAILS.md or mostly empty fields)
+- **COMPREHENSIVE MODE**: If user has detailed requirements (complete APP_DETAILS.md with substantial content)
+
+**Auto-detect based on APP_DETAILS.md completeness:**
+- Count filled vs. empty required fields
+- If < 50% of required fields have substantial content → **COLLABORATIVE MODE**
+- If ≥ 50% of required fields have substantial content → **COMPREHENSIVE MODE**
+
+### Step 2.1: COLLABORATIVE MODE Path
+
+**Execute if COLLABORATIVE MODE detected:**
+
+1. **Gather Basic Required Information** (ask ONE AT A TIME):
+
+   **App Name** (if missing):
+   "What is the name of your app?"
+
+   **App Idea** (if missing):
+   "What problem does your app solve? Please provide a brief description of your app concept."
+
+   **MVP Features** (if missing):
+   "What are the core features for your minimum viable product (MVP)? Just list the essential functionality."
+
+2. **Generate Initial Collaborative PRD:**
+   - Use the collaborative template from doc-prompt-prd.md
+   - Focus on problem-solution fit
+   - Create initial specification with critical questions
+   - Save to `$OUTPUT_DIR/PRD_COLLABORATIVE.md`
+
+3. **Enter Collaborative Iteration Loop:**
+   - Present the collaborative PRD to user
+   - Ask: "Please review this initial specification. What would you like to clarify, change, or add? (Type 'continue' when ready to proceed to comprehensive documentation)"
+   - For each user response:
+     - Integrate feedback into the collaborative PRD
+     - Regenerate and present the COMPLETE updated collaborative PRD
+     - Ask follow-up questions based on their input
+     - Continue until user types 'continue' or equivalent
+
+4. **Graduation Decision:**
+   - Ask: "Would you like to generate the complete comprehensive documentation suite based on this refined specification? (yes/no)"
+   - If yes: Convert collaborative PRD to comprehensive format and proceed to Step 2.2
+   - If no: End with collaborative PRD only
+
+### Step 2.2: COMPREHENSIVE MODE Path
+
+**Execute if COMPREHENSIVE MODE detected OR graduating from collaborative:**
 
 For each missing required field, ask ONE AT A TIME (skip if already has content):
 
@@ -113,7 +161,9 @@ For each missing required field, ask ONE AT A TIME (skip if already has content)
 
 Wait for the user to answer each question before proceeding to the next.
 
-### Step 2.5: Optional Fields Quick Decision
+### Step 2.3: Optional Fields Quick Decision (COMPREHENSIVE MODE Only)
+
+**Execute only if in COMPREHENSIVE MODE:**
 
 "Would you like to skip all optional fields? (yes/no or y/n)
 
@@ -126,6 +176,8 @@ This often produces excellent results without manual input."
 
 If "yes" or "y": Mark all optional fields for auto-research and skip to Step 4
 If "no" or "n": Continue to Step 3 for individual optional fields
+
+**Note**: In COLLABORATIVE MODE, optional fields are handled through the iterative conversation process.
 
 ### Step 3: Offer Optional Fields Individually
 
@@ -242,42 +294,22 @@ The runner then uses **parallel Task agents** to execute independent prompts con
 Phase 1: Foundation (1 prompt)
     └── PRD.md
 
-Phase 2: Business & Design (4 prompts - parallel)
-    ├── GTM_STRATEGY.md
-    ├── BUSINESS_RULES.md
-    └── STYLE_GUIDE.md
+Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
+    ├── FEATURE_STORIES.md
+    └── TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 2.1: Design Dependencies (1 prompt - sequential)
-    └── WIREFRAMES.md (depends on Style Guide)
+Phase 3: Design & UI/UX (2 prompts - sequential)
+    ├── STYLE_GUIDE.md
+    └── UI_STATES.md (depends on Style Guide)
 
-Phase 2.2: Design Completion (3 prompts - parallel)
-    ├── USER_FLOWS.md
-    ├── INFORMATION_ARCHITECTURE.md
-    └── COMPONENT_LIBRARY.md
+Phase 4: Technical Architecture (1 prompt - sequential)
+    └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 3: Technical Architecture (1 prompt - sequential)
-    └── TECHNICAL_SPEC.md (depends on User Flows & IA)
-
-Phase 3.1: Technical Dependencies (5 prompts - parallel)
-    ├── API_SPEC.md
-    ├── DATA_MODEL.md
-    ├── SECURITY_ARCHITECTURE.md
-    ├── INTEGRATIONS.md
-    └── PERFORMANCE_SCALABILITY.md
-
-Phase 4: Interactive Preview (1 prompt - sequential)
-    └── INTERACTIVE_PREVIEW.html (depends on all design docs)
-
-Phase 5: Implementation & Operations (1 prompt - sequential)
-    └── IMPLEMENTATION_PLAN.md (depends on all technical docs)
-
-Phase 5.1: Final Documents (3 prompts - parallel)
-    ├── TESTING_STRATEGY.md
-    ├── DEVOPS_DEPLOYMENT.md
-    └── ONBOARDING_TRAINING.md
+Phase 5: Planning & Implementation Rules (1 step - sequential)
+    └── Load Playbooks and Rules (depends on Technical Spec)
 ```
 
-Total: 19 documents generated across 8 phases, with parallel execution reducing time by ~60%
+Total: 6 documents generated across 5 phases
 
 ## Prerequisites
 
@@ -353,43 +385,16 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      ```
      REQUIRED_DOCS=("PRD")  # Always required
 
-     # Business Documents (always relevant for commercial apps)
-     if [MVP Features or Business Context indicates commercial/business app]; then
-         REQUIRED_DOCS+=("GTM_STRATEGY" "BUSINESS_RULES")
-     fi
+     # Feature Analysis (always generated for comprehensive understanding)
+     REQUIRED_DOCS+=("FEATURE_STORIES" "TECHNICAL_OVERVIEW")
 
      # UI/UX Documents (only for apps with user interfaces)
      if [Platform includes Web/Mobile/Desktop] OR [App Type is UI-focused]; then
-         REQUIRED_DOCS+=("STYLE_GUIDE" "WIREFRAMES" "USER_FLOWS" "INFORMATION_ARCHITECTURE" "COMPONENT_LIBRARY" "INTERACTIVE_PREVIEW")
-     fi
-
-     # API Documents (only for apps with APIs or multi-client architecture)
-     if [App Type is API-focused] OR [Platform includes multiple platforms] OR [Features indicate client-server architecture]; then
-         REQUIRED_DOCS+=("API_SPEC")
-     fi
-
-     # Data Documents (only for apps with persistent data)
-     if [Features indicate data storage/management] OR [App Type is Data-focused]; then
-         REQUIRED_DOCS+=("DATA_MODEL")
+         REQUIRED_DOCS+=("STYLE_GUIDE" "UI_STATES")
      fi
 
      # Technical Documents (always required for development)
-     REQUIRED_DOCS+=("TECHNICAL_SPEC" "IMPLEMENTATION_PLAN" "TESTING_STRATEGY")
-
-     # Infrastructure Documents (only for deployed/distributed apps)
-     if [Platform includes Web] OR [App Type is API-focused] OR [Features indicate deployment/hosting]; then
-         REQUIRED_DOCS+=("SECURITY_ARCHITECTURE" "PERFORMANCE_SCALABILITY" "DEVOPS_DEPLOYMENT")
-     fi
-
-     # Integration Documents (only for apps with external dependencies)
-     if [Features indicate third-party integrations] OR [App Type is API-focused]; then
-         REQUIRED_DOCS+=("INTEGRATIONS")
-     fi
-
-     # Training Documents (only for apps with end users)
-     if [Platform includes Web/Mobile/Desktop] OR [App Type is UI-focused]; then
-         REQUIRED_DOCS+=("ONBOARDING_TRAINING")
-     fi
+     REQUIRED_DOCS+=("TECHNICAL_SPEC")
      ```
 
    - **Log Document Selection:**
@@ -412,7 +417,17 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 1:**
 
 1. **Generate Product Requirements Document**
+
+   **For COLLABORATIVE MODE:**
+   - If `PRD_COLLABORATIVE.md` exists from collaborative iteration, convert it to comprehensive format
    - Read `/project:.claude/commands/spec-chain/doc-prompt-prd.md` as PRD_PROMPT
+   - Use COMPREHENSIVE MODE task from PRD_PROMPT
+   - Replace placeholders with refined data from collaborative process
+   - Execute PRD_PROMPT and save output to `$OUTPUT_DIR/PRD.md`
+
+   **For COMPREHENSIVE MODE:**
+   - Read `/project:.claude/commands/spec-chain/doc-prompt-prd.md` as PRD_PROMPT
+   - Use COMPREHENSIVE MODE task from PRD_PROMPT
    - Replace placeholders in PRD_PROMPT with data from APP_DETAILS:
      - [APP NAME] → Extract from "App Name" section
      - [BRIEF DESCRIPTION OF THE APP CONCEPT, TARGET MARKET, AND CORE VALUE PROPOSITION] → Extract from "App Idea" section
@@ -420,278 +435,249 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [PRIMARY AND SECONDARY USER PERSONAS, THEIR ROLES, AND NEEDS] → Extract from "Target Users" section
      - [MARKET CONTEXT, COMPETITION, BUSINESS MODEL, OR CONSTRAINTS] → Extract from "Business Context" section (now complete from auto-research)
    - Execute PRD_PROMPT and save output to `$OUTPUT_DIR/PRD.md`
-   - This document becomes the foundation for all others
 
-### Phase 2: Business & Design (Parallel Execution)
+   **Note**: This document becomes the foundation for all subsequent documents
+
+### Phase 2: Feature Analysis & Technical Overview (Parallel after Phase 1)
 
 **Execute only if START_PHASE <= 2:**
 
 **Execute the following tasks in parallel using concurrent Task agents (only if required):**
 
-2. **Generate Go-to-Market Strategy** (Business Track)
-   - **Execute only if "GTM_STRATEGY" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-gtm.md` as GTM_PROMPT
+2. **Generate Feature Stories** (Depends on PRD)
+   - **Execute only if "FEATURE_STORIES" is in REQUIRED_DOCS**
+   - Read `/project:.claude/commands/spec-chain/doc-prompt-feature-stories.md` as FEATURE_STORIES_PROMPT
    - Read `$OUTPUT_DIR/PRD.md` content
-   - Replace in GTM_PROMPT:
-     - [APP NAME] → Extract from APP_DETAILS "App Name"
-     - [TARGET MARKET] → Extract from APP_DETAILS "Target Market" (now complete from auto-research)
-     - [VALUE PROPOSITION] → Extract from APP_DETAILS "Value Proposition" (now complete from auto-research)
-     - [COMPETITIVE LANDSCAPE] → Extract from APP_DETAILS "Competition" (now complete from auto-research)
-     - [BUSINESS MODEL] → Extract from APP_DETAILS "Business Model" (now complete from auto-research)
-   - Execute GTM_PROMPT and save output to `$OUTPUT_DIR/GTM_STRATEGY.md`
-
-3. **Generate Business Rules** (Business Track)
-   - **Execute only if "BUSINESS_RULES" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-business-rules.md` as BUSINESS_RULES_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` content
-   - Replace in BUSINESS_RULES_PROMPT:
+   - Replace in FEATURE_STORIES_PROMPT:
      - [APP NAME] → Extract from PRD
-     - [INDUSTRY AND BUSINESS CONTEXT] → Extract from PRD
-     - [KEY BUSINESS PROCESSES TO AUTOMATE] → Extract from PRD features
-     - [REGULATORY AND BUSINESS CONSTRAINTS] → Infer from PRD
-     - [KEY DECISION MAKERS AND THEIR NEEDS] → Extract from PRD stakeholders
-   - Execute BUSINESS_RULES_PROMPT and save output to `$OUTPUT_DIR/BUSINESS_RULES.md`
+     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND USER PERSONAS] → Use PRD.md content
+     - [TECHNICAL OVERVIEW WITH PLATFORM SPECIFICATIONS AND ARCHITECTURE] → Use placeholder (will be filled after technical overview is generated)
+     - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding visual design requirements] → Use default if not available
+     - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
+   - Execute FEATURE_STORIES_PROMPT and save output to `$OUTPUT_DIR/FEATURE_STORIES.md`
 
-4. **Generate Style Guide** (Design Track)
+3. **Generate Technical Overview** (Depends on PRD)
+   - **Execute only if "TECHNICAL_OVERVIEW" is in REQUIRED_DOCS**
+   - Read `/project:.claude/commands/spec-chain/doc-prompt-technical-overview.md` as TECHNICAL_OVERVIEW_PROMPT
+   - Read `$OUTPUT_DIR/PRD.md` content and APP_DETAILS.md technical requirements
+   - Replace in TECHNICAL_OVERVIEW_PROMPT:
+     - [APP NAME] → Extract from PRD
+     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND PLATFORM SPECIFICATIONS] → Use PRD.md content
+     - [TECHNICAL REQUIREMENTS FROM APP_DETAILS INCLUDING: - Platform specifications (Web/Mobile/Desktop/Terminal) - Technology preferences and constraints - Performance requirements and targets - Scale requirements and growth projections - Security needs and compliance requirements] → Extract from APP_DETAILS.md technical requirements section
+     - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding UI/UX technical requirements] → Use default if not available
+     - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
+   - Execute TECHNICAL_OVERVIEW_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`
+
+### Phase 3: Design & UI/UX (Sequential after Phase 2)
+
+**Execute only if START_PHASE <= 3:**
+
+4. **Generate Functional UX/UI Style Guide** (Design Track)
    - **Execute only if "STYLE_GUIDE" is in REQUIRED_DOCS**
    - Read `/project:.claude/commands/spec-chain/doc-prompt-style.md` as STYLE_PROMPT
    - Read `$OUTPUT_DIR/PRD.md` content
    - Replace in STYLE_PROMPT:
      - [APP NAME] → Extract from APP_DETAILS "App Name"
+     - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, TARGET USERS, AND FEATURE REQUIREMENTS] → Use PRD.md content
      - [BRAND VALUES AND PERSONALITY] → Extract from APP_DETAILS "Brand Personality" (now complete from auto-research)
      - [TARGET USER DEMOGRAPHICS AND PREFERENCES] → Extract from APP_DETAILS "Target Users" section
      - [ANY SPECIFIC DESIGN REQUIREMENTS OR CONSTRAINTS] → Extract from APP_DETAILS "Accessibility Requirements" (now complete from auto-research)
      - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
    - Execute STYLE_PROMPT and save output to `$OUTPUT_DIR/STYLE_GUIDE.md`
 
-### Phase 2.1: Design Dependencies (Sequential after Phase 2)
-
-**Execute only if START_PHASE <= 2:**
-
-5. **Generate Wireframes** (Depends on Style Guide)
-   - **Execute only if "WIREFRAMES" is in REQUIRED_DOCS**
-   - Wait for Style Guide completion from Phase 2 (if Style Guide was generated)
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-wireframes.md` as WIREFRAMES_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` and `$OUTPUT_DIR/STYLE_GUIDE.md` content (if Style Guide exists)
-   - Replace in WIREFRAMES_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [PRODUCT REQUIREMENTS DOCUMENT OR FEATURE LIST] → Use PRD.md content
-     - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE] → Use STYLE_GUIDE.md content (or default if not available)
-     - [USER FLOWS OR KEY JOURNEYS] → Extract from PRD user journeys
-     - [TARGET PLATFORMS: WEB/MOBILE/DESKTOP/TERMINAL - specify which platforms are required] → Extract from PRD Platform Requirements section
-     - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
-   - Execute WIREFRAMES_PROMPT and save output to `$OUTPUT_DIR/WIREFRAMES.md`
-
-### Phase 2.2: Design Completion (Parallel after Wireframes)
-
-**Execute only if START_PHASE <= 2:**
-
-**Execute the following tasks in parallel using concurrent Task agents (only if required):**
-
-6. **Generate User Flows** (Depends on Wireframes)
-   - **Execute only if "USER_FLOWS" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-user-flows.md` as USER_FLOWS_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` and `$OUTPUT_DIR/WIREFRAMES.md` content (if Wireframes exists)
-   - Replace in USER_FLOWS_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [USER PERSONAS] → Extract from PRD
-     - [KEY WORKFLOWS] → Extract from PRD features
-     - [SCREEN REFERENCES] → Extract from Wireframes (or PRD if Wireframes not available)
-     - [BUSINESS GOALS] → Extract from PRD
-   - Execute USER_FLOWS_PROMPT and save output to `$OUTPUT_DIR/USER_FLOWS.md`
-
-7. **Generate Information Architecture**
-   - **Execute only if "INFORMATION_ARCHITECTURE" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-ia.md` as IA_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/WIREFRAMES.md` content (if available)
-   - Replace in IA_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [CONTENT TYPES] → Extract from PRD data model
-     - [USER ROLES] → Extract from PRD
-     - [KEY FEATURES] → Extract from PRD
-     - [NAVIGATION PATTERNS] → Extract from Wireframes (or infer from PRD if not available)
-   - Execute IA_PROMPT and save output to `$OUTPUT_DIR/INFORMATION_ARCHITECTURE.md`
-
-8. **Generate Component Library**
-   - **Execute only if "COMPONENT_LIBRARY" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-component-library.md` as COMPONENTS_PROMPT
-   - Read `$OUTPUT_DIR/STYLE_GUIDE.md` and `$OUTPUT_DIR/WIREFRAMES.md` content (if available)
-   - Replace in COMPONENTS_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [DESIGN TOKENS] → Extract from Style Guide (or use defaults if not available)
-     - [COMPONENT LIST] → Extract from Wireframes (or infer from PRD if not available)
-     - [INTERACTION PATTERNS] → Extract from Style Guide (or use defaults if not available)
-     - [ACCESSIBILITY REQUIREMENTS] → Standard WCAG AA
-   - Execute COMPONENTS_PROMPT and save output to `$OUTPUT_DIR/COMPONENT_LIBRARY.md`
-
-### Phase 3: Technical Architecture (Sequential after Phase 2.2)
-
-**Execute only if START_PHASE <= 3:**
-
-9. **Generate Technical Specification**
-   - Wait for User Flows and Information Architecture completion from Phase 2.2
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-technical.md` as TECHNICAL_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/USER_FLOWS.md`, and `$OUTPUT_DIR/INFORMATION_ARCHITECTURE.md` content
-   - Replace in TECHNICAL_PROMPT:
+5. **Generate UI States & Screen Snapshots** (Depends on Style Guide)
+   - **Execute only if "UI_STATES" is in REQUIRED_DOCS**
+   - Wait for Style Guide completion from step 4
+   - Read `/project:.claude/commands/spec-chain/doc-prompt-states.md` as UI_STATES_PROMPT
+   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, and `$OUTPUT_DIR/STYLE_GUIDE.md` content
+   - Replace in UI_STATES_PROMPT:
      - [APP NAME] → Extract from APP_DETAILS "App Name"
-     - [FUNCTIONAL REQUIREMENTS] → Extract from PRD
-     - [SCALE REQUIREMENTS] → Extract from APP_DETAILS "Scale Requirements" (now complete from auto-research)
-     - [PERFORMANCE TARGETS] → Extract from APP_DETAILS "Performance Requirements" (now complete from auto-research)
-     - [SECURITY NEEDS] → Extract from APP_DETAILS "Constraints" (now complete from auto-research)
-   - Execute TECHNICAL_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_SPEC.md`
+     - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, FEATURES, AND USER WORKFLOWS] → Use PRD.md content
+     - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
+     - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
+     - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
+   - Execute UI_STATES_PROMPT and save output to `$OUTPUT_DIR/UI_STATES.md`
 
-### Phase 3.1: Technical Dependencies (Parallel after Technical Spec)
-
-**Execute only if START_PHASE <= 3:**
-
-**Execute the following tasks in parallel using concurrent Task agents (only if required):**
-
-10. **Generate API Specification**
-    - **Execute only if "API_SPEC" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-api.md` as API_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md` and `$OUTPUT_DIR/PRD.md` content
-    - Replace in API_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [API RESOURCES] → Extract from Technical Spec data model
-      - [AUTHENTICATION METHOD] → Extract from Technical Spec
-      - [API OPERATIONS] → Extract from PRD features
-      - [INTEGRATION REQUIREMENTS] → Extract from Technical Spec
-    - Execute API_PROMPT and save output to `$OUTPUT_DIR/API_SPEC.md`
-
-11. **Generate Data Model**
-    - **Execute only if "DATA_MODEL" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-data-model.md` as DATA_MODEL_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md` and `$OUTPUT_DIR/PRD.md` content
-    - Replace in DATA_MODEL_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [ENTITIES] → Extract from PRD and Technical Spec
-      - [RELATIONSHIPS] → Extract from PRD data model
-      - [DATA VOLUMES] → Extract from Technical Spec
-      - [PERFORMANCE REQUIREMENTS] → Extract from Technical Spec
-    - Execute DATA_MODEL_PROMPT and save output to `$OUTPUT_DIR/DATA_MODEL.md`
-
-12. **Generate Security Architecture**
-    - **Execute only if "SECURITY_ARCHITECTURE" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-security.md` as SECURITY_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md` and `$OUTPUT_DIR/BUSINESS_RULES.md` content (if available)
-    - Replace in SECURITY_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [DATA SENSITIVITY] → Extract from Business Rules (or infer from PRD if not available)
-      - [COMPLIANCE REQUIREMENTS] → Extract from Business Rules (or infer from PRD if not available)
-      - [USER ROLES] → Extract from PRD
-      - [AUTHENTICATION NEEDS] → Extract from Technical Spec
-    - Execute SECURITY_PROMPT and save output to `$OUTPUT_DIR/SECURITY_ARCHITECTURE.md`
-
-13. **Generate Integrations Specification**
-    - **Execute only if "INTEGRATIONS" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-integrations.md` as INTEGRATIONS_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md` and `$OUTPUT_DIR/PRD.md` content
-    - Replace in INTEGRATIONS_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [EXTERNAL SERVICES] → Extract from Technical Spec
-      - [INTEGRATION POINTS] → Extract from Technical Spec
-      - [DATA FLOWS] → Extract from Technical Spec
-      - [AUTHENTICATION METHODS] → Extract from Technical Spec
-    - Execute INTEGRATIONS_PROMPT and save output to `$OUTPUT_DIR/INTEGRATIONS.md`
-
-14. **Generate Performance & Scalability Plan**
-    - **Execute only if "PERFORMANCE_SCALABILITY" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-performance.md` as PERFORMANCE_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md`, `$OUTPUT_DIR/PRD.md`, and `$OUTPUT_DIR/GTM_STRATEGY.md` content (if available)
-    - Replace in PERFORMANCE_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [USER COUNTS, TRANSACTION VOLUMES, DATA SIZES] → Extract from GTM Strategy (or estimate from PRD if not available)
-      - [RESPONSE TIME TARGETS, THROUGHPUT NEEDS] → Extract from Technical Spec
-      - [TECHNOLOGY CHOICES AFFECTING PERFORMANCE] → Extract from Technical Spec
-      - [EXPECTED GROWTH OVER 1-3 YEARS] → Extract from GTM Strategy (or estimate from PRD if not available)
-    - Execute PERFORMANCE_PROMPT and save output to `$OUTPUT_DIR/PERFORMANCE_SCALABILITY.md`
-
-### Phase 4: Interactive Preview (Sequential after Phase 3.1)
+### Phase 4: Technical Architecture (Sequential after Phase 3)
 
 **Execute only if START_PHASE <= 4:**
 
-15. **Generate Interactive Preview** (Depends on Design + Technical)
-    - **Execute only if "INTERACTIVE_PREVIEW" is in REQUIRED_DOCS**
-    - Wait for all required Design and Technical documents to complete
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-preview.md` as PREVIEW_PROMPT
-    - Read available documents: `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/WIREFRAMES.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, `$OUTPUT_DIR/COMPONENT_LIBRARY.md`, `$OUTPUT_DIR/USER_FLOWS.md` content (only if they exist)
-    - Replace in PREVIEW_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [PRODUCT REQUIREMENTS DOCUMENT WITH PLATFORM SPECIFICATIONS] → Use PRD.md content
-      - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS] → Use STYLE_GUIDE.md content (or defaults if not available)
-      - [WIREFRAME SPECIFICATIONS AND LAYOUTS] → Use WIREFRAMES.md content (or infer from PRD if not available)
-      - [USER FLOW DEFINITIONS AND INTERACTIONS] → Use USER_FLOWS.md content (or infer from PRD if not available)
-      - [COMPONENT SPECIFICATIONS AND BEHAVIORS] → Use COMPONENT_LIBRARY.md content (or defaults if not available)
-      - [NAVIGATION STRUCTURE AND ORGANIZATION] → Extract from Information Architecture (or infer from PRD if not available)
-      - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
-      - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
-    - Execute PREVIEW_PROMPT and save output to `$OUTPUT_DIR/INTERACTIVE_PREVIEW.html`
+6. **Generate Comprehensive Technical Specification**
+   - Wait for UI States completion from Phase 3
+   - Read `/project:.claude/commands/spec-chain/doc-prompt-technical.md` as TECHNICAL_PROMPT
+   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, and `$OUTPUT_DIR/UI_STATES.md` content
+   - Replace in TECHNICAL_PROMPT:
+     - [APP NAME] → Extract from APP_DETAILS "App Name"
+     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
+     - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
+     - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
+     - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
+     - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
+     - [SCALE REQUIREMENTS AND GROWTH PROJECTIONS] → Extract from APP_DETAILS "Scale Requirements" (now complete from auto-research)
+     - [PERFORMANCE TARGETS AND OPTIMIZATION REQUIREMENTS] → Extract from APP_DETAILS "Performance Requirements" (now complete from auto-research)
+     - [SECURITY NEEDS AND COMPLIANCE REQUIREMENTS] → Extract from APP_DETAILS "Constraints" (now complete from auto-research)
+   - Execute TECHNICAL_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_SPEC.md`
 
-### Phase 5: Implementation & Operations (Sequential after Phase 3.1)
-
-**Execute only if START_PHASE <= 5:**
-
-16. **Generate Implementation Plan** (AI-Optimized)
-    - Wait for all Technical documents from Phase 3.1 to complete
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-implementation.md` as IMPLEMENTATION_PROMPT
-    - Read `$OUTPUT_DIR/TECHNICAL_SPEC.md`, `$OUTPUT_DIR/API_SPEC.md`, `$OUTPUT_DIR/DATA_MODEL.md`, and all other technical docs
-    - Replace in IMPLEMENTATION_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [TECHNICAL REQUIREMENTS] → Extract from Technical Spec
-      - [FEATURES TO IMPLEMENT] → Extract from PRD
-      - [ARCHITECTURE DECISIONS] → Extract from Technical Spec
-      - [TEAM STRUCTURE] → Standard small team
-    - Execute IMPLEMENTATION_PROMPT and save output to `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md`
-
-### Phase 5.1: Final Documents (Parallel after Implementation Plan)
+### Phase 5: Planning & Implementation Rules (Sequential after Phase 4)
 
 **Execute only if START_PHASE <= 5:**
 
-**Execute the following tasks in parallel using concurrent Task agents (only if required):**
+5.1. **Load Playbooks and Rules**
+   - **Check for Playbook Directory:**
+     - If `/assets/playbooks/` directory exists, proceed with loading
+     - If directory doesn't exist, log: "No playbooks directory found, skipping rule loading"
+     - Continue to Post-Generation phase
 
-17. **Generate Testing Strategy**
-    - **Execute only if "TESTING_STRATEGY" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-testing.md` as TESTING_PROMPT
-    - Read available documents: `$OUTPUT_DIR/TECHNICAL_SPEC.md`, `$OUTPUT_DIR/API_SPEC.md`, `$OUTPUT_DIR/USER_FLOWS.md`, `$OUTPUT_DIR/SECURITY_ARCHITECTURE.md`, and `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md` content (only if they exist)
-    - Replace in TESTING_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [FRONTEND AND BACKEND TECHNOLOGIES] → Extract from Technical Spec
-      - [KEY FEATURES REQUIRING TESTING] → Extract from PRD
-      - [PERFORMANCE, SECURITY, ACCESSIBILITY STANDARDS] → Extract from various specs (or use defaults if not available)
-      - [DEVELOPMENT TEAM SIZE AND ROLES] → Extract from Implementation Plan
-    - Execute TESTING_PROMPT and save output to `$OUTPUT_DIR/TESTING_STRATEGY.md`
+   - **Scan Playbook Files:**
+     - List all files in `/assets/playbooks/` directory
+     - Include subdirectories and organize by category
+     - Supported file types: `.md`, `.txt`, `.json`, `.yaml`, `.yml`
+     - Log: "Found playbook files: [list of files with paths]"
 
-18. **Generate DevOps & Deployment Plan**
-    - **Execute only if "DEVOPS_DEPLOYMENT" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-devops.md` as DEVOPS_PROMPT
-    - Read available documents: `$OUTPUT_DIR/TECHNICAL_SPEC.md`, `$OUTPUT_DIR/PERFORMANCE_SCALABILITY.md`, `$OUTPUT_DIR/SECURITY_ARCHITECTURE.md`, and `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md` content (only if they exist)
-    - Replace in DEVOPS_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [LANGUAGES, FRAMEWORKS, DATABASES] → Extract from Technical Spec
-      - [ENVIRONMENTS, SCALE, UPTIME REQUIREMENTS] → Extract from Performance Plan (or use defaults if not available)
-      - [AWS, GCP, AZURE, OR HYBRID] → Extract from Technical Spec
-      - [DEVELOPMENT TEAM SIZE AND STRUCTURE] → Extract from Implementation Plan
-    - Execute DEVOPS_PROMPT and save output to `$OUTPUT_DIR/DEVOPS_DEPLOYMENT.md`
+   - **Load and Categorize Rules:**
+     - **Planning Rules**: Files containing planning methodologies, project structure guidelines, estimation techniques
+     - **Implementation Rules**: Files containing coding standards, architecture patterns, best practices
+     - **Quality Rules**: Files containing testing strategies, code review guidelines, quality gates
+     - **Deployment Rules**: Files containing deployment procedures, infrastructure guidelines, operational practices
+     - **Team Rules**: Files containing collaboration guidelines, communication protocols, workflow procedures
 
-19. **Generate Onboarding & Training Documentation**
-    - **Execute only if "ONBOARDING_TRAINING" is in REQUIRED_DOCS**
-    - Read `/project:.claude/commands/spec-chain/doc-prompt-onboarding.md` as ONBOARDING_PROMPT
-    - Read available documents: `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/USER_FLOWS.md`, `$OUTPUT_DIR/WIREFRAMES.md`, and `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md` content (only if they exist)
-    - Replace in ONBOARDING_PROMPT:
-      - [APP NAME] → Extract from PRD
-      - [USER PERSONAS AND ROLES] → Extract from PRD
-      - [CORE FEATURES TO TEACH] → Extract from PRD
-      - [SIMPLE/MODERATE/COMPLEX] → Determine from feature complexity
-      - [WHAT DEFINES SUCCESSFUL ONBOARDING] → Extract from PRD success metrics
-    - Execute ONBOARDING_PROMPT and save output to `$OUTPUT_DIR/ONBOARDING_TRAINING.md`
+   - **Parse Rule Content:**
+     - Read each file and extract key rules and guidelines
+     - Identify rule categories based on file names and content
+     - Create structured summary of available rules
+     - Note any dependencies or prerequisites mentioned in rules
+
+   - **Output Loaded Rules Summary:**
+     ```
+     **Playbooks and Rules Loaded for Planning/Implementation:**
+
+     **Planning Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional planning rule sets...]
+
+     **Implementation Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional implementation rule sets...]
+
+     **Quality Assurance Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional quality rule sets...]
+
+     **Deployment & Operations Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional deployment rule sets...]
+
+     **Team & Collaboration Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional team rule sets...]
+
+     **Custom/Specialized Rules:**
+     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Additional custom rule sets...]
+
+     **Total Rule Sets Loaded**: [Number] rule sets from [Number] files
+     **Coverage Areas**: [List of areas covered by the loaded rules]
+     **Integration Points**: [How these rules integrate with generated specifications]
+     ```
+
+   - **Prepare Rules for Integration:**
+     - Make loaded rules available for subsequent planning and implementation phases
+     - Create rule reference index for easy lookup during implementation
+     - Note any conflicts or overlaps between different rule sets
+     - Prepare rule application guidelines for development teams
+
+5.2. **Generate Comprehensive Implementation Plan** (Iterative with Validation)
+   - **Initialize Planning Loop:**
+     - Set ITERATION_COUNT = 1
+     - Set MAX_ITERATIONS = 5
+     - Set VALIDATION_THRESHOLD = 85% (minimum completion score for approval)
+
+   - **Planning and Validation Loop:**
+     ```
+     WHILE (ITERATION_COUNT <= MAX_ITERATIONS) AND (PLAN_STATUS != "APPROVED"):
+
+       // Generate Implementation Plan
+       - Read `/project:.claude/commands/spec-chain/doc-prompt-planner.md` as PLANNER_PROMPT
+       - Read all available documents: `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`,
+         `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, `$OUTPUT_DIR/UI_STATES.md`,
+         `$OUTPUT_DIR/TECHNICAL_SPEC.md`, and loaded playbooks summary
+       - If ITERATION_COUNT > 1, also read previous plan and validation feedback
+       - Replace in PLANNER_PROMPT:
+         - [APP NAME] → Extract from APP_DETAILS "App Name"
+         - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
+         - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
+         - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
+         - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
+         - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
+         - [COMPREHENSIVE TECHNICAL SPECIFICATION WITH ARCHITECTURE AND IMPLEMENTATION DETAILS] → Use TECHNICAL_SPEC.md content
+         - [LOADED PLAYBOOKS AND RULES FROM ASSETS/PLAYBOOKS DIRECTORY] → Use loaded playbooks summary
+         - [PREVIOUS IMPLEMENTATION PLAN IF THIS IS A REFINEMENT ITERATION] → Use previous plan if ITERATION_COUNT > 1
+         - [VALIDATION FEEDBACK FROM PREVIOUS ITERATION IF APPLICABLE] → Use validation feedback if ITERATION_COUNT > 1
+       - Execute PLANNER_PROMPT and save output to `$OUTPUT_DIR/IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md`
+
+       // Validate Implementation Plan
+       - Read `/project:.claude/commands/spec-chain/doc-prompt-planner-validator.md` as VALIDATOR_PROMPT
+       - Read all input documents and the newly generated implementation plan
+       - Replace in VALIDATOR_PROMPT:
+         - [APP NAME] → Extract from APP_DETAILS "App Name"
+         - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
+         - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
+         - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
+         - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
+         - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
+         - [COMPREHENSIVE TECHNICAL SPECIFICATION WITH ARCHITECTURE AND IMPLEMENTATION DETAILS] → Use TECHNICAL_SPEC.md content
+         - [LOADED PLAYBOOKS AND RULES FROM ASSETS/PLAYBOOKS DIRECTORY] → Use loaded playbooks summary
+         - [CURRENT IMPLEMENTATION PLAN TO VALIDATE] → Use IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md content
+         - [CURRENT ITERATION NUMBER (1-5)] → Use ITERATION_COUNT
+       - Execute VALIDATOR_PROMPT and save output to `$OUTPUT_DIR/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
+
+       // Check Validation Results
+       - Extract VALIDATION_DECISION from validation report (APPROVED/NEEDS_REFINEMENT/MAJOR_REVISION_REQUIRED)
+       - Extract COMPLETION_SCORE from validation report
+       - Log: "Iteration ${ITERATION_COUNT}: ${VALIDATION_DECISION} (${COMPLETION_SCORE}% complete)"
+
+       // Determine Next Action
+       IF (VALIDATION_DECISION == "APPROVED") OR (COMPLETION_SCORE >= VALIDATION_THRESHOLD):
+         - Set PLAN_STATUS = "APPROVED"
+         - Copy `IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md` to `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md`
+         - Log: "Implementation plan approved after ${ITERATION_COUNT} iterations"
+         - BREAK from loop
+       ELSE:
+         - Set PLAN_STATUS = "NEEDS_REFINEMENT"
+         - Store validation feedback for next iteration
+         - INCREMENT ITERATION_COUNT
+         - Log: "Implementation plan needs refinement, proceeding to iteration ${ITERATION_COUNT}"
+
+     END WHILE
+     ```
+
+   - **Final Status Check:**
+     ```
+     IF (PLAN_STATUS != "APPROVED"):
+       - Log: "Maximum iterations (${MAX_ITERATIONS}) reached without approval"
+       - Copy the best plan (highest completion score) to `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md`
+       - Create summary of remaining gaps in `$OUTPUT_DIR/IMPLEMENTATION_GAPS.md`
+       - Log: "Using best available plan with ${HIGHEST_COMPLETION_SCORE}% completion"
+     ```
+
+   - **Output Summary:**
+     ```
+     **Implementation Planning Summary:**
+     - **Total Iterations**: ${ITERATION_COUNT}
+     - **Final Status**: ${PLAN_STATUS}
+     - **Completion Score**: ${FINAL_COMPLETION_SCORE}%
+     - **Plan File**: IMPLEMENTATION_PLAN.md
+     - **Validation Reports**: VALIDATION_REPORT_v1.md through VALIDATION_REPORT_v${ITERATION_COUNT}.md
+     - **All Plan Versions**: IMPLEMENTATION_PLAN_v1.md through IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md
+     ```
 
 ### Post-Generation: Clarification Aggregation
 
-20. **Aggregate Clarification Requests**
+6. **Aggregate Clarification Requests**
     - After all documents have been generated, scan each document for clarification requests
     - For each generated document in `$OUTPUT_DIR`:
       - Read the document content
-      - Search for the "## Clarification Requests or Feedback" section
+      - Search for the "## Clarification Requests or Feedback" section or "## Critical Questions and Clarifications" section
       - Extract any non-placeholder content (anything other than "[Any questions, clarifications or architectural considerations]")
       - If clarification items are found, record them with their source document
     - Compile all found items into a structured list organized by document
@@ -704,9 +690,11 @@ Upon completion, provide a summary including the following information. This sum
 1. **Generation Details**:
    - Spec name: `$SPEC_NAME`
    - Output directory: `$OUTPUT_DIR` (e.g., `/specs/my-app` or `/specs/20240120_143052`)
+   - Generation mode: `[COLLABORATIVE/COMPREHENSIVE]` - indicates which approach was used
    - Start phase: `$START_PHASE`
    - Generation timestamp: `$TIMESTAMP`
    - Total execution time
+   - Collaborative iterations: `[number]` (if COLLABORATIVE MODE was used)
 
 2. **Generated Documents** (${#REQUIRED_DOCS[@]} total):
    - List each document with its full path in `$OUTPUT_DIR`
@@ -717,8 +705,11 @@ Upon completion, provide a summary including the following information. This sum
 3. **Documentation Coverage**:
    - **Generated Categories**: List categories of documents that were generated based on app requirements
    - **Skipped Categories**: List categories of documents that were skipped and why
-   - **Business documentation**: PRD (always), GTM (if commercial), Business Rules (if commercial)
-   - **Design documentation**: Style Guide, Wireframes, User Flows, IA, Components (if UI-focused)
+   - **Foundation documentation**: PRD (always)
+   - **Feature analysis**: Feature Stories (always), Technical Overview (always)
+   - **Design documentation**: Style Guide, UI States (if UI-focused)
+   - **Technical documentation**: Technical Spec (always)
+   - **Planning documentation**: Playbook Rules Loading, Implementation Plan (always)
    - **Technical documentation**: Technical Spec (always), API (if client-server), Data Model (if data-focused), Security (if deployed), Integrations (if external deps), Performance (if deployed)
    - **Implementation documentation**: Implementation Plan (always), Testing (always), DevOps (if deployed), Onboarding (if UI-focused)
    - **Interactive assets**: Preview HTML (if UI-focused)
@@ -748,10 +739,21 @@ Upon completion, provide a summary including the following information. This sum
    > **Note:** No clarification requests were recorded. The provided APP_DETAILS.md contained sufficient information for comprehensive documentation generation.
 
 6. **Next Steps**:
+
+   **For COLLABORATIVE MODE completions:**
+   - Review the collaborative PRD in `$OUTPUT_DIR/PRD_COLLABORATIVE.md` (if generated)
+   - Consider running again to graduate to comprehensive documentation
+   - Use insights gained to refine APP_DETAILS.md for future comprehensive generation
+
+   **For COMPREHENSIVE MODE completions:**
    - Review all documentation in `$OUTPUT_DIR`
    - Create symlink to latest generation (done automatically in summary output)
-   - Gather stakeholder feedback
+   - Gather stakeholder feedback on the comprehensive specification
    - Begin implementation using the Implementation Plan
+
+   **For both modes:**
+   - Address any clarification requests found in the generated documents
+   - Update APP_DETAILS.md with new insights for future iterations
 
 ### Summary Output Requirements
 
@@ -777,66 +779,107 @@ This documentation was generated by the Spec Chain system. All files in this dir
 
 ## Error Handling
 
+### General Prompt Failures
 If any prompt execution fails:
 1. Log the error with the specific prompt name
 2. Continue with other prompts that don't depend on the failed output
 3. Report all failures in the final summary
 4. Suggest manual intervention for failed steps
 
+### Collaborative Mode Specific Errors
+If collaborative mode encounters issues:
+1. **Iteration Loop Failures**: If user feedback integration fails, save the current state and offer to continue with existing PRD
+2. **User Input Timeout**: If user doesn't respond within reasonable time, offer to proceed with current specification
+3. **Invalid User Responses**: Gracefully handle unclear feedback and ask for clarification
+4. **Graduation Failures**: If transition from collaborative to comprehensive fails, preserve collaborative PRD and suggest manual review
+
+### Mode Detection Failures
+If mode detection fails:
+1. Default to COLLABORATIVE MODE for safety (less overwhelming)
+2. Log the detection failure reason
+3. Allow user to manually specify mode if needed
+4. Provide clear explanation of why collaborative mode was chosen
+
 ## Intelligent Document Selection Examples
 
-The system automatically determines which documents to generate based on app characteristics:
+The system automatically determines which documents to generate based on app characteristics and selected mode:
+
+### Collaborative Mode Example: Early-Stage Idea
+**Mode**: COLLABORATIVE
+**Input**: Basic app idea with minimal details
+**Generated Documents** (1 total):
+- PRD_COLLABORATIVE.md (focused 8-section collaborative PRD)
+
+**Process**:
+1. Generate initial collaborative PRD with critical questions
+2. User provides feedback and clarifications
+3. Iterate and refine the collaborative PRD
+4. Option to graduate to comprehensive documentation
+
+**Skipped Documents** (18 total): All other documents until graduation to comprehensive mode
 
 ### Example 1: Mobile Social Media App
 **App Type**: UI-focused, Client-Server
 **Platform**: Mobile (iOS/Android), Web
-**Generated Documents** (15 total):
-- PRD, GTM_STRATEGY, BUSINESS_RULES (business)
-- STYLE_GUIDE, WIREFRAMES, USER_FLOWS, INFORMATION_ARCHITECTURE, COMPONENT_LIBRARY (design)
-- TECHNICAL_SPEC, API_SPEC, DATA_MODEL, SECURITY_ARCHITECTURE, PERFORMANCE_SCALABILITY (technical)
-- IMPLEMENTATION_PLAN, TESTING_STRATEGY, DEVOPS_DEPLOYMENT, ONBOARDING_TRAINING (implementation)
-- INTERACTIVE_PREVIEW (preview)
-
-**Skipped Documents** (4 total): INTEGRATIONS (no external APIs mentioned)
+**Generated Documents** (7 total):
+- PRD (foundation)
+- FEATURE_STORIES, TECHNICAL_OVERVIEW (feature analysis)
+- STYLE_GUIDE, UI_STATES (design)
+- TECHNICAL_SPEC (technical)
+- IMPLEMENTATION_PLAN (planning - with iterative refinement)
+**Additional Outputs**: Playbook rules loading, validation reports for each iteration
 
 ### Example 2: CLI Data Processing Tool
 **App Type**: CLI-focused, Standalone
 **Platform**: Terminal/CLI
-**Generated Documents** (6 total):
+**Generated Documents** (5 total):
 - PRD (foundation)
-- TECHNICAL_SPEC, DATA_MODEL (technical - for data processing)
-- IMPLEMENTATION_PLAN, TESTING_STRATEGY (implementation)
-
-**Skipped Documents** (13 total): All UI/UX docs (no interface), API docs (standalone), DevOps (local tool), Business docs (not commercial), Security/Performance (local tool), Onboarding (CLI tool), Preview (no UI)
+- FEATURE_STORIES, TECHNICAL_OVERVIEW (feature analysis)
+- TECHNICAL_SPEC (technical)
+- IMPLEMENTATION_PLAN (planning - with iterative refinement)
+**Skipped Documents** (2 total): All UI/UX docs (no interface)
+**Additional Outputs**: Playbook rules loading, validation reports for each iteration
 
 ### Example 3: REST API Microservice
 **App Type**: API-focused, Service-Only
 **Platform**: Web (server-only)
-**Generated Documents** (11 total):
-- PRD, BUSINESS_RULES (foundation/business)
-- TECHNICAL_SPEC, API_SPEC, DATA_MODEL, SECURITY_ARCHITECTURE, INTEGRATIONS, PERFORMANCE_SCALABILITY (technical)
-- IMPLEMENTATION_PLAN, TESTING_STRATEGY, DEVOPS_DEPLOYMENT (implementation)
-
-**Skipped Documents** (8 total): All UI/UX docs (no interface), GTM (internal service), Onboarding (no end users), Preview (no UI)
+**Generated Documents** (5 total):
+- PRD (foundation)
+- FEATURE_STORIES, TECHNICAL_OVERVIEW (feature analysis)
+- TECHNICAL_SPEC (technical)
+- IMPLEMENTATION_PLAN (planning - with iterative refinement)
+**Skipped Documents** (2 total): All UI/UX docs (no interface)
+**Additional Outputs**: Playbook rules loading, validation reports for each iteration
 
 ### Example 4: Desktop Productivity App
 **App Type**: UI-focused, Standalone
 **Platform**: Desktop (Windows/macOS)
-**Generated Documents** (12 total):
-- PRD, GTM_STRATEGY, BUSINESS_RULES (business)
-- STYLE_GUIDE, WIREFRAMES, USER_FLOWS, INFORMATION_ARCHITECTURE, COMPONENT_LIBRARY (design)
-- TECHNICAL_SPEC, IMPLEMENTATION_PLAN, TESTING_STRATEGY, ONBOARDING_TRAINING (implementation)
-- INTERACTIVE_PREVIEW (preview)
-
-**Skipped Documents** (7 total): API docs (standalone), Data Model (simple local storage), Security/Performance/DevOps (desktop app), Integrations (no external deps)
+**Generated Documents** (7 total):
+- PRD (foundation)
+- FEATURE_STORIES, TECHNICAL_OVERVIEW (feature analysis)
+- STYLE_GUIDE, UI_STATES (design)
+- TECHNICAL_SPEC (technical)
+- IMPLEMENTATION_PLAN (planning - with iterative refinement)
+**Additional Outputs**: Playbook rules loading, validation reports for each iteration
 
 ## Customization Options
 
+### Mode Selection
+- **Auto-Detection** (Default): System automatically chooses COLLABORATIVE or COMPREHENSIVE based on APP_DETAILS.md completeness
+- **Force Collaborative**: Override detection to use collaborative mode regardless of input completeness
+- **Force Comprehensive**: Override detection to use comprehensive mode regardless of input completeness
+
+### Document Generation
 - **Force Full Generation**: Override intelligent selection to generate all 19 documents
 - **Manual Selection**: Specify exact documents to generate via command line flags
 - **Profile-Based**: Use predefined profiles (mobile-app, api-service, cli-tool, desktop-app)
 
-Remember: The PRD is always required as it feeds all other documents.
+### Collaborative Mode Options
+- **Iteration Limit**: Set maximum number of collaborative iterations before auto-graduation
+- **Auto-Graduate**: Automatically proceed to comprehensive mode after successful collaborative refinement
+- **Save Iterations**: Preserve all collaborative iteration states for review
+
+Remember: The PRD (collaborative or comprehensive) is always required as it feeds all other documents.
 
 ## APP_DETAILS.md Usage Summary
 
@@ -877,7 +920,7 @@ The runner extracts the following information from APP_DETAILS.md:
   - Interactive Preview (visual implementation)
   
 - If `/assets/inspiration/functional/` exists, its contents are passed to functional design prompts:
-  - Wireframes (layout and structure)
+  - Technical Overview (architecture and implementation patterns)
   - Component Library (behaviors and interactions)
   - User Flows (navigation and workflows)
   - Information Architecture (organization and hierarchy)
