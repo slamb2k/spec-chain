@@ -55,213 +55,157 @@ Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/
 
 ## Execution Flow
 
-### Step 1: Load and Analyze Existing Data
+### Step 1: Initialize APP_DETAILS.md
 
 1. **Check for existing APP_DETAILS.md:**
-   - First, check if `/APP_DETAILS.md` exists in the project root
-   - If it exists:
-     - Read and parse all sections
-     - Extract existing values for all fields
-     - Identify which fields are empty or contain placeholder text
+   - Check if `/APP_DETAILS.md` exists in the project root
    - If it doesn't exist:
-     - Start with an empty data structure
-     - All fields will need to be gathered
+     - Copy `/APP_DETAILS.md.template` to `/APP_DETAILS.md`
+     - Log: "Created APP_DETAILS.md from template"
 
-2. **Identify missing information:**
-   - Required fields that must have content:
-     - App Name
-     - App Idea (what problem it solves)
-     - MVP Features (core functionality)
-     - Target Users (primary users)
-   - Optional fields that can be auto-researched:
-     - Market Context
-     - Competition
-     - Business Model
-     - Constraints
-     - Platform
-     - Technology Preferences
-     - Performance Requirements
-     - Scale Requirements
-     - Brand Personality
-     - Visual Style
-     - Key Emotions
-     - Accessibility Requirements
-     - Core Workflows
-     - Content Types
-     - Feature Priorities
-     - Integration Requirements
-     - Success Metrics
-     - Go-to-Market Strategy
-     - Development Team
-     - Additional Context
+2. **Parse APP_DETAILS.md structure:**
+   - Read the APP_DETAILS.md file
+   - Extract all sections and their current values
+   - Identify REQUIRED vs OPTIONAL fields based on template annotations
+   - Determine which fields are empty or contain placeholder text
 
-### Step 2: Mode Detection and Initial Gathering
+### Step 2: Show Current Status Summary
 
-**Mode Detection Logic:**
-- **COLLABORATIVE MODE**: If user provides only basic idea/concept (minimal APP_DETAILS.md or mostly empty fields)
-- **COMPREHENSIVE MODE**: If user has detailed requirements (complete APP_DETAILS.md with substantial content)
+Display a summary of the current APP_DETAILS.md status:
 
-**Auto-detect based on APP_DETAILS.md completeness:**
-- Count filled vs. empty required fields
-- If < 50% of required fields have substantial content → **COLLABORATIVE MODE**
-- If ≥ 50% of required fields have substantial content → **COMPREHENSIVE MODE**
+```
+**APP_DETAILS.md Status Summary:**
 
-### Step 2.1: COLLABORATIVE MODE Path
+**REQUIRED Fields:**
+✅ App Name: [Current value or "❌ Missing"]
+✅ App Idea: [Current value or "❌ Missing"]
+✅ MVP Features: [Current value or "❌ Missing"]
+✅ Target Users: [Current value or "❌ Missing"]
 
-**Execute if COLLABORATIVE MODE detected:**
+**OPTIONAL Fields:**
+📝 Market Context: [Current value or "⚪ Empty - can auto-research"]
+📝 Competition: [Current value or "⚪ Empty - can auto-research"]
+📝 Business Model: [Current value or "⚪ Empty - can auto-research"]
+📝 Constraints: [Current value or "⚪ Empty - can auto-research"]
+📝 Platform: [Current value or "⚪ Empty - can auto-research"]
+📝 Technology Preferences: [Current value or "⚪ Empty - can auto-research"]
+📝 Performance Requirements: [Current value or "⚪ Empty - can auto-research"]
+📝 Scale Requirements: [Current value or "⚪ Empty - can auto-research"]
+📝 Brand Personality: [Current value or "⚪ Empty - can auto-research"]
+📝 Visual Style: [Current value or "⚪ Empty - can auto-research"]
+📝 Accessibility Requirements: [Current value or "⚪ Empty - can auto-research"]
+📝 Integration Requirements: [Current value or "⚪ Empty - can auto-research"]
+📝 Success Metrics: [Current value or "⚪ Empty - can auto-research"]
+📝 Go-to-Market Strategy: [Current value or "⚪ Empty - can auto-research"]
+📝 Development Team: [Current value or "⚪ Empty - can auto-research"]
 
-1. **Gather Basic Required Information** (ask ONE AT A TIME):
+**Summary:** [X] of [Y] required fields complete, [Z] optional fields have content
+```
 
-   **App Name** (if missing):
-   "What is the name of your app?"
+### Step 3: Gather Missing Required Information
 
-   **App Idea** (if missing):
-   "What problem does your app solve? Please provide a brief description of your app concept."
-
-   **MVP Features** (if missing):
-   "What are the core features for your minimum viable product (MVP)? Just list the essential functionality."
-
-2. **Generate Initial Collaborative PRD:**
-   - Use the collaborative template from doc-prompt-prd.md
-   - Focus on problem-solution fit
-   - Create initial specification with critical questions
-   - Save to `$OUTPUT_DIR/PRD_COLLABORATIVE.md`
-
-3. **Enter Collaborative Iteration Loop:**
-   - Present the collaborative PRD to user
-   - Ask: "Please review this initial specification. What would you like to clarify, change, or add? (Type 'continue' when ready to proceed to comprehensive documentation)"
-   - For each user response:
-     - Integrate feedback into the collaborative PRD
-     - Regenerate and present the COMPLETE updated collaborative PRD
-     - Ask follow-up questions based on their input
-     - Continue until user types 'continue' or equivalent
-
-4. **Graduation Decision:**
-   - Ask: "Would you like to generate the complete comprehensive documentation suite based on this refined specification? (yes/no)"
-   - If yes: Convert collaborative PRD to comprehensive format and proceed to Step 2.2
-   - If no: End with collaborative PRD only
-
-### Step 2.2: COMPREHENSIVE MODE Path
-
-**Execute if COMPREHENSIVE MODE detected OR graduating from collaborative:**
-
-For each missing required field, ask ONE AT A TIME (skip if already has content):
+For each missing REQUIRED field, ask ONE AT A TIME:
 
 1. **App Name** (if missing):
    "What is the name of your app?"
 
 2. **App Idea** (if missing):
-   "What problem does your app solve? Please provide a brief description."
+   "What problem does your app solve? Please provide a brief description of your app concept."
 
 3. **MVP Features** (if missing):
-   "What are the core features for your minimum viable product (MVP)?"
+   "What are the core features for your minimum viable product (MVP)? List the essential functionality."
 
 4. **Target Users** (if missing):
-   "Who is the primary target audience for your app?"
+   "Who is the primary target audience for your app? Describe your main user types."
 
 Wait for the user to answer each question before proceeding to the next.
 
-### Step 2.3: Optional Fields Quick Decision (COMPREHENSIVE MODE Only)
+### Step 4: Handle Optional Fields
 
-**Execute only if in COMPREHENSIVE MODE:**
+Ask: "How would you like to handle the optional fields?
 
-"Would you like to skip all optional fields? (yes/no or y/n)
+**Options:**
+1. **Skip all** - Auto-research all empty optional fields (recommended for speed)
+2. **Fill individually** - Go through each empty optional field one by one
+3. **Skip remaining** - Available during individual filling to auto-research remaining fields
 
-If you skip, we'll use intelligent auto-research to fill these fields based on:
-- Your app type and industry
-- Best practices and modern standards
-- Market research and competitive analysis
+**Auto-research benefits:**
+- Analyzes similar successful apps in your market
+- Applies industry best practices and modern standards
+- Generates contextually appropriate suggestions
+- Ensures consistency across all documentation
+- Often produces excellent results without manual input
 
-This often produces excellent results without manual input."
+**Choose:** (1=skip all, 2=fill individually)"
 
-If "yes" or "y": Mark all optional fields for auto-research and skip to Step 4
-If "no" or "n": Continue to Step 3 for individual optional fields
+**If user chooses "1" (skip all):**
+- Mark all empty optional fields for auto-research
+- Skip to Step 5
 
-**Note**: In COLLABORATIVE MODE, optional fields are handled through the iterative conversation process.
-
-### Step 3: Offer Optional Fields Individually
-
-For each field below, you can:
-- Provide your own specific details (just type your answer)
-- Type 'skip' or 's' to use auto-research for this field
-- Type 'skip remaining' or 'sr' to use auto-research for all remaining fields
-
-Auto-research will intelligently generate appropriate content based on your app context.
-
-Quick shortcuts:
-- s = skip (auto-research this field)
-- sr = skip remaining (auto-research all remaining fields)
-- y/n = yes/no responses
-
-Note: Auto-research often produces high-quality results by:
-- Analyzing similar successful apps in your market
-- Applying industry best practices
-- Generating contextually appropriate suggestions
-- Ensuring consistency across all documentation
-
+**If user chooses "2" (fill individually):**
 For each empty optional field, ask ONE AT A TIME:
 
 1. **Market Context**: "Describe the market context and opportunity
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-2. **Competition**: "List key competitors
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+2. **Competition**: "List key competitors and their positioning
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-3. **Business Model**: "Specify the business model
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+3. **Business Model**: "Specify your business/monetization model
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
 4. **Constraints**: "List any business or technical constraints
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-5. **Platform**: "Specify the platform (Web/Mobile/Desktop)
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+5. **Platform**: "Specify target platforms (Web/Mobile/Desktop/CLI)
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-6. **Technology Stack**: "Specify technology preferences
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+6. **Technology Preferences**: "Specify technology preferences or constraints
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-7. **Performance Requirements**: "Define performance requirements
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+7. **Performance Requirements**: "Define performance requirements and targets
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-8. **Scale Requirements**: "Specify scale requirements
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+8. **Scale Requirements**: "Specify expected scale and growth requirements
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-9. **Brand Personality**: "Describe the brand personality
-   → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+9. **Brand Personality**: "Describe your brand personality and values
+   → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-10. **Visual Style**: "Provide visual style guidelines
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+10. **Visual Style**: "Describe your visual style preferences
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-11. **Accessibility**: "Specify accessibility requirements
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+11. **Accessibility Requirements**: "Specify accessibility requirements
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-12. **Integration Requirements**: "List third-party integrations
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+12. **Integration Requirements**: "List required third-party integrations
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-13. **Success Metrics**: "Define success metrics
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+13. **Success Metrics**: "Define success metrics and KPIs
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-14. **Go-to-Market Strategy**: "Provide go-to-market details
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+14. **Go-to-Market Strategy**: "Describe your go-to-market approach
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-15. **Development Team**: "Specify team structure
-    → Enter details (or 's'=skip, 'sr'=skip remaining - both use auto-research):"
+15. **Development Team**: "Specify team structure and requirements
+    → Enter details (or type 'skip' to auto-research this field, 'skipall' to auto-research all remaining):"
 
-When processing responses:
-- If user types 's' or 'skip': Mark field for auto-research and continue to next field
-- If user types 'sr' or 'skip remaining': Mark all remaining fields for auto-research and proceed to Step 4
+**Response Processing:**
+- If user types 'skip': Mark this field for auto-research and continue to next field
+- If user types 'skipall': Mark all remaining fields for auto-research and proceed to Step 5
 - Any other input: Use as the field value
 
-### Step 4: Generate and Save APP_DETAILS.md
+### Step 5: Auto-Research and Finalize APP_DETAILS.md
 
-1. **Perform Auto-Research for Skipped Fields:**
-   - If any optional fields were marked for auto-research, notify user: "Performing auto-research for skipped fields. This may take a moment..."
+1. **Perform Auto-Research for Marked Fields:**
+   - If any fields were marked for auto-research, notify user: "Performing auto-research for skipped fields. This may take a moment..."
    - For each field marked for auto-research, generate appropriate content based on the app context:
      - **Market Context**: Research similar apps, market size, trends, and opportunities in the relevant industry
      - **Competition**: Identify 3-5 key competitors and their positioning
      - **Business Model**: Suggest appropriate monetization strategies based on app type and target users
      - **Constraints**: Identify common technical and business constraints for this type of application
      - **Platform**: Recommend optimal platform(s) based on target users and app functionality
-     - **Technology Stack**: Suggest modern, appropriate technology choices for the platform and requirements
+     - **Technology Preferences**: Suggest modern, appropriate technology choices for the platform and requirements
      - **Performance Requirements**: Set industry-standard performance targets for the app type
      - **Scale Requirements**: Estimate appropriate scale targets based on target market and business model
      - **Brand Personality**: Generate brand attributes that align with the app idea and target users
@@ -272,19 +216,20 @@ When processing responses:
      - **Go-to-Market Strategy**: Develop launch and growth strategies appropriate for the target market
      - **Development Team**: Recommend team structure based on technical requirements and project scope
 
-2. **Combine all data:**
-   - Merge existing data with newly gathered information
-   - Include all auto-researched content as complete, detailed sections
-   - Format according to the APP_DETAILS.md structure
+2. **Combine and Format Data:**
+   - Merge existing data with newly gathered information and auto-researched content
+   - Format according to the APP_DETAILS.md template structure
+   - Ensure all sections are complete and properly formatted
 
-3. **Save to output directory:**
+3. **Save to Output Directory:**
    - Always save the complete APP_DETAILS.md to `$OUTPUT_DIR/APP_DETAILS.md`
-   - This ensures all generation steps use the same data
+   - This ensures all generation steps use the same comprehensive data
 
-4. **Offer to update root file:**
-   - Ask: "Would you like to save/update the APP_DETAILS.md file in your project root directory for future runs? (yes/no)"
-   - If yes, save the updated content to `/APP_DETAILS.md`
-   - This allows iterative refinement across multiple runs
+4. **Offer to Update Root File:**
+   - Ask: "Would you like to update the APP_DETAILS.md file in your project root directory with this complete information? (yes/no)"
+   - If yes: Save the updated content to `/APP_DETAILS.md`
+   - If no: Keep the complete version only in the output directory
+   - Log the user's choice and file locations
 
 ### Step 5: Proceed with Documentation Generation
 
@@ -417,15 +362,6 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 1:**
 
 1. **Generate Product Requirements Document**
-
-   **For COLLABORATIVE MODE:**
-   - If `PRD_COLLABORATIVE.md` exists from collaborative iteration, convert it to comprehensive format
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-prd.md` as PRD_PROMPT
-   - Use COMPREHENSIVE MODE task from PRD_PROMPT
-   - Replace placeholders with refined data from collaborative process
-   - Execute PRD_PROMPT and save output to `$OUTPUT_DIR/PRD.md`
-
-   **For COMPREHENSIVE MODE:**
    - Read `/project:.claude/commands/spec-chain/doc-prompt-prd.md` as PRD_PROMPT
    - Use COMPREHENSIVE MODE task from PRD_PROMPT
    - Replace placeholders in PRD_PROMPT with data from APP_DETAILS:
@@ -433,7 +369,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [BRIEF DESCRIPTION OF THE APP CONCEPT, TARGET MARKET, AND CORE VALUE PROPOSITION] → Extract from "App Idea" section
      - [LIST OF MINIMUM VIABLE PRODUCT FEATURES AND CORE FUNCTIONALITY] → Extract from "MVP Features" section
      - [PRIMARY AND SECONDARY USER PERSONAS, THEIR ROLES, AND NEEDS] → Extract from "Target Users" section
-     - [MARKET CONTEXT, COMPETITION, BUSINESS MODEL, OR CONSTRAINTS] → Extract from "Business Context" section (now complete from auto-research)
+     - [MARKET CONTEXT, COMPETITION, BUSINESS MODEL, OR CONSTRAINTS] → Extract from "Business Context" section (complete from interactive gathering and auto-research)
    - Execute PRD_PROMPT and save output to `$OUTPUT_DIR/PRD.md`
 
    **Note**: This document becomes the foundation for all subsequent documents
@@ -444,7 +380,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 
 **Execute the following tasks in parallel using concurrent Task agents (only if required):**
 
-2. **Generate Feature Stories** (Depends on PRD)
+1. **Generate Feature Stories** (Depends on PRD)
    - **Execute only if "FEATURE_STORIES" is in REQUIRED_DOCS**
    - Read `/project:.claude/commands/spec-chain/doc-prompt-feature-stories.md` as FEATURE_STORIES_PROMPT
    - Read `$OUTPUT_DIR/PRD.md` content
@@ -456,7 +392,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
    - Execute FEATURE_STORIES_PROMPT and save output to `$OUTPUT_DIR/FEATURE_STORIES.md`
 
-3. **Generate Technical Overview** (Depends on PRD)
+2. **Generate Technical Overview** (Depends on PRD)
    - **Execute only if "TECHNICAL_OVERVIEW" is in REQUIRED_DOCS**
    - Read `/project:.claude/commands/spec-chain/doc-prompt-technical-overview.md` as TECHNICAL_OVERVIEW_PROMPT
    - Read `$OUTPUT_DIR/PRD.md` content and APP_DETAILS.md technical requirements
@@ -472,22 +408,22 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 
 **Execute only if START_PHASE <= 3:**
 
-4. **Generate Functional UX/UI Style Guide** (Design Track)
+1. **Generate Functional UX/UI Style Guide** (Design Track)
    - **Execute only if "STYLE_GUIDE" is in REQUIRED_DOCS**
    - Read `/project:.claude/commands/spec-chain/doc-prompt-style.md` as STYLE_PROMPT
    - Read `$OUTPUT_DIR/PRD.md` content
    - Replace in STYLE_PROMPT:
      - [APP NAME] → Extract from APP_DETAILS "App Name"
      - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, TARGET USERS, AND FEATURE REQUIREMENTS] → Use PRD.md content
-     - [BRAND VALUES AND PERSONALITY] → Extract from APP_DETAILS "Brand Personality" (now complete from auto-research)
+     - [BRAND VALUES AND PERSONALITY] → Extract from APP_DETAILS "Brand Personality" (complete from interactive gathering and auto-research)
      - [TARGET USER DEMOGRAPHICS AND PREFERENCES] → Extract from APP_DETAILS "Target Users" section
-     - [ANY SPECIFIC DESIGN REQUIREMENTS OR CONSTRAINTS] → Extract from APP_DETAILS "Accessibility Requirements" (now complete from auto-research)
+     - [ANY SPECIFIC DESIGN REQUIREMENTS OR CONSTRAINTS] → Extract from APP_DETAILS "Accessibility Requirements" (complete from interactive gathering and auto-research)
      - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
    - Execute STYLE_PROMPT and save output to `$OUTPUT_DIR/STYLE_GUIDE.md`
 
-5. **Generate UI States & Screen Snapshots** (Depends on Style Guide)
+2. **Generate UI States & Screen Snapshots** (Depends on Style Guide)
    - **Execute only if "UI_STATES" is in REQUIRED_DOCS**
-   - Wait for Style Guide completion from step 4
+   - Wait for Style Guide completion from step 1
    - Read `/project:.claude/commands/spec-chain/doc-prompt-states.md` as UI_STATES_PROMPT
    - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, and `$OUTPUT_DIR/STYLE_GUIDE.md` content
    - Replace in UI_STATES_PROMPT:
@@ -502,7 +438,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 
 **Execute only if START_PHASE <= 4:**
 
-6. **Generate Comprehensive Technical Specification**
+1. **Generate Comprehensive Technical Specification**
    - Wait for UI States completion from Phase 3
    - Read `/project:.claude/commands/spec-chain/doc-prompt-technical.md` as TECHNICAL_PROMPT
    - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, and `$OUTPUT_DIR/UI_STATES.md` content
@@ -513,9 +449,9 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
      - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
      - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
-     - [SCALE REQUIREMENTS AND GROWTH PROJECTIONS] → Extract from APP_DETAILS "Scale Requirements" (now complete from auto-research)
-     - [PERFORMANCE TARGETS AND OPTIMIZATION REQUIREMENTS] → Extract from APP_DETAILS "Performance Requirements" (now complete from auto-research)
-     - [SECURITY NEEDS AND COMPLIANCE REQUIREMENTS] → Extract from APP_DETAILS "Constraints" (now complete from auto-research)
+     - [SCALE REQUIREMENTS AND GROWTH PROJECTIONS] → Extract from APP_DETAILS "Scale Requirements" (complete from interactive gathering and auto-research)
+     - [PERFORMANCE TARGETS AND OPTIMIZATION REQUIREMENTS] → Extract from APP_DETAILS "Performance Requirements" (complete from interactive gathering and auto-research)
+     - [SECURITY NEEDS AND COMPLIANCE REQUIREMENTS] → Extract from APP_DETAILS "Constraints" (complete from interactive gathering and auto-research)
    - Execute TECHNICAL_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_SPEC.md`
 
 ### Phase 5: Planning & Implementation Rules (Sequential after Phase 4)
