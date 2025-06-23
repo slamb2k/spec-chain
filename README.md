@@ -4,7 +4,7 @@ A comprehensive system of AI prompts that work together to generate complete pro
 
 ## 🚀 What is Spec Chain?
 
-Spec Chain is a collection of 19 carefully crafted AI prompts that generate interconnected documentation for software projects. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
+Spec Chain is a collection of 8 carefully crafted AI prompts that generate 7 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
 
 ## 🎯 Quick Start
 
@@ -38,38 +38,22 @@ Spec Chain is a collection of 19 carefully crafted AI prompts that generate inte
 
 ## 📋 Available Documentation Generators
 
-The `.claude/commands/spec-chain/` directory contains 19 specialized prompts:
+The `.claude/commands/spec-chain/` directory contains 8 specialized prompts that generate 7 core documents:
 
-### Phase 1: Foundation
-- **doc-prompt-prd.md** - Product Requirements Document (Start here!)
+### Document Generation Prompts
+1. **doc-prompt-prd.md** - Product Requirements Document (foundation)
+2. **doc-prompt-feature-stories.md** - Detailed feature stories and user scenarios
+3. **doc-prompt-technical-overview.md** - High-level technical architecture
+4. **doc-prompt-style.md** - UI/UX style guide and design system
+5. **doc-prompt-states.md** - UI states and screen snapshots
+6. **doc-prompt-technical.md** - Comprehensive technical specification
+7. **doc-prompt-planner.md** - AI-optimized implementation plan
+8. **doc-prompt-planner-validator.md** - Implementation plan validator
 
-### Phase 2: Business & Strategy
-- **doc-prompt-gtm.md** - Go-to-Market Strategy
-- **doc-prompt-business-rules.md** - Business Logic & Rules
-
-### Phase 3: Design & UX
-- **doc-prompt-style.md** - Style Guide & Design System
-- **doc-prompt-wireframes.md** - Screen Mockups (ASCII art)
-- **doc-prompt-user-flows.md** - User Journey Maps
-- **doc-prompt-ia.md** - Information Architecture
-- **doc-prompt-component-library.md** - UI Component Specifications
-
-### Phase 4: Technical Architecture
-- **doc-prompt-technical.md** - Technical Specification
-- **doc-prompt-api.md** - API Documentation
-- **doc-prompt-data-model.md** - Database Design
-- **doc-prompt-security.md** - Security Architecture
-- **doc-prompt-integrations.md** - Third-party Integrations
-- **doc-prompt-performance.md** - Performance & Scalability
-
-### Phase 5: Implementation & Operations
-- **doc-prompt-implementation.md** - AI-Optimized Development Plan
-- **doc-prompt-testing.md** - Testing Strategy
-- **doc-prompt-devops.md** - DevOps & Deployment
-- **doc-prompt-onboarding.md** - User Training & Documentation
-
-### Special Features
-- **doc-prompt-preview.md** - Interactive HTML Preview Generator
+### Command Utilities
+- **init-spec-chain.md** - Initialize project structure
+- **validate-spec-chain.md** - Validate setup and requirements
+- **run-spec-chain.md** - Execute documentation generation pipeline
 
 ## 🔄 Documentation Flow
 
@@ -85,21 +69,21 @@ The runner now uses **parallel execution** to generate multiple documents concur
 ```bash
 1. Use doc-prompt-prd.md with your app idea
 2. Use doc-prompt-technical.md with the PRD output
-3. Use doc-prompt-implementation.md for development plan
+3. Use doc-prompt-planner.md for development plan (with validation)
 ```
 
 ### Full Documentation Suite
 ```bash
-1. Start with doc-prompt-prd.md
-2. Run business track (GTM, Business Rules)
-3. Run design track (Style, Wireframes, User Flows, etc.)
-4. Run technical track (Technical, API, Data Model, etc.)
-5. Generate interactive preview
-6. Create implementation and operations docs
+1. Fill out APP_DETAILS.md with your project information
+2. Optionally add inspiration materials to /assets/inspiration/
+3. Run /validate-spec-chain to ensure setup is correct
+4. Execute /run-spec-chain to generate all documentation
+5. Review generated documents in /specs/[spec-name]/
+6. Iterate on APP_DETAILS.md and regenerate as needed
 ```
 
 ### For Claude Code Users
-The `doc-prompt-implementation.md` prompt is specifically optimized for AI-assisted development, breaking work into clear, manageable sessions.
+The `doc-prompt-planner.md` prompt is specifically optimized for AI-assisted development, breaking work into clear, manageable sessions. The implementation plan now includes iterative validation to ensure comprehensive coverage.
 
 ## 📊 Documentation Flow Diagram
 
@@ -109,39 +93,21 @@ The Spec Chain runner executes prompts in optimized phases with parallel executi
 Phase 1: Foundation (1 prompt)
     └── PRD.md
 
-Phase 2: Business & Design (4 prompts - PARALLEL)
-    ├── GTM_STRATEGY.md
-    ├── BUSINESS_RULES.md
-    └── STYLE_GUIDE.md
+Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
+    ├── FEATURE_STORIES.md
+    └── TECHNICAL_OVERVIEW.md
 
-Phase 2.1: Design Dependencies (1 prompt)
-    └── WIREFRAMES.md (depends on Style Guide)
+Phase 3: Design & UI/UX (2 prompts - SEQUENTIAL)
+    ├── STYLE_GUIDE.md
+    └── UI_STATES.md (depends on Style Guide)
 
-Phase 2.2: Design Completion (3 prompts - PARALLEL)
-    ├── USER_FLOWS.md
-    ├── INFORMATION_ARCHITECTURE.md
-    └── COMPONENT_LIBRARY.md
+Phase 4: Technical Architecture (1 prompt)
+    └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 3: Technical Architecture (1 prompt)
-    └── TECHNICAL_SPEC.md (depends on User Flows & IA)
-
-Phase 3.1: Technical Dependencies (5 prompts - PARALLEL)
-    ├── API_SPEC.md
-    ├── DATA_MODEL.md
-    ├── SECURITY_ARCHITECTURE.md
-    ├── INTEGRATIONS.md
-    └── PERFORMANCE_SCALABILITY.md
-
-Phase 4: Interactive Preview (1 prompt)
-    └── INTERACTIVE_PREVIEW.html
-
-Phase 5: Implementation & Operations (1 prompt)
-    └── IMPLEMENTATION_PLAN.md
-
-Phase 5.1: Final Documents (3 prompts - PARALLEL)
-    ├── TESTING_STRATEGY.md
-    ├── DEVOPS_DEPLOYMENT.md
-    └── ONBOARDING_TRAINING.md
+Phase 5: Planning & Implementation (2 steps)
+    ├── 5.1: Load Playbooks and Rules (if available)
+    └── 5.2: Generate Implementation Plan with Iterative Validation
+         └── IMPLEMENTATION_PLAN.md (with up to 5 validation iterations)
 ```
 
 **Key:** Prompts marked as PARALLEL execute concurrently using Task agents
@@ -156,7 +122,7 @@ spec-chain/
 │           ├── init-spec-chain.md      # Initialize project structure
 │           ├── validate-spec-chain.md  # Validate setup
 │           ├── run-spec-chain.md       # Generate documentation
-│           └── [19 prompt files]       # Document generation prompts
+│           └── [8 doc-prompt files]    # Document generation prompts
 ├── assets/
 │   └── inspiration/
 │       ├── visual/                 # Visual design references
@@ -183,7 +149,7 @@ Validates your project setup:
 ### 🚀 run-spec-chain
 Generates complete documentation suite:
 - Creates timestamped output directory
-- Executes all 19 prompts in optimized phases
+- Executes all prompts in optimized phases to generate 7 core documents
 - **Uses parallel Task agents** for independent prompts (~60% faster)
 - Manages dependencies between documents
 - Produces comprehensive documentation set
@@ -222,27 +188,26 @@ Spec Chain can use reference materials to enhance documentation quality:
 
 ## 🔧 Special Features
 
-### AI-Optimized Implementation Plans
-The `doc-prompt-implementation.md` prompt generates development plans specifically structured for AI coding assistants like Claude Code, with:
-- Session-based task breakdown
-- Clear acceptance criteria
-- Specific implementation prompts
-
-### Interactive Previews
-The `doc-prompt-preview.md` prompt creates functional HTML mockups from your specifications, allowing stakeholders to interact with the design before development.
+### AI-Optimized Implementation Plans with Validation
+The implementation planning process now includes iterative validation:
+- **doc-prompt-planner.md** generates development plans structured for AI coding assistants
+- **doc-prompt-planner-validator.md** validates the plan against all specifications
+- Up to 5 iterations of refinement based on validation feedback
+- Minimum 85% completion score required for approval
+- Session-based task breakdown with clear acceptance criteria
+- Automatic integration of loaded playbook rules
 
 ### Visual Documentation
-Several prompts generate visual elements:
-- ASCII art wireframes
-- Flow diagrams
-- Entity relationship diagrams
-- Architecture diagrams
+The spec-chain prompts generate various visual elements within the documentation:
+- ASCII art representations in UI_STATES.md
+- Structured diagrams in technical specifications
+- Clear hierarchical representations of system architecture
 
 ## 📈 Benefits
 
 - **Consistency**: All documents follow the same structure and terminology
 - **Completeness**: Nothing gets forgotten with comprehensive prompts
-- **Speed**: Generate months of documentation work in hours (~60% faster with parallel execution)
+- **Speed**: Generate comprehensive documentation in minutes with parallel execution
 - **Quality**: Based on industry best practices
 - **Flexibility**: Customize prompts for your specific needs
 - **Performance**: Parallel execution using Task agents for independent prompts

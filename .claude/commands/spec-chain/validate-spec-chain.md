@@ -104,24 +104,13 @@ fi
 # Check spec-chain prompts
 PROMPTS=(
     "doc-prompt-prd.md"
-    "doc-prompt-gtm.md"
-    "doc-prompt-business-rules.md"
+    "doc-prompt-feature-stories.md"
+    "doc-prompt-technical-overview.md"
     "doc-prompt-style.md"
-    "doc-prompt-wireframes.md"
-    "doc-prompt-user-flows.md"
-    "doc-prompt-ia.md"
-    "doc-prompt-component-library.md"
+    "doc-prompt-states.md"
     "doc-prompt-technical.md"
-    "doc-prompt-api.md"
-    "doc-prompt-data-model.md"
-    "doc-prompt-security.md"
-    "doc-prompt-integrations.md"
-    "doc-prompt-performance.md"
-    "doc-prompt-preview.md"
-    "doc-prompt-implementation.md"
-    "doc-prompt-testing.md"
-    "doc-prompt-devops.md"
-    "doc-prompt-onboarding.md"
+    "doc-prompt-planner.md"
+    "doc-prompt-planner-validator.md"
 )
 
 missing_prompts=0
@@ -131,10 +120,11 @@ for prompt in "${PROMPTS[@]}"; do
     fi
 done
 
+total_prompts=${#PROMPTS[@]}
 if [ $missing_prompts -eq 0 ]; then
-    echo "| Spec-chain prompts (19 files) | ✅ All present | 19/19 found |"
+    echo "| Spec-chain prompts ($total_prompts files) | ✅ All present | $total_prompts/$total_prompts found |"
 else
-    echo "| Spec-chain prompts | ⚠️  Incomplete | $((19 - missing_prompts))/19 found |"
+    echo "| Spec-chain prompts | ⚠️  Incomplete | $(($total_prompts - missing_prompts))/$total_prompts found |"
 fi
 ```
 
@@ -447,7 +437,7 @@ The validation is considered successful when:
 - APP_DETAILS.md.template exists and is accessible
 - APP_DETAILS.md exists with complete structure matching template
 - All required fields in APP_DETAILS.md are filled
-- All 19 spec-chain prompts are present
+- All 8 spec-chain prompts are present
 - At least some inspiration materials are provided
 
 ## Output Format

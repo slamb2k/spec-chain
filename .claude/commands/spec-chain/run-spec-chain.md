@@ -20,31 +20,31 @@ Execute the complete specification chain to generate comprehensive documentation
 
 **Basic usage (full generation with timestamp):**
 ```
-@run-spec-chain
+/run-spec-chain
 ```
 Creates: `/specs/20240120_143052/` with all documents
 
 **Named spec (full generation):**
 ```
-@run-spec-chain my-app
+/run-spec-chain my-app
 ```
 Creates: `/specs/my-app/` with all documents
 
 **Resume from specific phase:**
 ```
-@run-spec-chain my-app 3
+/run-spec-chain my-app 3
 ```
 Resumes generation from Phase 3 (Technical Architecture) in `/specs/my-app/`
 
 **Update existing spec from Phase 3:**
 ```
-@run-spec-chain existing-spec 3
+/run-spec-chain existing-spec 3
 ```
 Overwrites Phase 3+ documents in `/specs/existing-spec/`
 
 ## Overview
 
-This runner orchestrates the execution of all 19 specification chain prompts in the correct order, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
+This runner orchestrates the execution of 8 specification chain prompts that generate 7 core documents, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
 
 Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/specs/20240120_143052/`) to:
 - Preserve historical documentation versions
@@ -250,11 +250,12 @@ Phase 3: Design & UI/UX (2 prompts - sequential)
 Phase 4: Technical Architecture (1 prompt - sequential)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 5: Planning & Implementation Rules (1 step - sequential)
-    └── Load Playbooks and Rules (depends on Technical Spec)
+Phase 5: Planning & Implementation Rules (2 steps - sequential)
+    ├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
+    └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
 ```
 
-Total: 6 documents generated across 5 phases
+Total: 7+ documents generated across 5 phases (includes Implementation Plan + validation reports)
 
 ## Prerequisites
 
@@ -752,7 +753,7 @@ The system automatically determines which documents to generate based on app cha
 3. Iterate and refine the collaborative PRD
 4. Option to graduate to comprehensive documentation
 
-**Skipped Documents** (18 total): All other documents until graduation to comprehensive mode
+**Skipped Documents** (6 total): All other documents until graduation to comprehensive mode
 
 ### Example 1: Mobile Social Media App
 **App Type**: UI-focused, Client-Server
@@ -806,7 +807,7 @@ The system automatically determines which documents to generate based on app cha
 - **Force Comprehensive**: Override detection to use comprehensive mode regardless of input completeness
 
 ### Document Generation
-- **Force Full Generation**: Override intelligent selection to generate all 19 documents
+- **Force Full Generation**: Override intelligent selection to generate all 7 documents
 - **Manual Selection**: Specify exact documents to generate via command line flags
 - **Profile-Based**: Use predefined profiles (mobile-app, api-service, cli-tool, desktop-app)
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Repository Overview
 
-Spec Chain is an AI-powered documentation generator that creates comprehensive software documentation from a single APP_DETAILS.md file. It consists of 19 interconnected prompts that build upon each other to generate a complete documentation suite.
+Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 8 specialized prompts that work together to generate 7 core documents with iterative validation for implementation planning.
 
 ## Project Structure
 
@@ -16,7 +16,7 @@ spec-chain/
 │           ├── init-spec-chain.md      # Initialize project
 │           ├── validate-spec-chain.md  # Validate setup
 │           ├── run-spec-chain.md       # Generate docs
-│           └── [19 prompt files]       # Document generation prompts
+│           └── [8 doc-prompt files]    # Document generation prompts
 ├── assets/
 │   └── inspiration/
 │       ├── visual/                 # Visual references
@@ -29,25 +29,55 @@ spec-chain/
 ## Key Commands
 
 ### Initialize a Project
-```bash
-# From .claude/commands/spec-chain/
-init-spec-chain
+```
+/init-spec-chain
 ```
 Creates directory structure and APP_DETAILS.md template.
 
 ### Validate Setup
-```bash
-# From .claude/commands/spec-chain/
-validate-spec-chain
+```
+/validate-spec-chain
 ```
 Checks all requirements and provides status report.
 
 ### Generate Documentation
-```bash
-# From .claude/commands/spec-chain/
-run-spec-chain
 ```
-Executes all 19 prompts to create documentation suite using parallel Task agents for ~60% faster generation.
+/run-spec-chain [spec-name] [start-phase]
+```
+Executes the documentation generation pipeline using parallel Task agents for optimized performance, including iterative validation.
+
+**Examples:**
+- `/run-spec-chain` - Generate with timestamp
+- `/run-spec-chain my-app` - Generate in /specs/my-app/
+- `/run-spec-chain my-app 3` - Resume from Phase 3
+
+## Generated Documents
+
+A complete spec-chain run produces 7 core documents:
+1. **PRD.md** - Product Requirements Document
+2. **FEATURE_STORIES.md** - Detailed feature breakdowns
+3. **TECHNICAL_OVERVIEW.md** - High-level architecture
+4. **STYLE_GUIDE.md** - UI/UX design system
+5. **UI_STATES.md** - Screen mockups and states
+6. **TECHNICAL_SPEC.md** - Detailed technical specification
+7. **IMPLEMENTATION_PLAN.md** - AI-optimized development plan
+
+Additional outputs:
+- **IMPLEMENTATION_PLAN_v[1-N].md** - Iteration versions
+- **VALIDATION_REPORT_v[1-N].md** - Validation feedback for each iteration
+
+## Available Prompts
+
+The spec-chain system includes 8 specialized document generation prompts:
+
+1. **doc-prompt-prd.md** - Generates the Product Requirements Document (foundation)
+2. **doc-prompt-feature-stories.md** - Creates detailed feature stories and user scenarios
+3. **doc-prompt-technical-overview.md** - Produces high-level technical architecture overview
+4. **doc-prompt-style.md** - Generates UI/UX style guide and design system
+5. **doc-prompt-states.md** - Creates UI states and screen snapshots
+6. **doc-prompt-technical.md** - Produces comprehensive technical specification
+7. **doc-prompt-planner.md** - Generates AI-optimized implementation plan
+8. **doc-prompt-planner-validator.md** - Validates implementation plan completeness
 
 ## Working with Spec Chain
 
@@ -62,8 +92,9 @@ Executes all 19 prompts to create documentation suite using parallel Task agents
 - Prompts analyze these materials to inform documentation
 
 ### 3. Generated Documentation
-- All output goes to `/specs/[timestamp]/`
-- Each run creates a unique timestamped directory
+- All output goes to `/specs/[spec-name]/` or `/specs/[timestamp]/`
+- Each run creates a unique directory (named or timestamped)
+- Generates 7 core documents plus validation reports
 - Preserves documentation history for comparison
 
 ## Prompt Dependencies & Execution Flow
@@ -74,32 +105,20 @@ The runner uses parallel execution to optimize generation time:
 Phase 1: Foundation (1 prompt)
     └── PRD.md
 
-Phase 2: Business & Design (4 prompts - PARALLEL)
-    ├── GTM_STRATEGY.md
-    ├── BUSINESS_RULES.md
-    └── STYLE_GUIDE.md
+Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
+    ├── FEATURE_STORIES.md
+    └── TECHNICAL_OVERVIEW.md
 
-Phase 2.1: Design Dependencies (1 prompt)
-    └── WIREFRAMES.md (depends on Style Guide)
+Phase 3: Design & UI/UX (2 prompts - SEQUENTIAL)
+    ├── STYLE_GUIDE.md
+    └── UI_STATES.md (depends on Style Guide)
 
-Phase 2.2: Design Completion (3 prompts - PARALLEL)
-    ├── USER_FLOWS.md
-    ├── INFORMATION_ARCHITECTURE.md
-    └── COMPONENT_LIBRARY.md
+Phase 4: Technical Architecture (1 prompt)
+    └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 3: Technical Architecture (1 prompt)
-    └── TECHNICAL_SPEC.md
-
-Phase 3.1: Technical Dependencies (5 prompts - PARALLEL)
-    ├── API_SPEC.md
-    ├── DATA_MODEL.md
-    ├── SECURITY_ARCHITECTURE.md
-    ├── INTEGRATIONS.md
-    └── PERFORMANCE_SCALABILITY.md
-
-Phase 4: Interactive Preview (1 prompt)
-Phase 5: Implementation (1 prompt)
-Phase 5.1: Final Documents (3 prompts - PARALLEL)
+Phase 5: Planning & Implementation Rules (2 steps)
+    ├── 5.1: Load Playbooks and Rules (if available)
+    └── 5.2: Generate Implementation Plan with Iterative Validation
 ```
 
 ## Important Notes
@@ -109,6 +128,7 @@ Phase 5.1: Final Documents (3 prompts - PARALLEL)
 3. **Inspiration Separation**: Visual and functional inspiration are kept separate
 4. **Validation First**: Always run validate-spec-chain before generating docs
 5. **Parallel Performance**: Independent prompts execute concurrently using Task agents
+6. **Iterative Validation**: Implementation plans are validated and refined up to 5 times for quality assurance
 
 ## Development Guidelines
 
@@ -126,17 +146,33 @@ When modifying Spec Chain:
    - Update documentation flow diagram
 
 3. **Testing**:
-   - Validate changes with a full documentation generation
+   - Validate changes with a full documentation generation using `/run-spec-chain`
    - Check that all prompts execute without errors
    - Verify output quality and completeness
+   - Review validation reports for implementation plan iterations
+
+## Implementation Plan Validation Process
+
+The spec-chain now includes an iterative validation process for implementation plans:
+
+1. **Initial Generation**: The `doc-prompt-planner.md` generates an implementation plan based on all prior specifications
+2. **Validation**: The `doc-prompt-planner-validator.md` evaluates the plan against requirements
+3. **Iterative Refinement**: If the plan doesn't meet the 85% completion threshold, it's refined based on validation feedback
+4. **Maximum Iterations**: Up to 5 iterations are performed to achieve an approved plan
+5. **Output Files**: 
+   - `IMPLEMENTATION_PLAN.md` - The final approved plan
+   - `IMPLEMENTATION_PLAN_v1.md` through `IMPLEMENTATION_PLAN_v[N].md` - All iteration versions
+   - `VALIDATION_REPORT_v1.md` through `VALIDATION_REPORT_v[N].md` - Validation feedback for each iteration
+
+This ensures the implementation plan comprehensively covers all requirements and integrates any loaded playbook rules.
 
 ## Common Tasks
 
 ### Add a New Documentation Type
-1. Create new prompt in `.claude/commands/spec-chain/`
-2. Add execution step in appropriate phase of `spec-chain/run-spec-chain.md`
-3. Update README.md documentation list
-4. Test full generation cycle
+1. Create new prompt in `.claude/commands/spec-chain/` following naming convention: `doc-prompt-[name].md`
+2. Add execution step in appropriate phase of `.claude/commands/spec-chain/run-spec-chain.md`
+3. Update README.md and CLAUDE.md documentation lists
+4. Test full generation cycle with `/run-spec-chain`
 
 ### Modify Existing Prompt
 1. Edit prompt file in `.claude/commands/spec-chain/`
@@ -144,10 +180,11 @@ When modifying Spec Chain:
 3. Run validation and full generation to test
 
 ### Debug Generation Issues
-1. Check validate-spec-chain output for errors
+1. Run `/validate-spec-chain` to check for errors
 2. Verify APP_DETAILS.md is completely filled out
 3. Ensure inspiration directories contain appropriate materials
-4. Check individual prompt outputs in `/specs/[timestamp]/`
+4. Check individual prompt outputs in `/specs/[spec-name]/`
+5. Review validation reports for implementation plan issues
 
 ## Current Configuration
 
