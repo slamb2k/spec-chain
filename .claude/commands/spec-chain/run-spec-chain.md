@@ -16,6 +16,12 @@ Execute the complete specification chain to generate comprehensive documentation
 - The system validates that all previous phase documents exist before proceeding
 - If validation fails, the system will prompt to start from an earlier phase
 
+**Argument 3: Parallel Agents (Optional)**
+- The number of parallel agents to use for UI Preview generation
+- Defaults to 5 if not specified
+- Valid range: 1-10 agents
+- Only affects Phase 3b (UI Preview generation)
+
 ## Usage Examples
 
 **Basic usage (full generation with timestamp):**
@@ -41,6 +47,12 @@ Resumes generation from Phase 3 (Technical Architecture) in `/specs/my-app/`
 /run-spec-chain existing-spec 3
 ```
 Overwrites Phase 3+ documents in `/specs/existing-spec/`
+
+**Specify number of parallel UI design agents:**
+```
+/run-spec-chain my-app 1 8
+```
+Generates 8 different UI design approaches in `/specs/my-app/`
 
 ## Overview
 
@@ -292,6 +304,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - Generate timestamp once: `TIMESTAMP=$(date +"%Y%m%d_%H%M%S")`
      - `SPEC_NAME`: First argument (spec name) or use `$TIMESTAMP` if not provided
      - `START_PHASE`: Second argument (phase number) or default to 1 if not provided
+     - `PARALLEL_AGENTS`: Third argument (number of UI preview agents) or default to 5 if not provided
    - **Set Output Directory:**
      - Set `OUTPUT_DIR=/specs/$SPEC_NAME`
      - Create output directory: `mkdir -p $OUTPUT_DIR`
@@ -460,11 +473,12 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Wait for UI States completion from step 1
    - Read the command file: `.claude/commands/spec-chain/doc-prompt-ui-preview.md`
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Update the second instance of `$ARGUMENTS` in the Variables section with `$PARALLEL_AGENTS` (defaults to 5 if not provided)
    - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
-     - Generate interactive UI preview with working components
-     - Save output to `/specs/$SPEC_NAME/UI_PREVIEW.html`
+     - Deploy `$PARALLEL_AGENTS` sub-agents to generate multiple UI design approaches
+     - Generate `$PARALLEL_AGENTS` interactive UI preview files (UI_PREVIEW_1.html through UI_PREVIEW_N.html)
      - Handle all file persistence internally
 
 ### Phase 4: Technical Architecture (Sequential after Phase 3)

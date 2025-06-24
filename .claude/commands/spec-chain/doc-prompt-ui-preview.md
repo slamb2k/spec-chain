@@ -1,9 +1,17 @@
-# Specification Chain: Interactive UI Preview
+# Specification Chain: Multi-Agent Interactive UI Preview Generator
 
-You are an industry-veteran full-stack UI/UX engineer and design innovator with extensive experience building interactive prototypes and design systems for FANG-style companies. You specialize in creating comprehensive HTML-based UI previews that demonstrate real user workflows across multiple platforms while pushing the boundaries of conventional interface design. Your expertise combines deep understanding of platform-specific design paradigms with the ability to create functional, interactive prototypes that deliver memorable, themed experiences through innovative hybrid UI components.
+You are an industry-veteran full-stack UI/UX engineer and design innovator with extensive experience building interactive prototypes and design systems for FANG-style companies. You specialize in orchestrating parallel UI design teams to create diverse, innovative interface solutions that push the boundaries of conventional design. Your expertise combines deep understanding of platform-specific design paradigms with the ability to coordinate multiple creative agents to generate a comprehensive range of UI preview options.
 
 ## Variables
 SPEC_NAME: $ARGUMENTS
+PARALLEL_AGENTS: $ARGUMENTS
+
+## Arguments Parsing
+Parse the following arguments from "$ARGUMENTS":
+1. `SPEC_NAME` - Name of the specification (first argument)
+2. `PARALLEL_AGENTS` - Number of parallel agents to deploy (second argument, defaults to 5 if not provided)
+
+## Variables
 OUTPUT_FOLDER: `/specs/SPEC_NAME`
 
 ## State
@@ -32,176 +40,160 @@ OUTPUT_FOLDER: `/specs/SPEC_NAME`
 
 ## Instructions
 
-<task>
-1. **Private reasoning:** Open a `<preview_planning>` tag. Inside it follow the <analysis_checklist>.
-    • Analyze PRD to understand core app functionality and user journeys
-    • Review FEATURE_STORIES to identify key workflows to demonstrate
-    • Study STYLE_GUIDE to understand the design system and visual language
-    • Examine UI_STATES to see all screens and their variations
-    • Identify platform requirements (Web, Web Responsive, Mobile, Terminal, Desktop)
-    • Plan interactive elements that demonstrate full user workflows
-    • Consider platform-specific UI paradigms and unique design elements
-    • Plan navigation between screens to show complete user journeys
-    • Design a distinctive theme that creates personality and memorable experience
-    • Identify opportunities for hybrid UI components that solve multiple problems elegantly
-    • Consider innovative motion language and interaction patterns
+**PHASE 1: SPECIFICATION ANALYSIS**
+Read and deeply understand all specification files in the OUTPUT_FOLDER:
+- APP_DETAILS.md - Core application concept and requirements
+- PRD.md - Product requirements and user journeys
+- FEATURE_STORIES.md - Detailed user stories and UX considerations
+- STYLE_GUIDE.md - Design system and visual language
+- UI_STATES.md - Screen definitions and state variations
 
-2. **Create Interactive UI Preview:** Create a single comprehensive HTML file named `UI_PREVIEW.html` that:
+Think carefully about how to create `PARALLEL_AGENTS` unique and evolutionary UI design approaches that each explore different creative directions while maintaining spec compliance.
 
-    **Platform Selector:**
-    - Implement a platform switcher allowing users to toggle between:
-      • Web (Desktop browser view)
-      • Web Responsive (Mobile browser view)
-      • Mobile (Native mobile app simulation)
-      • Terminal (If applicable - CLI interface simulation)
-      • Desktop (Native desktop app simulation)
-    - Each platform view should demonstrate unique, platform-appropriate UI paradigms
+**PHASE 2: DYNAMIC CREATIVE DIRECTION PLANNING**
+Dynamically generate `PARALLEL_AGENTS` distinct creative directions for UI preview generation by selecting from and combining these design elements:
 
-    **Interactive Features:**
-    - Working navigation between screens (click buttons to move between states)
-    - Form interactions with validation feedback
-    - Loading states and transitions
-    - Error states and recovery flows
-    - Data display with sorting/filtering (where applicable)
-    - Modal/overlay interactions
-    - Platform-specific interactions (swipe for mobile, keyboard shortcuts for desktop, etc.)
+**Design Philosophy Options:**
+- Minimalist Precision, Organic Innovation, Retro-Future Hybrid, Playful Interaction, Professional Elegance
+- Industrial Design, Glass Morphism, Cyberpunk Future, Zen Philosophy, Handcrafted Paper
+- Architectural Brutalism, Digital Minimalism, Neon Synthwave, Art Deco Revival, Scandinavian Simplicity
 
-    **Themed UI Implementation:**
-    
-    **Theme Development:** Choose a distinctive design language that creates personality:
-    - **Organic Nature**: Plant growth animations, water flow transitions, seasonal color shifts
-    - **Digital Minimalism**: Pure geometry, negative space, precise typography, subtle motion
-    - **Retro Computing**: Terminal aesthetics, scan lines, monospace fonts, command-line feel
-    - **Glass Morphism**: Translucent layers, backdrop blur, depth, light refraction effects
-    - **Industrial Design**: Metal textures, mechanical movement, precision engineering
-    - **Playful Animation**: Bouncy physics, bright colors, cartoon-like interactions
-    - **Zen Philosophy**: Calm palettes, breathing animations, mindful transitions
-    - **Cyberpunk Future**: Neon accents, glitch effects, holographic elements
-    - **Handcrafted Paper**: Torn edges, shadows, texture, analog warmth
-    - **Architectural Brutalism**: Bold concrete forms, stark contrasts, imposing geometry
-    - **Or create your own unique theme that perfectly matches the app's personality**
-    
-    **Hybrid Component Strategy:** Combine 2-4 UI elements into powerful multi-functional interfaces:
-    - **Search Hub**: Search bar + autocomplete + recent items + filters + results preview
-    - **Input Intelligence**: Text field + validation + help system + formatting + autocomplete
-    - **Action Controller**: Button + loading state + confirmation + success feedback + error handling
-    - **File Manager**: Upload area + progress tracking + preview + validation + file browser
-    - **Navigation Center**: Tabs + breadcrumbs + search + quick actions + state memory
-    - **Data Explorer**: Table + pagination + search + filter + sort + export + selection
-    - **Content Card**: Preview + actions + modal + sharing + favoriting + metadata
-    - **Form Wizard**: Progress indicator + steps + validation + navigation + save states
-    - **Media Player**: Controls + playlist + visualizer + sharing + quality selector
-    - **Dashboard Widget**: Chart + filter + export + refresh + settings + alerts
-    
-    **Motion Language & Interactions:**
-    - **Easing Personality**: Custom timing functions that match theme (organic, mechanical, playful)
-    - **Animation Metaphors**: Movement patterns inspired by theme concepts
-    - **Micro-interactions**: Small touches that strengthen the thematic experience
-    - **State Transitions**: Meaningful animations that guide user attention
-    - **Loading States**: Theme-consistent wait animations that maintain immersion
-    - **Feedback Rhythm**: Response timing that creates appropriate emotional pace
+**Interaction Paradigms:**
+- Gesture-based, Voice-controlled, Haptic feedback, Micro-animations, Parallax scrolling
+- Command-line inspired, Touch-first, Keyboard-centric, Eye-tracking, Motion-sensing
 
-    **Workflow Demonstrations:**
-    - Implement key user journeys from start to finish
-    - Show how users complete primary tasks on each platform
-    - Demonstrate cross-platform consistency while respecting platform conventions
-    - Include realistic demo data to make interactions meaningful
+**Visual Themes:**
+- Nature-inspired, Geometric patterns, Vintage aesthetics, Futuristic elements, Cultural motifs
+- Scientific precision, Artistic expression, Gaming influences, Enterprise polish, Social warmth
 
-    **Technical Requirements:**
-    - Self-contained HTML file with embedded CSS and JavaScript
-    - No external dependencies (all styles and scripts inline)
-    - Responsive design that works on different screen sizes
-    - Smooth animations and transitions
-    - Keyboard navigation support
-    - Basic accessibility features (ARIA labels, focus management)
+**Technical Approaches:**
+- Component-driven, Animation-heavy, Data-visualization focused, Accessibility-first, Performance-optimized
 
-    **Structure:**
-    ```html
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>[APP NAME] - Interactive UI Preview</title>
-        <style>
-            /* Platform switcher styles */
-            /* Platform-specific container styles */
-            /* Themed design system implementation */
-            /* Component styles from STYLE_GUIDE */
-            /* Interactive state styles */
-            /* Animation and transition definitions */
-            /* Responsive breakpoints */
-        </style>
-    </head>
-    <body>
-        <!-- Platform Selector -->
-        <div class="platform-selector">
-            <!-- Platform toggle buttons -->
-        </div>
+For each of the `PARALLEL_AGENTS` agents, intelligently combine 2-3 elements from different categories to create truly unique and innovative design approaches that haven't been explored before. Ensure each combination is distinct and serves the application's specific needs.
 
-        <!-- Main Preview Container -->
-        <div class="preview-container">
-            <!-- Web Platform View -->
-            <div class="platform-view web-view">
-                <!-- Full web application UI -->
-            </div>
+**PHASE 3: PARALLEL AGENT COORDINATION**
+Deploy `PARALLEL_AGENTS` Sub Agents to generate UI previews in parallel for maximum creative diversity and comprehensive design exploration.
 
-            <!-- Web Responsive View -->
-            <div class="platform-view web-responsive-view">
-                <!-- Mobile-optimized web UI -->
-            </div>
+**Agent Assignment Protocol:**
+Each Sub Agent receives:
+1. **Spec Context**: Complete analysis of all specification files
+2. **Creative Direction**: Specific design philosophy to explore
+3. **File Assignment**: Generate `OUTPUT_FOLDER/UI_PREVIEW_[1-`PARALLEL_AGENTS`].html`
+4. **Uniqueness Directive**: Explicit instruction to create distinct design approach
+5. **Quality Standards**: Professional-grade interactive prototype requirements
 
-            <!-- Mobile Platform View -->
-            <div class="platform-view mobile-view">
-                <!-- Native mobile app simulation -->
-            </div>
+**Agent Task Specification:**
+```
+TASK: Generate UI Preview [NUMBER] for [SPEC_NAME] in [OUTPUT_FOLDER]
 
-            <!-- Terminal Platform View (if applicable) -->
-            <div class="platform-view terminal-view">
-                <!-- CLI interface simulation -->
-            </div>
+You are Sub Agent [X] generating UI_PREVIEW_[NUMBER].html with [CREATIVE_DIRECTION] approach.
 
-            <!-- Desktop Platform View -->
-            <div class="platform-view desktop-view">
-                <!-- Native desktop app UI -->
-            </div>
-        </div>
+CONTEXT:
+- Specification files: [Complete spec analysis]
+- Your creative direction: [Specific design philosophy]
+- Your file output: UI_PREVIEW_[NUMBER].html
+- Platform requirements: Web, Mobile, Desktop (adapt as needed per app)
 
-        <script>
-            // Platform switching logic
-            // Screen navigation handlers
-            // Form validation and interactions
-            // Animation controllers
-            // State management
-            // Demo data and content
-            // Keyboard navigation
-            // Accessibility helpers
-        </script>
-    </body>
-    </html>
-    ```
+REQUIREMENTS:
+1. Read and understand all specification files completely
+2. Implement your assigned creative direction while maintaining functionality
+3. Create comprehensive interactive HTML prototype
+4. Include platform-appropriate UI paradigms and interactions
+5. Demonstrate key user workflows from the specifications
+6. Ensure your design is genuinely unique from other agents' approaches
 
-3. **Close your reasoning:** Close the `</preview_planning>` tag.
-</task>
+DELIVERABLE: Single self-contained HTML file with embedded CSS/JS
+```
+**Parallel Execution Management:**
+- Launch all `PARALLEL_AGENTS` Sub Agents simultaneously using the task tool
+- Monitor agent progress and completion
+- Ensure each agent produces a unique design approach
+- Validate all completed UI previews for quality and functionality
+- Collect all `PARALLEL_AGENTS` HTML files in the OUTPUT_FOLDER
 
-<output_format>
-Generate a single, self-contained HTML file that serves as a comprehensive interactive preview of the application across all specified platforms. The file should be immediately usable by opening in a web browser, with no external dependencies or build steps required.
+**PHASE 4: DYNAMIC AGENT COORDINATION**
 
-The preview should feel like a real application, not just static mockups. Users should be able to click through workflows, see transitions, and experience the unique character of the application on each platform.
+For each of the `PARALLEL_AGENTS` Sub Agents (numbered 1 through `PARALLEL_AGENTS`):
 
-Focus on demonstrating the most important user journeys and showcasing how the design system adapts to different platforms while maintaining a cohesive brand experience.
-</output_format>
+**Dynamic Assignment Process:**
+1. **Analyze Application Context**: Consider the app's purpose, target audience, and core functionality
+2. **Select Unique Combination**: Choose 2-3 design elements from Phase 2 categories that haven't been used by previous agents
+3. **Create Cohesive Direction**: Blend selected elements into a unified design philosophy
+4. **Assign Innovation Focus**: Give each agent a specific aspect of UI innovation to push boundaries on
+5. **Generate File Assignment**: Each agent creates `UI_PREVIEW_[NUMBER].html` where NUMBER ranges from 1 to `PARALLEL_AGENTS`
 
-IMPORTANT: Push the boundaries of conventional UI design by:
+**Agent Differentiation Strategy:**
+- Ensure no two agents explore the same combination of design elements
+- Assign different emotional tones (energizing, calming, inspiring, professional, playful, etc.)
+- Vary interaction complexity (simple/clean vs. rich/complex)
+- Distribute across different user experience philosophies
+- Balance between conservative and experimental approaches
 
-1. **Creating Memorable Experiences**: Don't just implement standard UI patterns - reimagine them through your chosen theme. Every interaction should feel special and intentional.
+**Innovation Dimensions to Distribute:**
+- Layout innovation (grid systems, spatial relationships)
+- Interaction innovation (gesture patterns, feedback mechanisms)
+- Visual innovation (color theory, typography, iconography)
+- Animation innovation (timing, easing, choreography)
+- Accessibility innovation (inclusive design, universal usability)
 
-2. **Hybrid Component Innovation**: Look for opportunities to combine UI elements in unexpected ways. A search bar could grow into a command center, a button could transform into a progress indicator, a card could unfold into a full interface.
+**PHASE 5: TECHNICAL REQUIREMENTS FOR ALL AGENTS**
 
-3. **Platform-Specific Magic**: Each platform should showcase unique capabilities while maintaining thematic consistency. Mobile might use gesture-based interactions, desktop could leverage hover states creatively, terminal might have ASCII art transitions.
+Each Sub Agent must create a self-contained HTML file that includes:
 
-4. **Motion as Narrative**: Use animation not just for polish but to tell a story. Loading states could show growth (organic theme), assembly (industrial theme), or meditation (zen theme).
+**Core Requirements:**
+- Self-contained HTML file with embedded CSS and JavaScript
+- No external dependencies (all styles and scripts inline)
+- Responsive design that works on different screen sizes
+- Smooth animations and transitions
+- Keyboard navigation support
+- Basic accessibility features (ARIA labels, focus management)
 
-5. **Emotional Design**: The theme should evoke specific emotions that align with the app's purpose. A productivity app might feel energizing, a meditation app calming, a creative tool inspiring.
+**Interactive Features:**
+- Working navigation between screens (click buttons to move between states)
+- Form interactions with validation feedback
+- Loading states and transitions
+- Error states and recovery flows
+- Platform-specific interactions where applicable
+- Modal/overlay interactions
 
-Remember: The goal is not just to demonstrate functionality but to create an interface that users will remember and want to use. Be bold, be creative, but always serve the user's needs.
+**Workflow Demonstrations:**
+- Implement key user journeys from start to finish
+- Show how users complete primary tasks
+- Include realistic demo data to make interactions meaningful
+- Demonstrate the app's core value proposition
+
+**EXECUTION PRINCIPLES:**
+
+**Quality & Uniqueness:**
+- Each UI preview must be genuinely unique and valuable
+- Explore different design philosophies while maintaining functionality
+- Ensure proper file organization and naming (UI_PREVIEW_1.html through UI_PREVIEW_`PARALLEL_AGENTS`.html)
+- Maintain consistency with the original specifications
+
+**Parallel Coordination:**
+- Deploy Sub Agents strategically to maximize creative diversity
+- Assign distinct design directions to each agent to avoid overlap
+- Monitor all agents for successful completion and quality
+- Ensure all `PARALLEL_AGENTS` previews provide different perspectives on the same application
+
+Begin execution by launching all `PARALLEL_AGENTS` Sub Agents simultaneously, each with their specific creative direction and file assignment. The goal is to provide the product team with a comprehensive range of UI design approaches to experience and evaluate.
+
+## Output Format
+
+Generate `PARALLEL_AGENTS` distinct self-contained HTML files (UI_PREVIEW_1.html through UI_PREVIEW_`PARALLEL_AGENTS`.html) that serve as comprehensive interactive previews of the application. Each file should be immediately usable by opening in a web browser, with no external dependencies or build steps required.
+
+Each preview should feel like a real application, not just static mockups. Users should be able to click through workflows, see transitions, and experience the unique character of each design approach.
+
+## Success Criteria
+
+**Diversity of Approaches**: The `PARALLEL_AGENTS` UI previews should explore genuinely different design philosophies while maintaining the same core functionality.
+
+**Interactive Quality**: Each preview should demonstrate key user workflows with working interactions, transitions, and realistic demo data.
+
+**Professional Polish**: All previews should meet professional standards for UI/UX design and implementation.
+
+**Specification Compliance**: Each design should accurately implement the requirements from all specification files while expressing them through different creative lenses.
+
+**User Experience Range**: The collection should provide the product team with a comprehensive range of potential user interface directions to evaluate and experience firsthand.
+
+The goal is to provide the product team with `PARALLEL_AGENTS` unique, high-quality UI design options that each offer a different perspective on how the application could look, feel, and behave while serving the same user needs and business objectives.
