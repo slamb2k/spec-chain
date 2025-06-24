@@ -362,7 +362,9 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 1:**
 
 1. **Generate Product Requirements Document**
-   - Execute: `/doc-prompt-prd $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-prd.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load APP_DETAILS.md from `/specs/$SPEC_NAME/APP_DETAILS.md`
      - Generate comprehensive PRD based on complete application details
@@ -402,7 +404,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 1. **Generate Feature Stories** (Depends on PRD)
    - **Execute only if "FEATURE_STORIES" is in REQUIRED_DOCS**
-   - Execute: `/doc-prompt-feature-stories $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-feature-stories.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate comprehensive feature stories based on PRD
@@ -411,7 +415,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 2. **Generate Technical Overview** (Depends on PRD + APP_DETAILS)
    - **Execute only if "TECHNICAL_OVERVIEW" is in REQUIRED_DOCS**
-   - Execute: `/doc-prompt-technical-overview $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-technical-overview.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate comprehensive technical overview based on PRD and APP_DETAILS
@@ -420,7 +426,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 3. **Generate Style Guide** (Depends on PRD + APP_DETAILS) - **PARALLEL EXECUTION**
    - **Execute only if "STYLE_GUIDE" is in REQUIRED_DOCS**
-   - Execute: `/doc-prompt-style $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-style.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate comprehensive style guide based on PRD and APP_DETAILS
@@ -438,7 +446,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 1. **Generate UI States & Screen Snapshots** (Depends on Style Guide and Feature Stories)
    - **Execute only if "UI_STATES" is in REQUIRED_DOCS**
    - Wait for Style Guide and Feature Stories completion from previous phase
-   - Execute: `/doc-prompt-states $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-states.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate comprehensive UI states based on PRD, Feature Stories, and Style Guide
@@ -448,7 +458,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 2. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
    - **Execute only if "UI_PREVIEW" is in REQUIRED_DOCS**
    - Wait for UI States completion from step 1
-   - Execute: `/doc-prompt-ui-preview $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-ui-preview.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate interactive UI preview with working components
@@ -461,7 +473,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 1. **Generate Comprehensive Technical Specification**
    - Wait for UI States completion from Phase 3 (if UI-focused app)
-   - Execute: `/doc-prompt-technical $SPEC_NAME`
+   - Read the command file: `.claude/commands/spec-chain/doc-prompt-technical.md`
+   - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+   - Execute the updated command as a prompt
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate comprehensive technical specification based on all previous documents
@@ -547,7 +561,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
      WHILE (ITERATION_COUNT <= MAX_ITERATIONS) AND (PLAN_STATUS != "APPROVED"):
 
        // Generate Implementation Plan
-       - Execute: `/doc-prompt-planner $SPEC_NAME`
+       - Read the command file: `.claude/commands/spec-chain/doc-prompt-planner.md`
+       - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+       - Execute the updated command as a prompt
        - The prompt will:
          - Load all required documents from `/specs/$SPEC_NAME/` directory
          - Load playbooks from `/assets/playbooks/` directory
@@ -557,7 +573,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
          - Handle all file persistence internally
 
        // Validate Implementation Plan
-       - Execute: `/doc-prompt-planner-validator $SPEC_NAME`
+       - Read the command file: `.claude/commands/spec-chain/doc-prompt-planner-validator.md`
+       - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
+       - Execute the updated command as a prompt
        - The prompt will:
          - Load all required documents from `/specs/$SPEC_NAME/` directory
          - Load the current implementation plan
