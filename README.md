@@ -1,17 +1,22 @@
 # Spec Chain - AI-Powered Documentation Generator
 
-A comprehensive system of AI prompts that work together to generate complete product documentation from a single app idea. This repository contains the spec-chain methodology for creating full documentation suites using AI.
+A comprehensive system of AI prompts that work together to generate complete product documentation from a single app idea. This repository contains the spec-chain methodology for creating full documentation suites using AI with optimized parallel execution and simplified file-based operations.
 
 ## 🚀 What is Spec Chain?
 
-Spec Chain is a collection of 8 carefully crafted AI prompts that generate 7 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
+Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
+
+### ⚡ **New in v2.0**: Simplified Execution & Parallel Processing
+- **File-Based Architecture**: All prompts now use simplified file-based loading instead of complex argument passing
+- **Parallel Execution**: Independent documents generate simultaneously, reducing total time by 25-33%
+- **Single Argument Interface**: All prompts now only require the spec name as an argument
+- **Self-Contained Operations**: Each prompt handles its own file loading and persistence internally
 
 ## 🎯 Quick Start
 
 1. **Initialize your project**:
    ```bash
-   # Run from .claude/commands/spec-chain/
-   init-spec-chain
+   /init-spec-chain
    ```
    This creates the required directory structure and APP_DETAILS.md template.
 
@@ -26,19 +31,17 @@ Spec Chain is a collection of 8 carefully crafted AI prompts that generate 7 cor
 
 4. **Validate your setup**:
    ```bash
-   # Run from .claude/commands/spec-chain/
-   validate-spec-chain
+   /validate-spec-chain
    ```
 
 5. **Generate documentation**:
    ```bash
-   # Run from .claude/commands/spec-chain/
-   run-spec-chain
+   /run-spec-chain
    ```
 
 ## 📋 Available Documentation Generators
 
-The `.claude/commands/spec-chain/` directory contains 8 specialized prompts that generate 7 core documents:
+The `.claude/commands/spec-chain/` directory contains 9 specialized prompts that generate 8 core documents:
 
 ### Document Generation Prompts
 1. **doc-prompt-prd.md** - Product Requirements Document (foundation)
@@ -46,9 +49,10 @@ The `.claude/commands/spec-chain/` directory contains 8 specialized prompts that
 3. **doc-prompt-technical-overview.md** - High-level technical architecture
 4. **doc-prompt-style.md** - UI/UX style guide and design system
 5. **doc-prompt-states.md** - UI states and screen snapshots
-6. **doc-prompt-technical.md** - Comprehensive technical specification
-7. **doc-prompt-planner.md** - AI-optimized implementation plan
-8. **doc-prompt-planner-validator.md** - Implementation plan validator
+6. **doc-prompt-ui-preview.md** - Interactive UI preview with working components
+7. **doc-prompt-technical.md** - Comprehensive technical specification
+8. **doc-prompt-planner.md** - AI-optimized implementation plan
+9. **doc-prompt-planner-validator.md** - Implementation plan validator
 
 ### Command Utilities
 - **init-spec-chain.md** - Initialize project structure
@@ -97,9 +101,10 @@ Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
     ├── FEATURE_STORIES.md
     └── TECHNICAL_OVERVIEW.md
 
-Phase 3: Design & UI/UX (2 prompts - SEQUENTIAL)
+Phase 3: Design & UI/UX (3 prompts - SEQUENTIAL)
     ├── STYLE_GUIDE.md
-    └── UI_STATES.md (depends on Style Guide)
+    ├── UI_STATES.md (depends on Style Guide)
+    └── UI_PREVIEW.html (depends on Style Guide and UI States)
 
 Phase 4: Technical Architecture (1 prompt)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
@@ -117,17 +122,26 @@ Phase 5: Planning & Implementation (2 steps)
 ```
 spec-chain/
 ├── .claude/
+│   ├── CLAUDE.md                   # Claude Code guidance
 │   └── commands/
-│       └── spec-chain/             # All spec-chain commands and prompts
-│           ├── init-spec-chain.md      # Initialize project structure
-│           ├── validate-spec-chain.md  # Validate setup
-│           ├── run-spec-chain.md       # Generate documentation
-│           └── [8 doc-prompt files]    # Document generation prompts
+│       ├── COMMANDS.md                 # Command documentation
+│       ├── prime.md                    # Context priming
+│       └── spec-chain/                 # All spec-chain commands and prompts
+│           ├── init-spec-chain.md          # Initialize project structure
+│           ├── validate-spec-chain.md      # Validate setup
+│           ├── run-spec-chain.md           # Generate documentation
+│           └── [9 doc-prompt files]        # Document generation prompts
+├── ai_docs/
+│   ├── AI_DOCS.md                  # AI documentation overview
+│   ├── extended_thinking.md        # Claude extended thinking guide
+│   ├── implement-tool-use.md       # Tool use implementation guide
+│   └── prompt_caching.md          # Prompt caching optimization
 ├── assets/
 │   └── inspiration/
 │       ├── visual/                 # Visual design references
 │       └── functional/             # Functional/UX references
-├── specs/                          # Generated documentation
+├── specs/
+│   ├── SPECS.md                    # Generated documentation guide
 │   └── [timestamp]/                # Each run creates timestamped folder
 └── APP_DETAILS.md                  # Your application details
 
@@ -149,7 +163,7 @@ Validates your project setup:
 ### 🚀 run-spec-chain
 Generates complete documentation suite:
 - Creates timestamped output directory
-- Executes all prompts in optimized phases to generate 7 core documents
+- Executes all prompts in optimized phases to generate 8 core documents
 - **Uses parallel Task agents** for independent prompts (~60% faster)
 - Manages dependencies between documents
 - Produces comprehensive documentation set

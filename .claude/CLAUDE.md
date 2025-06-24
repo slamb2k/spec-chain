@@ -4,24 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Repository Overview
 
-Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 8 specialized prompts that work together to generate 7 core documents with iterative validation for implementation planning.
+Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 9 specialized prompts that work together to generate 8 core documents with iterative validation for implementation planning.
 
 ## Project Structure
 
 ```
 spec-chain/
 ├── .claude/
+│   ├── CLAUDE.md                   # Claude Code guidance (this file)
 │   └── commands/
-│       └── spec-chain/             # All spec-chain commands and prompts
-│           ├── init-spec-chain.md      # Initialize project
-│           ├── validate-spec-chain.md  # Validate setup
-│           ├── run-spec-chain.md       # Generate docs
-│           └── [8 doc-prompt files]    # Document generation prompts
+│       ├── COMMANDS.md                 # Command documentation
+│       ├── prime.md                    # Context priming
+│       └── spec-chain/                 # All spec-chain commands and prompts
+│           ├── init-spec-chain.md          # Initialize project
+│           ├── validate-spec-chain.md      # Validate setup
+│           ├── run-spec-chain.md           # Generate docs
+│           └── [9 doc-prompt files]        # Document generation prompts
+├── ai_docs/
+│   ├── AI_DOCS.md                  # AI documentation overview
+│   ├── extended_thinking.md        # Claude extended thinking guide
+│   ├── implement-tool-use.md       # Tool use implementation guide
+│   └── prompt_caching.md          # Prompt caching optimization
 ├── assets/
 │   └── inspiration/
 │       ├── visual/                 # Visual references
 │       └── functional/             # Functional references
-├── specs/                          # Generated documentation
+├── specs/
+│   ├── SPECS.md                    # Generated documentation guide
 │   └── [timestamp]/                # Timestamped outputs
 └── APP_DETAILS.md                  # Project configuration
 ```
@@ -69,16 +78,17 @@ Additional outputs:
 
 ## Available Prompts
 
-The spec-chain system includes 8 specialized document generation prompts:
+The spec-chain system includes 9 specialized document generation prompts:
 
 1. **doc-prompt-prd.md** - Generates the Product Requirements Document (foundation)
 2. **doc-prompt-feature-stories.md** - Creates detailed feature stories and user scenarios
 3. **doc-prompt-technical-overview.md** - Produces high-level technical architecture overview
 4. **doc-prompt-style.md** - Generates UI/UX style guide and design system
 5. **doc-prompt-states.md** - Creates UI states and screen snapshots
-6. **doc-prompt-technical.md** - Produces comprehensive technical specification
-7. **doc-prompt-planner.md** - Generates AI-optimized implementation plan
-8. **doc-prompt-planner-validator.md** - Validates implementation plan completeness
+6. **doc-prompt-ui-preview.md** - Generates interactive UI preview with working components
+7. **doc-prompt-technical.md** - Produces comprehensive technical specification
+8. **doc-prompt-planner.md** - Generates AI-optimized implementation plan
+9. **doc-prompt-planner-validator.md** - Validates implementation plan completeness
 
 ## Working with Spec Chain
 
@@ -95,7 +105,7 @@ The spec-chain system includes 8 specialized document generation prompts:
 ### 3. Generated Documentation
 - All output goes to `/specs/[spec-name]/` or `/specs/[timestamp]/`
 - Each run creates a unique directory (named or timestamped)
-- Generates 7 core documents plus validation reports
+- Generates 8 core documents plus validation reports
 - Preserves documentation history for comparison
 
 ## Prompt Dependencies & Execution Flow
@@ -110,9 +120,10 @@ Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
     ├── FEATURE_STORIES.md
     └── TECHNICAL_OVERVIEW.md
 
-Phase 3: Design & UI/UX (2 prompts - SEQUENTIAL)
+Phase 3: Design & UI/UX (3 prompts - SEQUENTIAL)
     ├── STYLE_GUIDE.md
-    └── UI_STATES.md (depends on Style Guide)
+    ├── UI_STATES.md (depends on Style Guide)
+    └── UI_PREVIEW.html (depends on Style Guide and UI States)
 
 Phase 4: Technical Architecture (1 prompt)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
@@ -186,6 +197,16 @@ This ensures the implementation plan comprehensively covers all requirements and
 3. Ensure inspiration directories contain appropriate materials
 4. Check individual prompt outputs in `/specs/[spec-name]/`
 5. Review validation reports for implementation plan issues
+
+## Related Resources
+
+- **Claude API Documentation**: https://docs.anthropic.com/
+- **Spec Chain Commands**: `/.claude/commands/spec-chain/`
+- **Command Documentation**: `/.claude/commands/COMMANDS.md`
+- **AI Documentation**: `/ai_docs/AI_DOCS.md`
+- **Generated Documentation Guide**: `/specs/SPECS.md`
+- **Project Examples**: `/specs/` directory
+- **Implementation Guides**: Individual prompt documentation
 
 ## Current Configuration
 
