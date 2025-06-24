@@ -9,29 +9,58 @@ OUTPUT_FOLDER: `/specs/SPEC_NAME`
 ## State
 
 <user_data>
-  <app_details>
-  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the complete application details including:
-  - App Name
-  - App Idea (concept, target market, core value proposition)
-  - MVP Features (minimum viable product features and core functionality)
-  - Target Users (primary and secondary user personas, their roles, and needs)
-  - Business Context (market context, competition, business model, constraints)
-  - Technical Requirements (platform, technology, performance, scale)
-  - Design Requirements (brand personality, visual style, accessibility)
-  - Feature Details (core workflows, content types, feature priorities)
-  - Integration Requirements
-  - Success Metrics
-  - Go-to-Market Strategy
-  - Development Team
-  </app_details>
+  <app_name>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the app's name.
+  </app_name>
+
+  <app_idea>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the app concept, target market, and core value proposition.
+  </app_idea>
+
+  <mvp_features>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the minimum viable product features and core functionality.
+  </mvp_features>
+
+  <target_users>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand primary and secondary user personas, their roles, and needs.
+  </target_users>
+
+  <business_context>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand market context, competition, business model, and constraints.
+  </business_context>
+
+  <technical_requirements>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand platform, technology, performance, and scale requirements.
+  </technical_requirements>
+
+  <design_requirements>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand brand personality, visual style, and accessibility requirements.
+  </design_requirements>
+
+  <feature_details>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand core workflows, content types, and feature priorities.
+  </feature_details>
+
+  <integration_requirements>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand integration requirements and third-party service needs.
+  </integration_requirements>
+
+  <success_metrics>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand success metrics and KPIs.
+  </success_metrics>
+
+  <gtm_strategy>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand go-to-market strategy and launch plans.
+  </gtm_strategy>
+
+  <development_team>
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand development team structure and capabilities.
+  </development_team>
 </user_data>
 
-## Task
+## Instructions
 
-Generate a comprehensive, enterprise-ready Product Requirements Document based on the complete application details from APP_DETAILS.md. The interactive information gathering has already been completed, so all necessary information should be available in the APP_DETAILS.md file.
-
-## EXECUTION TASK
-
+<task>
 1. **Auto-research (if needed):** If the business context from APP_DETAILS.md is empty or contains placeholder text like "(Optional - will be auto-researched if not provided)":
     • Perform a web search for "[app_name] competitors market analysis" and "[app_idea] similar solutions"
     • Research the market landscape, identify 3-5 key competitors
@@ -54,7 +83,7 @@ Generate a comprehensive, enterprise-ready Product Requirements Document based o
 
   Additionally, if you have any suggestions on areas that should be addressed, please include these in the **Clarification Requests or Feedback** section so if user wishes to re-execute the spec-chain process, they can improve the output by including any additional suggested information.
 
-7. **Stop:** End the interaction once complete PRD has been generated and saved. Do not reveal chain-of-thought or planning
+7. **Stop:** End the interaction once complete PRD has been generated and saved. Do not reveal chain-of-thought or planning notes at any stage.
 
 </task>
 
