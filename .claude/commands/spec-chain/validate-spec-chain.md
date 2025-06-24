@@ -50,11 +50,11 @@ Counts and categorizes files in inspiration directories:
 - HTML files
 - PDF documents
 
-### 5. Generation Mode Analysis
+### 5. Readiness Analysis
 
 Based on APP_DETAILS.md completeness:
-- **< 50% Complete**: Recommends COLLABORATIVE MODE
-- **≥ 50% Complete**: Recommends COMPREHENSIVE MODE
+- **< 50% Complete**: Recommends completing interactive information gathering first
+- **≥ 50% Complete**: Ready for comprehensive documentation generation
 
 ### 6. Summary Report
 

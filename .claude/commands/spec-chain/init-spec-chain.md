@@ -415,16 +415,16 @@ Created files:
 
 Next steps:
 1. Fill out /APP_DETAILS.md with your application details
-   - For COLLABORATIVE MODE: Just fill basic required fields (App Name, App Idea, MVP Features)
-   - For COMPREHENSIVE MODE: Fill out as many sections as possible for detailed generation
+   - The interactive information gathering will guide you through completing any missing fields
+   - Fill out as many sections as possible for the most detailed generation
 2. Add inspiration materials to the appropriate directories:
    - Visual designs → /assets/inspiration/visual/
    - Functional examples → /assets/inspiration/functional/
-3. Run the spec-chain generator to create your documentation
+3. Run the spec-chain generator to create your comprehensive documentation
 
 To generate documentation after setup:
-- Use the run-spec-chain.md command (automatically detects Collaborative vs Comprehensive mode)
-- Use validate-spec-chain.md to check your setup and see which mode is recommended
+- Use the run-spec-chain.md command (includes interactive information gathering and comprehensive generation)
+- Use validate-spec-chain.md to check your setup and see readiness for generation
 ```
 
 ## Error Handling

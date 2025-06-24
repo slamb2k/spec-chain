@@ -243,9 +243,10 @@ Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
     ├── FEATURE_STORIES.md
     └── TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 3: Design & UI/UX (2 prompts - sequential)
+Phase 3: Design & UI/UX (3 prompts - sequential)
     ├── STYLE_GUIDE.md
-    └── UI_STATES.md (depends on Style Guide)
+    ├── UI_STATES.md (depends on Style Guide)
+    └── UI_PREVIEW.html (depends on Style Guide and UI States)
 
 Phase 4: Technical Architecture (1 prompt - sequential)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
@@ -255,7 +256,7 @@ Phase 5: Planning & Implementation Rules (2 steps - sequential)
     └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
 ```
 
-Total: 7+ documents generated across 5 phases (includes Implementation Plan + validation reports)
+Total: 8+ documents generated across 5 phases (includes Implementation Plan + validation reports)
 
 ## Prerequisites
 
@@ -310,8 +311,6 @@ All input data is read from the `APP_DETAILS.md` file which contains:
        - If no missing sections: Log: "✅ APP_DETAILS.md structure is complete"
      - Read APP_DETAILS from either `$OUTPUT_DIR/APP_DETAILS.md` (if newly created) or `/APP_DETAILS.md` (if existing)
      - Extract all sections for use in subsequent prompts
-     - If `/assets/inspiration/visual/` directory exists, list its contents for visual design prompts
-     - If `/assets/inspiration/functional/` directory exists, list its contents for functional design prompts
 
 0.1. **Document Relevance Analysis**
    - **Analyze App Characteristics from APP_DETAILS:**
@@ -336,7 +335,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 
      # UI/UX Documents (only for apps with user interfaces)
      if [Platform includes Web/Mobile/Desktop] OR [App Type is UI-focused]; then
-         REQUIRED_DOCS+=("STYLE_GUIDE" "UI_STATES")
+         REQUIRED_DOCS+=("STYLE_GUIDE" "UI_STATES" "UI_PREVIEW")
      fi
 
      # Technical Documents (always required for development)
@@ -363,15 +362,12 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 1:**
 
 1. **Generate Product Requirements Document**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-prd.md` as PRD_PROMPT
-   - Use COMPREHENSIVE MODE task from PRD_PROMPT
-   - Replace placeholders in PRD_PROMPT with data from APP_DETAILS:
-     - [APP NAME] → Extract from "App Name" section
-     - [BRIEF DESCRIPTION OF THE APP CONCEPT, TARGET MARKET, AND CORE VALUE PROPOSITION] → Extract from "App Idea" section
-     - [LIST OF MINIMUM VIABLE PRODUCT FEATURES AND CORE FUNCTIONALITY] → Extract from "MVP Features" section
-     - [PRIMARY AND SECONDARY USER PERSONAS, THEIR ROLES, AND NEEDS] → Extract from "Target Users" section
-     - [MARKET CONTEXT, COMPETITION, BUSINESS MODEL, OR CONSTRAINTS] → Extract from "Business Context" section (complete from interactive gathering and auto-research)
-   - Execute PRD_PROMPT and save output to `$OUTPUT_DIR/PRD.md`
+   - Execute: `@doc-prompt-prd $SPEC_NAME`
+   - The prompt will:
+     - Load APP_DETAILS.md from `/specs/$SPEC_NAME/APP_DETAILS.md`
+     - Generate comprehensive PRD based on complete application details
+     - Save PRD to `/specs/$SPEC_NAME/PRD.md`
+     - Handle all file persistence internally
 
    **Note**: This document becomes the foundation for all subsequent documents
 
@@ -390,7 +386,6 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND USER PERSONAS] → Use PRD.md content
      - [TECHNICAL OVERVIEW WITH PLATFORM SPECIFICATIONS AND ARCHITECTURE] → Use placeholder (will be filled after technical overview is generated)
      - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding visual design requirements] → Use default if not available
-     - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
    - Execute FEATURE_STORIES_PROMPT and save output to `$OUTPUT_DIR/FEATURE_STORIES.md`
 
 2. **Generate Technical Overview** (Depends on PRD)
@@ -402,7 +397,6 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND PLATFORM SPECIFICATIONS] → Use PRD.md content
      - [TECHNICAL REQUIREMENTS FROM APP_DETAILS INCLUDING: - Platform specifications (Web/Mobile/Desktop/Terminal) - Technology preferences and constraints - Performance requirements and targets - Scale requirements and growth projections - Security needs and compliance requirements] → Extract from APP_DETAILS.md technical requirements section
      - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding UI/UX technical requirements] → Use default if not available
-     - [LIST OF FILES IN /assets/inspiration/functional/] → List files from functional inspiration directory if it exists
    - Execute TECHNICAL_OVERVIEW_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`
 
 ### Phase 3: Design & UI/UX (Sequential after Phase 2)
@@ -419,7 +413,6 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [BRAND VALUES AND PERSONALITY] → Extract from APP_DETAILS "Brand Personality" (complete from interactive gathering and auto-research)
      - [TARGET USER DEMOGRAPHICS AND PREFERENCES] → Extract from APP_DETAILS "Target Users" section
      - [ANY SPECIFIC DESIGN REQUIREMENTS OR CONSTRAINTS] → Extract from APP_DETAILS "Accessibility Requirements" (complete from interactive gathering and auto-research)
-     - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
    - Execute STYLE_PROMPT and save output to `$OUTPUT_DIR/STYLE_GUIDE.md`
 
 2. **Generate UI States & Screen Snapshots** (Depends on Style Guide)
@@ -432,8 +425,17 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, FEATURES, AND USER WORKFLOWS] → Use PRD.md content
      - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
      - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
-     - [LIST OF FILES IN /assets/inspiration/visual/] → List files from visual inspiration directory if it exists
    - Execute UI_STATES_PROMPT and save output to `$OUTPUT_DIR/UI_STATES.md`
+
+3. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
+   - **Execute only if "UI_PREVIEW" is in REQUIRED_DOCS**
+   - Wait for UI States completion from step 2
+   - Execute: `@doc-prompt-ui-preview $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate interactive UI preview with working components
+     - Save output to `/specs/$SPEC_NAME/UI_PREVIEW.html`
+     - Handle all file persistence internally
 
 ### Phase 4: Technical Architecture (Sequential after Phase 3)
 
@@ -627,11 +629,10 @@ Upon completion, provide a summary including the following information. This sum
 1. **Generation Details**:
    - Spec name: `$SPEC_NAME`
    - Output directory: `$OUTPUT_DIR` (e.g., `/specs/my-app` or `/specs/20240120_143052`)
-   - Generation mode: `[COLLABORATIVE/COMPREHENSIVE]` - indicates which approach was used
+   - Generation mode: Interactive with Auto-Research
    - Start phase: `$START_PHASE`
    - Generation timestamp: `$TIMESTAMP`
    - Total execution time
-   - Collaborative iterations: `[number]` (if COLLABORATIVE MODE was used)
 
 2. **Generated Documents** (${#REQUIRED_DOCS[@]} total):
    - List each document with its full path in `$OUTPUT_DIR`
@@ -677,20 +678,21 @@ Upon completion, provide a summary including the following information. This sum
 
 6. **Next Steps**:
 
-   **For COLLABORATIVE MODE completions:**
-   - Review the collaborative PRD in `$OUTPUT_DIR/PRD_COLLABORATIVE.md` (if generated)
-   - Consider running again to graduate to comprehensive documentation
-   - Use insights gained to refine APP_DETAILS.md for future comprehensive generation
-
-   **For COMPREHENSIVE MODE completions:**
+   **Immediate Actions:**
    - Review all documentation in `$OUTPUT_DIR`
+   - Check clarification requests for any additional information needed
    - Create symlink to latest generation (done automatically in summary output)
    - Gather stakeholder feedback on the comprehensive specification
-   - Begin implementation using the Implementation Plan
 
-   **For both modes:**
+   **Implementation Phase:**
+   - Begin implementation using the Implementation Plan
+   - Follow any loaded playbook rules from `/assets/playbooks/`
+   - Use validation reports to ensure comprehensive coverage
+
+   **Iterative Improvement:**
    - Address any clarification requests found in the generated documents
    - Update APP_DETAILS.md with new insights for future iterations
+   - Re-run spec chain with updated APP_DETAILS.md for refined documentation
 
 ### Summary Output Requirements
 
@@ -723,37 +725,16 @@ If any prompt execution fails:
 3. Report all failures in the final summary
 4. Suggest manual intervention for failed steps
 
-### Collaborative Mode Specific Errors
-If collaborative mode encounters issues:
-1. **Iteration Loop Failures**: If user feedback integration fails, save the current state and offer to continue with existing PRD
-2. **User Input Timeout**: If user doesn't respond within reasonable time, offer to proceed with current specification
-3. **Invalid User Responses**: Gracefully handle unclear feedback and ask for clarification
-4. **Graduation Failures**: If transition from collaborative to comprehensive fails, preserve collaborative PRD and suggest manual review
-
-### Mode Detection Failures
-If mode detection fails:
-1. Default to COLLABORATIVE MODE for safety (less overwhelming)
-2. Log the detection failure reason
-3. Allow user to manually specify mode if needed
-4. Provide clear explanation of why collaborative mode was chosen
+### Interactive Information Gathering Errors
+If information gathering encounters issues:
+1. **APP_DETAILS.md Template Missing**: Copy from backup or recreate from scratch
+2. **Invalid User Responses**: Gracefully handle unclear input and ask for clarification
+3. **Auto-Research Failures**: Fall back to placeholder content and note in clarification summary
+4. **File Write Permissions**: Ensure output directory is writable
 
 ## Intelligent Document Selection Examples
 
-The system automatically determines which documents to generate based on app characteristics and selected mode:
-
-### Collaborative Mode Example: Early-Stage Idea
-**Mode**: COLLABORATIVE
-**Input**: Basic app idea with minimal details
-**Generated Documents** (1 total):
-- PRD_COLLABORATIVE.md (focused 8-section collaborative PRD)
-
-**Process**:
-1. Generate initial collaborative PRD with critical questions
-2. User provides feedback and clarifications
-3. Iterate and refine the collaborative PRD
-4. Option to graduate to comprehensive documentation
-
-**Skipped Documents** (6 total): All other documents until graduation to comprehensive mode
+The system automatically determines which documents to generate based on app characteristics:
 
 ### Example 1: Mobile Social Media App
 **App Type**: UI-focused, Client-Server
@@ -801,22 +782,23 @@ The system automatically determines which documents to generate based on app cha
 
 ## Customization Options
 
-### Mode Selection
-- **Auto-Detection** (Default): System automatically chooses COLLABORATIVE or COMPREHENSIVE based on APP_DETAILS.md completeness
-- **Force Collaborative**: Override detection to use collaborative mode regardless of input completeness
-- **Force Comprehensive**: Override detection to use comprehensive mode regardless of input completeness
+### Information Gathering
+- **Auto-Research All**: Skip all optional fields and use intelligent auto-research
+- **Manual Entry**: Provide specific details for all optional fields
+- **Hybrid Approach**: Mix of manual entry and auto-research using skip options
 
 ### Document Generation
-- **Force Full Generation**: Override intelligent selection to generate all 7 documents
+- **Intelligent Selection** (Default): Generate documents based on app type analysis
+- **Force Full Generation**: Override intelligent selection to generate all documents
 - **Manual Selection**: Specify exact documents to generate via command line flags
 - **Profile-Based**: Use predefined profiles (mobile-app, api-service, cli-tool, desktop-app)
 
-### Collaborative Mode Options
-- **Iteration Limit**: Set maximum number of collaborative iterations before auto-graduation
-- **Auto-Graduate**: Automatically proceed to comprehensive mode after successful collaborative refinement
-- **Save Iterations**: Preserve all collaborative iteration states for review
+### Implementation Planning
+- **Iteration Limit**: Set maximum iterations for implementation plan refinement (default: 5)
+- **Validation Threshold**: Set minimum completion score for plan approval (default: 85%)
+- **Save All Iterations**: Preserve all planning iterations and validation reports
 
-Remember: The PRD (collaborative or comprehensive) is always required as it feeds all other documents.
+Remember: The PRD is always required as it feeds all other documents.
 
 ## APP_DETAILS.md Usage Summary
 

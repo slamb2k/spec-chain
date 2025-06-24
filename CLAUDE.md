@@ -53,14 +53,15 @@ Executes the documentation generation pipeline using parallel Task agents for op
 
 ## Generated Documents
 
-A complete spec-chain run produces 7 core documents:
+A complete spec-chain run produces 8 core documents:
 1. **PRD.md** - Product Requirements Document
 2. **FEATURE_STORIES.md** - Detailed feature breakdowns
 3. **TECHNICAL_OVERVIEW.md** - High-level architecture
 4. **STYLE_GUIDE.md** - UI/UX design system
 5. **UI_STATES.md** - Screen mockups and states
-6. **TECHNICAL_SPEC.md** - Detailed technical specification
-7. **IMPLEMENTATION_PLAN.md** - AI-optimized development plan
+6. **UI_PREVIEW.html** - Interactive UI preview across platforms
+7. **TECHNICAL_SPEC.md** - Detailed technical specification
+8. **IMPLEMENTATION_PLAN.md** - AI-optimized development plan
 
 Additional outputs:
 - **IMPLEMENTATION_PLAN_v[1-N].md** - Iteration versions
