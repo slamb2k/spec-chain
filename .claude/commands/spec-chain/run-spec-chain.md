@@ -44,7 +44,7 @@ Overwrites Phase 3+ documents in `/specs/existing-spec/`
 
 ## Overview
 
-This runner orchestrates the execution of 8 specification chain prompts that generate 7 core documents, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
+This runner orchestrates the execution of 9 specification chain prompts that generate 8 core documents, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
 
 Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/specs/20240120_143052/`) to:
 - Preserve historical documentation versions
@@ -362,7 +362,7 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 1:**
 
 1. **Generate Product Requirements Document**
-   - Execute: `@doc-prompt-prd $SPEC_NAME`
+   - Execute: `/doc-prompt-prd $SPEC_NAME`
    - The prompt will:
      - Load APP_DETAILS.md from `/specs/$SPEC_NAME/APP_DETAILS.md`
      - Generate comprehensive PRD based on complete application details
@@ -371,66 +371,84 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 
    **Note**: This document becomes the foundation for all subsequent documents
 
-### Phase 2: Feature Analysis & Technical Overview (Parallel after Phase 1)
+## Parallel Execution Strategy
+
+The spec-chain system has been optimized for parallel execution where dependencies allow. Here's the dependency analysis and parallel execution opportunities:
+
+### Dependency Tree Analysis:
+```
+Phase 1: PRD (Foundation)
+├── Phase 2a: Feature Stories (depends on PRD)
+├── Phase 2b: Technical Overview (depends on PRD + APP_DETAILS)
+└── Phase 3a: Style Guide (depends on PRD + APP_DETAILS) ← Can run parallel with Phase 2
+
+Phase 3b: UI States (depends on Feature Stories + Style Guide)
+Phase 3c: UI Preview (depends on UI States)
+Phase 4: Technical Spec (depends on all previous)
+Phase 5: Implementation Planning (depends on Technical Spec)
+```
+
+### Parallel Execution Opportunities:
+1. **Phase 2 + 3a Parallel**: Feature Stories, Technical Overview, and Style Guide can all run simultaneously after PRD
+2. **Phase 3b Sequential**: UI States must wait for both Feature Stories and Style Guide
+3. **Phase 3c Sequential**: UI Preview must wait for UI States
+4. **Phases 4-5 Sequential**: Technical Spec and Implementation Planning are sequential
+
+### Phase 2 & 3a: Parallel Document Generation (After Phase 1)
 
 **Execute only if START_PHASE <= 2:**
 
-**Execute the following tasks in parallel using concurrent Task agents (only if required):**
+**Execute the following tasks in parallel using concurrent Task agents:**
 
 1. **Generate Feature Stories** (Depends on PRD)
    - **Execute only if "FEATURE_STORIES" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-feature-stories.md` as FEATURE_STORIES_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` content
-   - Replace in FEATURE_STORIES_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND USER PERSONAS] → Use PRD.md content
-     - [TECHNICAL OVERVIEW WITH PLATFORM SPECIFICATIONS AND ARCHITECTURE] → Use placeholder (will be filled after technical overview is generated)
-     - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding visual design requirements] → Use default if not available
-   - Execute FEATURE_STORIES_PROMPT and save output to `$OUTPUT_DIR/FEATURE_STORIES.md`
+   - Execute: `/doc-prompt-feature-stories $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate comprehensive feature stories based on PRD
+     - Save output to `/specs/$SPEC_NAME/FEATURE_STORIES.md`
+     - Handle all file persistence internally
 
-2. **Generate Technical Overview** (Depends on PRD)
+2. **Generate Technical Overview** (Depends on PRD + APP_DETAILS)
    - **Execute only if "TECHNICAL_OVERVIEW" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-technical-overview.md` as TECHNICAL_OVERVIEW_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` content and APP_DETAILS.md technical requirements
-   - Replace in TECHNICAL_OVERVIEW_PROMPT:
-     - [APP NAME] → Extract from PRD
-     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES AND PLATFORM SPECIFICATIONS] → Use PRD.md content
-     - [TECHNICAL REQUIREMENTS FROM APP_DETAILS INCLUDING: - Platform specifications (Web/Mobile/Desktop/Terminal) - Technology preferences and constraints - Performance requirements and targets - Scale requirements and growth projections - Security needs and compliance requirements] → Extract from APP_DETAILS.md technical requirements section
-     - [STYLE GUIDE OR DESIGN SYSTEM REFERENCE - for understanding UI/UX technical requirements] → Use default if not available
-   - Execute TECHNICAL_OVERVIEW_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`
+   - Execute: `/doc-prompt-technical-overview $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate comprehensive technical overview based on PRD and APP_DETAILS
+     - Save output to `/specs/$SPEC_NAME/TECHNICAL_OVERVIEW.md`
+     - Handle all file persistence internally
 
-### Phase 3: Design & UI/UX (Sequential after Phase 2)
+3. **Generate Style Guide** (Depends on PRD + APP_DETAILS) - **PARALLEL EXECUTION**
+   - **Execute only if "STYLE_GUIDE" is in REQUIRED_DOCS**
+   - Execute: `/doc-prompt-style $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate comprehensive style guide based on PRD and APP_DETAILS
+     - Save output to `/specs/$SPEC_NAME/STYLE_GUIDE.md`
+     - Handle all file persistence internally
+
+**Note**: Tasks 1, 2, and 3 can run simultaneously as they only depend on Phase 1 outputs
+
+### Phase 3b: UI States & Preview (Sequential after Phase 2 & 3a)
 
 **Execute only if START_PHASE <= 3:**
 
-1. **Generate Functional UX/UI Style Guide** (Design Track)
-   - **Execute only if "STYLE_GUIDE" is in REQUIRED_DOCS**
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-style.md` as STYLE_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md` content
-   - Replace in STYLE_PROMPT:
-     - [APP NAME] → Extract from APP_DETAILS "App Name"
-     - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, TARGET USERS, AND FEATURE REQUIREMENTS] → Use PRD.md content
-     - [BRAND VALUES AND PERSONALITY] → Extract from APP_DETAILS "Brand Personality" (complete from interactive gathering and auto-research)
-     - [TARGET USER DEMOGRAPHICS AND PREFERENCES] → Extract from APP_DETAILS "Target Users" section
-     - [ANY SPECIFIC DESIGN REQUIREMENTS OR CONSTRAINTS] → Extract from APP_DETAILS "Accessibility Requirements" (complete from interactive gathering and auto-research)
-   - Execute STYLE_PROMPT and save output to `$OUTPUT_DIR/STYLE_GUIDE.md`
+**Wait for completion of Phase 2 & 3a parallel tasks before proceeding**
 
-2. **Generate UI States & Screen Snapshots** (Depends on Style Guide)
+1. **Generate UI States & Screen Snapshots** (Depends on Style Guide and Feature Stories)
    - **Execute only if "UI_STATES" is in REQUIRED_DOCS**
-   - Wait for Style Guide completion from step 1
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-states.md` as UI_STATES_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, and `$OUTPUT_DIR/STYLE_GUIDE.md` content
-   - Replace in UI_STATES_PROMPT:
-     - [APP NAME] → Extract from APP_DETAILS "App Name"
-     - [PRODUCT REQUIREMENTS DOCUMENT WITH APP OVERVIEW, FEATURES, AND USER WORKFLOWS] → Use PRD.md content
-     - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
-     - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
-   - Execute UI_STATES_PROMPT and save output to `$OUTPUT_DIR/UI_STATES.md`
+   - Wait for Style Guide and Feature Stories completion from previous phase
+   - Execute: `/doc-prompt-states $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate comprehensive UI states based on PRD, Feature Stories, and Style Guide
+     - Save output to `/specs/$SPEC_NAME/UI_STATES.md`
+     - Handle all file persistence internally
 
-3. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
+2. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
    - **Execute only if "UI_PREVIEW" is in REQUIRED_DOCS**
-   - Wait for UI States completion from step 2
-   - Execute: `@doc-prompt-ui-preview $SPEC_NAME`
+   - Wait for UI States completion from step 1
+   - Execute: `/doc-prompt-ui-preview $SPEC_NAME`
    - The prompt will:
      - Load all required documents from `/specs/$SPEC_NAME/` directory
      - Generate interactive UI preview with working components
@@ -442,20 +460,13 @@ All input data is read from the `APP_DETAILS.md` file which contains:
 **Execute only if START_PHASE <= 4:**
 
 1. **Generate Comprehensive Technical Specification**
-   - Wait for UI States completion from Phase 3
-   - Read `/project:.claude/commands/spec-chain/doc-prompt-technical.md` as TECHNICAL_PROMPT
-   - Read `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`, `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, and `$OUTPUT_DIR/UI_STATES.md` content
-   - Replace in TECHNICAL_PROMPT:
-     - [APP NAME] → Extract from APP_DETAILS "App Name"
-     - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
-     - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
-     - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
-     - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
-     - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
-     - [SCALE REQUIREMENTS AND GROWTH PROJECTIONS] → Extract from APP_DETAILS "Scale Requirements" (complete from interactive gathering and auto-research)
-     - [PERFORMANCE TARGETS AND OPTIMIZATION REQUIREMENTS] → Extract from APP_DETAILS "Performance Requirements" (complete from interactive gathering and auto-research)
-     - [SECURITY NEEDS AND COMPLIANCE REQUIREMENTS] → Extract from APP_DETAILS "Constraints" (complete from interactive gathering and auto-research)
-   - Execute TECHNICAL_PROMPT and save output to `$OUTPUT_DIR/TECHNICAL_SPEC.md`
+   - Wait for UI States completion from Phase 3 (if UI-focused app)
+   - Execute: `/doc-prompt-technical $SPEC_NAME`
+   - The prompt will:
+     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Generate comprehensive technical specification based on all previous documents
+     - Save output to `/specs/$SPEC_NAME/TECHNICAL_SPEC.md`
+     - Handle all file persistence internally
 
 ### Phase 5: Planning & Implementation Rules (Sequential after Phase 4)
 
@@ -536,39 +547,24 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      WHILE (ITERATION_COUNT <= MAX_ITERATIONS) AND (PLAN_STATUS != "APPROVED"):
 
        // Generate Implementation Plan
-       - Read `/project:.claude/commands/spec-chain/doc-prompt-planner.md` as PLANNER_PROMPT
-       - Read all available documents: `$OUTPUT_DIR/PRD.md`, `$OUTPUT_DIR/FEATURE_STORIES.md`,
-         `$OUTPUT_DIR/TECHNICAL_OVERVIEW.md`, `$OUTPUT_DIR/STYLE_GUIDE.md`, `$OUTPUT_DIR/UI_STATES.md`,
-         `$OUTPUT_DIR/TECHNICAL_SPEC.md`, and loaded playbooks summary
-       - If ITERATION_COUNT > 1, also read previous plan and validation feedback
-       - Replace in PLANNER_PROMPT:
-         - [APP NAME] → Extract from APP_DETAILS "App Name"
-         - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
-         - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
-         - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
-         - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
-         - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
-         - [COMPREHENSIVE TECHNICAL SPECIFICATION WITH ARCHITECTURE AND IMPLEMENTATION DETAILS] → Use TECHNICAL_SPEC.md content
-         - [LOADED PLAYBOOKS AND RULES FROM ASSETS/PLAYBOOKS DIRECTORY] → Use loaded playbooks summary
-         - [PREVIOUS IMPLEMENTATION PLAN IF THIS IS A REFINEMENT ITERATION] → Use previous plan if ITERATION_COUNT > 1
-         - [VALIDATION FEEDBACK FROM PREVIOUS ITERATION IF APPLICABLE] → Use validation feedback if ITERATION_COUNT > 1
-       - Execute PLANNER_PROMPT and save output to `$OUTPUT_DIR/IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md`
+       - Execute: `/doc-prompt-planner $SPEC_NAME`
+       - The prompt will:
+         - Load all required documents from `/specs/$SPEC_NAME/` directory
+         - Load playbooks from `/assets/playbooks/` directory
+         - Load previous plan and validation feedback if ITERATION_COUNT > 1
+         - Generate comprehensive implementation plan
+         - Save output to `/specs/$SPEC_NAME/IMPLEMENTATION_PLAN.md`
+         - Handle all file persistence internally
 
        // Validate Implementation Plan
-       - Read `/project:.claude/commands/spec-chain/doc-prompt-planner-validator.md` as VALIDATOR_PROMPT
-       - Read all input documents and the newly generated implementation plan
-       - Replace in VALIDATOR_PROMPT:
-         - [APP NAME] → Extract from APP_DETAILS "App Name"
-         - [PRODUCT REQUIREMENTS DOCUMENT WITH FEATURES, USER WORKFLOWS, AND BUSINESS OBJECTIVES] → Use PRD.md content
-         - [FEATURE STORIES WITH USER STORIES AND UX/UI CONSIDERATIONS] → Use FEATURE_STORIES.md content
-         - [TECHNICAL OVERVIEW WITH ARCHITECTURE AND PLATFORM SPECIFICATIONS] → Use TECHNICAL_OVERVIEW.md content
-         - [STYLE GUIDE WITH COLORS, TYPOGRAPHY, COMPONENTS, AND DESIGN SYSTEM] → Use STYLE_GUIDE.md content
-         - [UI STATES WITH SCREEN SNAPSHOTS AND INTERACTION SPECIFICATIONS] → Use UI_STATES.md content
-         - [COMPREHENSIVE TECHNICAL SPECIFICATION WITH ARCHITECTURE AND IMPLEMENTATION DETAILS] → Use TECHNICAL_SPEC.md content
-         - [LOADED PLAYBOOKS AND RULES FROM ASSETS/PLAYBOOKS DIRECTORY] → Use loaded playbooks summary
-         - [CURRENT IMPLEMENTATION PLAN TO VALIDATE] → Use IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md content
-         - [CURRENT ITERATION NUMBER (1-5)] → Use ITERATION_COUNT
-       - Execute VALIDATOR_PROMPT and save output to `$OUTPUT_DIR/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
+       - Execute: `/doc-prompt-planner-validator $SPEC_NAME`
+       - The prompt will:
+         - Load all required documents from `/specs/$SPEC_NAME/` directory
+         - Load the current implementation plan
+         - Determine current iteration number from existing validation reports
+         - Generate comprehensive validation report
+         - Save output to `/specs/$SPEC_NAME/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
+         - Handle all file persistence internally
 
        // Check Validation Results
        - Extract VALIDATION_DECISION from validation report (APPROVED/NEEDS_REFINEMENT/MAJOR_REVISION_REQUIRED)
@@ -578,12 +574,10 @@ All input data is read from the `APP_DETAILS.md` file which contains:
        // Determine Next Action
        IF (VALIDATION_DECISION == "APPROVED") OR (COMPLETION_SCORE >= VALIDATION_THRESHOLD):
          - Set PLAN_STATUS = "APPROVED"
-         - Copy `IMPLEMENTATION_PLAN_v${ITERATION_COUNT}.md` to `$OUTPUT_DIR/IMPLEMENTATION_PLAN.md`
          - Log: "Implementation plan approved after ${ITERATION_COUNT} iterations"
          - BREAK from loop
        ELSE:
          - Set PLAN_STATUS = "NEEDS_REFINEMENT"
-         - Store validation feedback for next iteration
          - INCREMENT ITERATION_COUNT
          - Log: "Implementation plan needs refinement, proceeding to iteration ${ITERATION_COUNT}"
 
