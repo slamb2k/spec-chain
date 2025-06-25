@@ -4,35 +4,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Repository Overview
 
-Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 9 specialized prompts that work together to generate 8 core documents with iterative validation for implementation planning.
+Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 9 specialized prompts that work together to generate 8 core documents with iterative validation for implementation planning. All generated content is isolated in a `.spec-chain` directory for clean project organization and portability.
 
 ## Project Structure
 
 ```
-spec-chain/
+your-project/                        # Any project using spec-chain
+├── .spec-chain/                    # All spec-chain files (created by init)
+│   ├── APP_DETAILS.md              # Project configuration
+│   ├── APP_DETAILS.md.template     # Template for new projects
+│   ├── assets/
+│   │   ├── inspiration/
+│   │   │   ├── visual/            # Visual references
+│   │   │   └── functional/        # Functional references
+│   │   └── playbooks/             # Development playbooks
+│   └── specs/
+│       ├── SPECS.md               # Generated documentation guide
+│       └── [timestamp]/           # Timestamped outputs
+└── [your project files]            # Your project remains clean
+
+spec-chain package:
 ├── .claude/
 │   ├── CLAUDE.md                   # Claude Code guidance (this file)
 │   └── commands/
-│       ├── COMMANDS.md                 # Command documentation
-│       ├── prime.md                    # Context priming
-│       └── spec-chain/                 # All spec-chain commands and prompts
-│           ├── init-spec-chain.md          # Initialize project
-│           ├── validate-spec-chain.md      # Validate setup
-│           ├── run-spec-chain.md           # Generate docs
-│           └── [9 doc-prompt files]        # Document generation prompts
-├── ai_docs/
-│   ├── AI_DOCS.md                  # AI documentation overview
-│   ├── extended_thinking.md        # Claude extended thinking guide
-│   ├── implement-tool-use.md       # Tool use implementation guide
-│   └── prompt_caching.md          # Prompt caching optimization
-├── assets/
-│   └── inspiration/
-│       ├── visual/                 # Visual references
-│       └── functional/             # Functional references
-├── specs/
-│   ├── SPECS.md                    # Generated documentation guide
-│   └── [timestamp]/                # Timestamped outputs
-└── APP_DETAILS.md                  # Project configuration
+│       ├── COMMANDS.md             # Command documentation
+│       ├── prime.md                # Context priming
+│       └── spec-chain/             # All spec-chain commands
+│           ├── init-spec-chain.md      # Initialize project
+│           ├── validate-spec-chain.md  # Validate setup
+│           ├── run-spec-chain.md       # Generate docs
+│           └── [9 doc-prompt files]    # Document generation prompts
+└── [documentation files]
 ```
 
 ## Key Commands
@@ -41,7 +43,7 @@ spec-chain/
 ```
 /init-spec-chain
 ```
-Creates directory structure and APP_DETAILS.md template.
+Creates `.spec-chain/` directory structure and APP_DETAILS.md template.
 
 ### Validate Setup
 ```
@@ -62,7 +64,7 @@ Executes the documentation generation pipeline using parallel Task agents for op
 
 **Examples:**
 - `/run-spec-chain` - Generate with timestamp
-- `/run-spec-chain my-app` - Generate in /specs/my-app/
+- `/run-spec-chain my-app` - Generate in .spec-chain/specs/my-app/
 - `/run-spec-chain my-app 3` - Resume from Phase 3
 - `/run-spec-chain my-app 1 8` - Generate with 8 parallel UI design agents
 
@@ -98,22 +100,22 @@ The spec-chain system includes 9 specialized document generation prompts:
 
 ## Working with Spec Chain
 
-### 1. APP_DETAILS.md
+### 1. .spec-chain/APP_DETAILS.md
 - This is the single source of truth for all project information
 - Contains sections for business, technical, and design requirements
 - All prompts read from this file to maintain consistency
-- **New in v2.0**: If APP_DETAILS.md is incomplete or missing, `/run-spec-chain` will:
+- **New in v2.0**: If `.spec-chain/APP_DETAILS.md` is incomplete or missing, `/run-spec-chain` will:
   - Create from template if missing
   - Interactively gather required fields
   - Auto-research optional fields if desired
 
 ### 2. Inspiration Materials
-- **Visual** (`/assets/inspiration/visual/`): Colors, typography, UI styles
-- **Functional** (`/assets/inspiration/functional/`): Layouts, workflows, interactions
+- **Visual** (`.spec-chain/assets/inspiration/visual/`): Colors, typography, UI styles
+- **Functional** (`.spec-chain/assets/inspiration/functional/`): Layouts, workflows, interactions
 - Prompts analyze these materials to inform documentation
 
 ### 3. Generated Documentation
-- All output goes to `/specs/[spec-name]/` or `/specs/[timestamp]/`
+- All output goes to `.spec-chain/specs/[spec-name]/` or `.spec-chain/specs/[timestamp]/`
 - Each run creates a unique directory (named or timestamped)
 - Generates 8 core documents plus validation reports
 - Preserves documentation history for comparison
@@ -153,7 +155,7 @@ Phase 5: Planning & Implementation Rules (2 steps - sequential)
 6. **Iterative Validation**: Implementation plans are validated and refined up to 5 times for quality assurance
 7. **Interactive Setup**: run-spec-chain can interactively gather missing APP_DETAILS.md information
 8. **Auto-Research**: Optional fields can be automatically researched based on context
-9. **Playbook Integration**: Implementation plans automatically integrate rules from `/assets/playbooks/`
+9. **Playbook Integration**: Implementation plans automatically integrate rules from `.spec-chain/assets/playbooks/`
 
 ## Development Guidelines
 
@@ -184,7 +186,7 @@ The spec-chain now includes an iterative validation process for implementation p
 2. **Validation**: The `doc-prompt-planner-validator.md` evaluates the plan against requirements
 3. **Iterative Refinement**: If the plan doesn't meet the 85% completion threshold, it's refined based on validation feedback
 4. **Maximum Iterations**: Up to 5 iterations are performed to achieve an approved plan
-5. **Output Files**: 
+5. **Output Files** (in `.spec-chain/specs/[spec-name]/`): 
    - `IMPLEMENTATION_PLAN.md` - The final approved plan
    - `IMPLEMENTATION_PLAN_v1.md` through `IMPLEMENTATION_PLAN_v[N].md` - All iteration versions
    - `VALIDATION_REPORT_v1.md` through `VALIDATION_REPORT_v[N].md` - Validation feedback for each iteration
@@ -207,8 +209,8 @@ This ensures the implementation plan comprehensively covers all requirements and
 ### Debug Generation Issues
 1. Run `/validate-spec-chain` to check for errors
 2. Verify APP_DETAILS.md is completely filled out
-3. Ensure inspiration directories contain appropriate materials
-4. Check individual prompt outputs in `/specs/[spec-name]/`
+3. Ensure inspiration directories contain appropriate materials in `.spec-chain/assets/`
+4. Check individual prompt outputs in `.spec-chain/specs/[spec-name]/`
 5. Review validation reports for implementation plan issues
 
 ## Related Resources
@@ -217,8 +219,8 @@ This ensures the implementation plan comprehensively covers all requirements and
 - **Spec Chain Commands**: `/.claude/commands/spec-chain/`
 - **Command Documentation**: `/.claude/commands/COMMANDS.md`
 - **AI Documentation**: `/ai_docs/AI_DOCS.md`
-- **Generated Documentation Guide**: `/specs/SPECS.md`
-- **Project Examples**: `/specs/` directory
+- **Generated Documentation Guide**: `.spec-chain/specs/SPECS.md`
+- **Project Examples**: `.spec-chain/specs/` directory
 - **Implementation Guides**: Individual prompt documentation
 
 ## Current Configuration

@@ -30,7 +30,7 @@ This directory contains custom Claude Code commands for the Spec Chain project. 
 
 ### 🚀 Spec Chain System
 
-The spec-chain system is a comprehensive AI-powered documentation generator that creates complete software specifications from a single APP_DETAILS.md file.
+The spec-chain system is a comprehensive AI-powered documentation generator that creates complete software specifications from a single APP_DETAILS.md file. All generated content is isolated in a `.spec-chain` directory for clean project organization and portability.
 
 #### Core Management Commands
 
@@ -39,19 +39,20 @@ The spec-chain system is a comprehensive AI-powered documentation generator that
 **Purpose**: Initialize a new Spec Chain project
 **Usage**: `/init-spec-chain`
 **Description**:
-- Creates required directory structure (`/specs/`, `/assets/inspiration/`)
-- Generates APP_DETAILS.md template with detailed instructions
+- Creates required directory structure (`.spec-chain/specs/`, `.spec-chain/assets/inspiration/`)
+- Generates `.spec-chain/APP_DETAILS.md` template with detailed instructions
 - Sets up inspiration directories with usage guides
 - Validates Claude Code permissions and environment
+- Keeps your project root clean by isolating all spec-chain files
 
 ##### `/validate-spec-chain`
 **File**: `spec-chain/validate-spec-chain.md`
 **Purpose**: Validate project setup and requirements
 **Usage**: `/validate-spec-chain`
 **Description**:
-- Checks all required directories exist
-- Validates APP_DETAILS.md completeness and format
-- Reports on inspiration materials availability
+- Checks `.spec-chain/` directory exists and is properly initialized
+- Validates `.spec-chain/APP_DETAILS.md` completeness and format
+- Reports on inspiration materials availability in `.spec-chain/assets/`
 - Provides detailed status report with ✅/⚠️/❌ indicators
 - Ensures environment is ready for documentation generation
 
@@ -76,7 +77,7 @@ The spec-chain system is a comprehensive AI-powered documentation generator that
 
 **Examples**:
 - `/run-spec-chain` - Generate with timestamp
-- `/run-spec-chain my-app` - Generate in `/specs/my-app/`
+- `/run-spec-chain my-app` - Generate in `.spec-chain/specs/my-app/`
 - `/run-spec-chain my-app 3` - Resume from Phase 3
 - `/run-spec-chain my-app 1 8` - Generate with 8 parallel UI design agents
 
@@ -88,7 +89,7 @@ The spec-chain system includes 9 specialized prompts that generate 8 core docume
 **File**: `spec-chain/doc-prompt-prd.md`
 **Purpose**: Generate Product Requirements Document (foundation)
 **Usage**: `/doc-prompt-prd SPEC_NAME`
-**Dependencies**: APP_DETAILS.md
+**Dependencies**: .spec-chain/APP_DETAILS.md
 **Output**: PRD.md
 
 ##### `/doc-prompt-feature-stories`
@@ -103,7 +104,7 @@ The spec-chain system includes 9 specialized prompts that generate 8 core docume
 **File**: `spec-chain/doc-prompt-technical-overview.md`
 **Purpose**: Generate high-level technical architecture overview
 **Usage**: `/doc-prompt-technical-overview SPEC_NAME`
-**Dependencies**: PRD.md, APP_DETAILS.md (technical requirements)
+**Dependencies**: PRD.md, .spec-chain/APP_DETAILS.md (technical requirements)
 **Output**: TECHNICAL_OVERVIEW.md
 **Parallel**: Can run with feature-stories and style
 
@@ -111,7 +112,7 @@ The spec-chain system includes 9 specialized prompts that generate 8 core docume
 **File**: `spec-chain/doc-prompt-style.md`
 **Purpose**: Generate UI/UX style guide and design system
 **Usage**: `/doc-prompt-style SPEC_NAME`
-**Dependencies**: PRD.md, APP_DETAILS.md (design requirements)
+**Dependencies**: PRD.md, .spec-chain/APP_DETAILS.md (design requirements)
 **Output**: STYLE_GUIDE.md
 **Parallel**: Can run with feature-stories and technical-overview
 
@@ -140,7 +141,7 @@ The spec-chain system includes 9 specialized prompts that generate 8 core docume
 **File**: `spec-chain/doc-prompt-planner.md`
 **Purpose**: Generate AI-optimized implementation plan
 **Usage**: `/doc-prompt-planner SPEC_NAME`
-**Dependencies**: TECHNICAL_SPEC.md, playbooks from `/assets/playbooks/`
+**Dependencies**: TECHNICAL_SPEC.md, playbooks from `.spec-chain/assets/playbooks/`
 **Output**: IMPLEMENTATION_PLAN.md
 
 ##### `/doc-prompt-planner-validator`
@@ -196,7 +197,7 @@ Phase 5: Planning & Implementation Rules (Sequential)
 ## Generated Output Structure
 
 ```
-/specs/SPEC_NAME/
+.spec-chain/specs/SPEC_NAME/
 ├── APP_DETAILS.md (input)
 ├── PRD.md (Phase 1)
 ├── FEATURE_STORIES.md (Phase 2a)
@@ -215,7 +216,7 @@ Phase 5: Planning & Implementation Rules (Sequential)
 ### Quick Start
 ```bash
 /init-spec-chain                    # Initialize project
-# Edit APP_DETAILS.md with your project info
+# Edit .spec-chain/APP_DETAILS.md with your project info
 /validate-spec-chain               # Validate setup
 /run-spec-chain my-app             # Generate all documentation
 ```
@@ -244,3 +245,5 @@ wait
 - **Quality**: Based on industry best practices and iterative validation
 - **Flexibility**: Individual prompts can be run independently
 - **Maintainability**: File-based architecture simplifies debugging and updates
+- **Portability**: All spec-chain files isolated in `.spec-chain/` directory
+- **Clean Projects**: Your project root remains uncluttered

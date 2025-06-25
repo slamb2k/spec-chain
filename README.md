@@ -222,7 +222,7 @@ The implementation planning process now includes iterative validation:
 - Up to 5 iterations of refinement based on validation feedback
 - Minimum 85% completion score required for approval
 - Session-based task breakdown with clear acceptance criteria
-- Automatic integration of loaded playbook rules from `/assets/playbooks/`
+- Automatic integration of loaded playbook rules from `.spec-chain/assets/playbooks/`
 
 ### Visual Documentation
 The spec-chain prompts generate various visual elements within the documentation:
