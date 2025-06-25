@@ -18,7 +18,7 @@ OUTPUT_FOLDER: `/specs/SPEC_NAME`
 
 <user_data>
   <app_name>
-  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the app's name.
+  Read the `OUTPUT_FOLDER/APP_DETAILS.md` to understand the app's name and **Design Requirements**. Use this to help steer your potential creative directions and provide feedback on design choices that do not align with the app's design vision.
   </app_name>
 
   <prd>

@@ -58,19 +58,27 @@ The spec-chain system is a comprehensive AI-powered documentation generator that
 ##### `/run-spec-chain`
 **File**: `spec-chain/run-spec-chain.md`
 **Purpose**: Execute the complete documentation generation pipeline
-**Usage**: `/run-spec-chain [spec-name] [start-phase]`
+**Usage**: `/run-spec-chain [spec-name] [start-phase] [parallel-agents]`
 **Description**:
 - Generates 8 core documents in optimized phases
-- Uses parallel execution for independent documents (25-33% faster)
+- Uses parallel execution for independent documents
 - Manages dependencies between document types
 - Creates timestamped output directories
 - Includes iterative validation for implementation plans
 - Supports resuming from specific phases
+- Interactively gathers missing APP_DETAILS.md information
+- Auto-researches optional fields when requested
+
+**Parameters**:
+- `spec-name`: Optional - Output directory name (defaults to timestamp)
+- `start-phase`: Optional - Resume from specific phase (1-5, defaults to 1)
+- `parallel-agents`: Optional - Number of UI preview agents (defaults to 5)
 
 **Examples**:
 - `/run-spec-chain` - Generate with timestamp
 - `/run-spec-chain my-app` - Generate in `/specs/my-app/`
 - `/run-spec-chain my-app 3` - Resume from Phase 3
+- `/run-spec-chain my-app 1 8` - Generate with 8 parallel UI design agents
 
 #### Document Generation Prompts
 
@@ -165,23 +173,24 @@ The spec-chain system includes 9 specialized prompts that generate 8 core docume
 ## Execution Flow
 
 ```
-Phase 1: Foundation
+Phase 1: Foundation (Sequential)
 └── PRD.md
 
-Phase 2 & 3a: Parallel Generation
-├── FEATURE_STORIES.md (parallel)
-├── TECHNICAL_OVERVIEW.md (parallel)
-└── STYLE_GUIDE.md (parallel)
+Phase 2: Feature Analysis & Technical Overview (Parallel)
+├── FEATURE_STORIES.md
+└── TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 3b: UI Documentation (Sequential)
-├── UI_STATES.md (depends on Feature Stories + Style Guide)
-└── UI_PREVIEW.html (depends on UI States)
+Phase 3: Design & UI/UX (Sequential)
+├── STYLE_GUIDE.md
+├── UI_STATES.md (depends on Style Guide)
+└── UI_PREVIEW.html (depends on Style Guide and UI States)
 
-Phase 4: Technical Architecture
-└── TECHNICAL_SPEC.md (depends on all previous)
+Phase 4: Technical Architecture (Sequential)
+└── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 5: Implementation Planning (Iterative)
-└── IMPLEMENTATION_PLAN.md (with validation loop)
+Phase 5: Planning & Implementation Rules (Sequential)
+├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
+└── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
 ```
 
 ## Generated Output Structure

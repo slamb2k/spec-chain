@@ -51,14 +51,20 @@ Checks all requirements and provides status report.
 
 ### Generate Documentation
 ```
-/run-spec-chain [spec-name] [start-phase]
+/run-spec-chain [spec-name] [start-phase] [parallel-agents]
 ```
 Executes the documentation generation pipeline using parallel Task agents for optimized performance, including iterative validation.
+
+**Parameters:**
+- `spec-name`: Optional - Output directory name (defaults to timestamp)
+- `start-phase`: Optional - Resume from specific phase (1-5, defaults to 1)
+- `parallel-agents`: Optional - Number of UI preview agents (defaults to 5)
 
 **Examples:**
 - `/run-spec-chain` - Generate with timestamp
 - `/run-spec-chain my-app` - Generate in /specs/my-app/
 - `/run-spec-chain my-app 3` - Resume from Phase 3
+- `/run-spec-chain my-app 1 8` - Generate with 8 parallel UI design agents
 
 ## Generated Documents
 
@@ -96,6 +102,10 @@ The spec-chain system includes 9 specialized document generation prompts:
 - This is the single source of truth for all project information
 - Contains sections for business, technical, and design requirements
 - All prompts read from this file to maintain consistency
+- **New in v2.0**: If APP_DETAILS.md is incomplete or missing, `/run-spec-chain` will:
+  - Create from template if missing
+  - Interactively gather required fields
+  - Auto-research optional fields if desired
 
 ### 2. Inspiration Materials
 - **Visual** (`/assets/inspiration/visual/`): Colors, typography, UI styles
@@ -116,21 +126,21 @@ The runner uses parallel execution to optimize generation time:
 Phase 1: Foundation (1 prompt)
     └── PRD.md
 
-Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
+Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
     ├── FEATURE_STORIES.md
-    └── TECHNICAL_OVERVIEW.md
+    └── TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 3: Design & UI/UX (3 prompts - SEQUENTIAL)
+Phase 3: Design & UI/UX (3 prompts - sequential)
     ├── STYLE_GUIDE.md
     ├── UI_STATES.md (depends on Style Guide)
     └── UI_PREVIEW.html (depends on Style Guide and UI States)
 
-Phase 4: Technical Architecture (1 prompt)
+Phase 4: Technical Architecture (1 prompt - sequential)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 5: Planning & Implementation Rules (2 steps)
-    ├── 5.1: Load Playbooks and Rules (if available)
-    └── 5.2: Generate Implementation Plan with Iterative Validation
+Phase 5: Planning & Implementation Rules (2 steps - sequential)
+    ├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
+    └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
 ```
 
 ## Important Notes
@@ -138,9 +148,12 @@ Phase 5: Planning & Implementation Rules (2 steps)
 1. **Optimized Execution**: Prompts run in phases with parallel execution where possible
 2. **Timestamp Directories**: Each generation creates a new timestamped folder
 3. **Inspiration Separation**: Visual and functional inspiration are kept separate
-4. **Validation First**: Always run validate-spec-chain before generating docs
+4. **Validation First**: Always run validate-spec-chain before generating docs (or let run-spec-chain handle missing data)
 5. **Parallel Performance**: Independent prompts execute concurrently using Task agents
 6. **Iterative Validation**: Implementation plans are validated and refined up to 5 times for quality assurance
+7. **Interactive Setup**: run-spec-chain can interactively gather missing APP_DETAILS.md information
+8. **Auto-Research**: Optional fields can be automatically researched based on context
+9. **Playbook Integration**: Implementation plans automatically integrate rules from `/assets/playbooks/`
 
 ## Development Guidelines
 

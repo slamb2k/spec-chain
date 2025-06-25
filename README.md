@@ -21,9 +21,10 @@ Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 cor
    This creates the required directory structure and APP_DETAILS.md template.
 
 2. **Create your APP_DETAILS.md**:
-   - Copy `APP_DETAILS.md.example` to `APP_DETAILS.md`
+   - Copy `APP_DETAILS.md.template` to `APP_DETAILS.md`
    - Fill out the required fields (App Name, App Idea, MVP Features, Target Users)
    - Optional fields can be left blank - they will be auto-researched
+   - **Note**: If APP_DETAILS.md is incomplete, `/run-spec-chain` will interactively gather missing information
 
 3. **Add inspiration materials** (optional):
    - Visual references → `/assets/inspiration/visual/`
@@ -65,7 +66,7 @@ The `.claude/commands/spec-chain/` directory contains 9 specialized prompts that
 Initial Idea → PRD → Business/Design/Technical → Implementation → Operations
 ```
 
-The runner now uses **parallel execution** to generate multiple documents concurrently, reducing total generation time by ~60%. See the complete flow diagram below for detailed dependencies.
+The runner now uses **parallel execution** to generate multiple documents concurrently, optimizing total generation time. See the complete flow diagram below for detailed dependencies.
 
 ## 🎯 How to Use Spec Chain
 
@@ -97,21 +98,21 @@ The Spec Chain runner executes prompts in optimized phases with parallel executi
 Phase 1: Foundation (1 prompt)
     └── PRD.md
 
-Phase 2: Feature Analysis & Technical Overview (2 prompts - PARALLEL)
+Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
     ├── FEATURE_STORIES.md
-    └── TECHNICAL_OVERVIEW.md
+    └── TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 3: Design & UI/UX (3 prompts - SEQUENTIAL)
+Phase 3: Design & UI/UX (3 prompts - sequential)
     ├── STYLE_GUIDE.md
     ├── UI_STATES.md (depends on Style Guide)
     └── UI_PREVIEW.html (depends on Style Guide and UI States)
 
-Phase 4: Technical Architecture (1 prompt)
+Phase 4: Technical Architecture (1 prompt - sequential)
     └── TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 5: Planning & Implementation (2 steps)
-    ├── 5.1: Load Playbooks and Rules (if available)
-    └── 5.2: Generate Implementation Plan with Iterative Validation
+Phase 5: Planning & Implementation Rules (2 steps - sequential)
+    ├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
+    └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
          └── IMPLEMENTATION_PLAN.md (with up to 5 validation iterations)
 ```
 
@@ -162,11 +163,16 @@ Validates your project setup:
 
 ### 🚀 run-spec-chain
 Generates complete documentation suite:
-- Creates timestamped output directory
+- Creates timestamped output directory  
 - Executes all prompts in optimized phases to generate 8 core documents
-- **Uses parallel Task agents** for independent prompts (~60% faster)
+- **Uses parallel Task agents** for independent prompts
 - Manages dependencies between documents
 - Produces comprehensive documentation set
+
+**Usage**: `/run-spec-chain [spec-name] [start-phase] [parallel-agents]`
+- `spec-name`: Optional - Output directory name (defaults to timestamp)
+- `start-phase`: Optional - Resume from specific phase (1-5, defaults to 1)
+- `parallel-agents`: Optional - Number of UI preview agents (defaults to 5)
 
 ## 📋 APP_DETAILS.md Structure
 
@@ -202,6 +208,13 @@ Spec Chain can use reference materials to enhance documentation quality:
 
 ## 🔧 Special Features
 
+### Interactive APP_DETAILS.md Gathering
+The `/run-spec-chain` command now includes interactive features:
+- **Automatic template creation** if APP_DETAILS.md doesn't exist
+- **Interactive prompting** for missing required fields
+- **Auto-research option** for optional fields (market analysis, competition, etc.)
+- **Smart validation** to ensure all necessary information is captured
+
 ### AI-Optimized Implementation Plans with Validation
 The implementation planning process now includes iterative validation:
 - **doc-prompt-planner.md** generates development plans structured for AI coding assistants
@@ -209,7 +222,7 @@ The implementation planning process now includes iterative validation:
 - Up to 5 iterations of refinement based on validation feedback
 - Minimum 85% completion score required for approval
 - Session-based task breakdown with clear acceptance criteria
-- Automatic integration of loaded playbook rules
+- Automatic integration of loaded playbook rules from `/assets/playbooks/`
 
 ### Visual Documentation
 The spec-chain prompts generate various visual elements within the documentation:
