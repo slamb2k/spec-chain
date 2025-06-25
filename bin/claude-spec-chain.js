@@ -40,7 +40,7 @@ const getPackagePath = () => {
 };
 
 // Copy directory recursively
-const copyRecursive = (src, dest) => {
+const copyRecursive = (src, dest, skipFiles = []) => {
     if (!fs.existsSync(src)) {
         throw new Error(`Source directory does not exist: ${src}`);
     }
@@ -55,8 +55,13 @@ const copyRecursive = (src, dest) => {
         const srcPath = path.join(src, entry.name);
         const destPath = path.join(dest, entry.name);
         
+        // Skip files in the skipFiles list
+        if (skipFiles.includes(entry.name)) {
+            continue;
+        }
+        
         if (entry.isDirectory()) {
-            copyRecursive(srcPath, destPath);
+            copyRecursive(srcPath, destPath, skipFiles);
         } else {
             fs.copyFileSync(srcPath, destPath);
         }
@@ -97,7 +102,8 @@ const commands = {
                 log.success('Removed existing installation');
             }
             
-            copyRecursive(sourceDir, claudeDir);
+            // Copy files, skipping CLAUDE.md to avoid conflicts
+            copyRecursive(sourceDir, claudeDir, ['CLAUDE.md']);
             log.success('Spec-chain commands installed successfully!');
             
             console.log('\nAvailable commands in Claude Code:');
@@ -105,6 +111,10 @@ const commands = {
             console.log('  /validate-spec-chain - Validate project setup');
             console.log('  /run-spec-chain      - Generate documentation');
             console.log('  /prime              - Prime Claude with project context');
+            
+            console.log('\nNote: Spec-chain commands are self-documenting. If you want Claude to have');
+            console.log('specific context about spec-chain, you can add notes to your project\'s');
+            console.log('.claude/CLAUDE.md file.');
             
         } catch (error) {
             log.error(`Installation failed: ${error.message}`);
@@ -160,7 +170,7 @@ ${colors.yellow}Examples:${colors.reset}
   claude-spec-chain version         # Show version
 
 ${colors.yellow}More Information:${colors.reset}
-  https://github.com/yourusername/spec-chain
+  https://github.com/slamb2k/spec-chain
 `);
     }
 };

@@ -32,6 +32,8 @@ This directory contains custom Claude Code commands for the Spec Chain project. 
 
 The spec-chain system is a comprehensive AI-powered documentation generator that creates complete software specifications from a single APP_DETAILS.md file. All generated content is isolated in a `.spec-chain` directory for clean project organization and portability.
 
+**Note for Claude:** When working with spec-chain commands, all prompts are self-documenting and include their own instructions. The commands work together to generate comprehensive documentation through multiple phases with parallel execution where possible.
+
 #### Core Management Commands
 
 ##### `/init-spec-chain`

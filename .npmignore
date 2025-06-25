@@ -31,8 +31,11 @@ tests/
 .DS_Store
 Thumbs.db
 
+# Exclude CLAUDE.md from .claude directory
+.claude/CLAUDE.md
+
 # Keep only necessary files for npm package
-# .claude/ directory is included by default
+# .claude/ directory is included by default (except CLAUDE.md)
 # bin/ directory is included by default  
 # lib/ directory is included by default
 # README.md is included by default

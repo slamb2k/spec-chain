@@ -148,7 +148,6 @@ install_files() {
     
     # List of files to download
     local files=(
-        "CLAUDE.md"
         "commands/COMMANDS.md"
         "commands/prime.md"
         "commands/spec-chain/init-spec-chain.md"
@@ -313,6 +312,10 @@ main() {
         echo "  4. Run /run-spec-chain to generate documentation"
     fi
     
+    echo ""
+    echo "Note: Spec-chain commands are self-documenting. If you want Claude to have"
+    echo "specific context about spec-chain, you can add notes to your project's"
+    echo ".claude/CLAUDE.md file."
     echo ""
     echo "For more information, visit: $REPO_URL"
 }
