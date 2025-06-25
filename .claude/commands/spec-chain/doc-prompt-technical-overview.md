@@ -10,7 +10,7 @@ Parse the following arguments from "$ARGUMENTS":
 1. `SPEC_NAME` - Name of the specification (first argument)
 
 ## Variables
-OUTPUT_FOLDER: `/specs/SPEC_NAME`
+OUTPUT_FOLDER: `specs/SPEC_NAME`
 
 ## State
 
