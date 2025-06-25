@@ -67,9 +67,9 @@ Each execution creates a directory under `.spec-chain/specs/` (e.g., `.spec-chai
 
 ## Execution Flow
 
-### Step 0: Verify Project Root
+### Step 0: Verify Spec-Chain Initialization
 
-Before proceeding with any operations, verify that this command is being run from the spec-chain project root:
+Before proceeding with any operations, verify that this command is being run from a directory initialized with spec-chain:
 
 1. **Check for required project indicators:**
    - Use LS tool to check if `.spec-chain/` directory exists
@@ -79,7 +79,7 @@ Before proceeding with any operations, verify that this command is being run fro
 2. **If any indicators are missing:**
    - Display error message:
      ```
-     ❌ Error: This command must be run from the spec-chain project root directory.
+     ❌ Error: This command must be run from a directory initialized with /init-spec-chain.
      
      Missing required project files/directories:
      - [list specific missing items]

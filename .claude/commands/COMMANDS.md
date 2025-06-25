@@ -246,4 +246,4 @@ wait
 - **Flexibility**: Individual prompts can be run independently
 - **Maintainability**: File-based architecture simplifies debugging and updates
 - **Portability**: All spec-chain files isolated in `.spec-chain/` directory
-- **Clean Projects**: Your project root remains uncluttered
+- **Clean Projects**: Your project directory remains uncluttered

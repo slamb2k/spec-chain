@@ -2,11 +2,19 @@
 
 A comprehensive system of AI prompts that work together to generate complete product documentation from a single app idea. This repository contains the spec-chain methodology for creating full documentation suites using AI with optimized parallel execution and simplified file-based operations.
 
+**Use spec-chain in any project:** Simply run `/init-spec-chain` in any directory to initialize it for spec-chain usage. All generated content is isolated in a `.spec-chain` directory for portability and clean project organization.
+
 ## 🚀 What is Spec Chain?
 
 Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
 
-### ⚡ **New in v2.0**: Simplified Execution & Parallel Processing
+### ⚡ **New in v3.0**: Isolated Project Structure
+- **Isolated Generation**: All spec-chain files now live in `.spec-chain/` directory
+- **Portable Commands**: Initialize and run spec-chain in any project directory
+- **Easy Verification**: Simple check for `.spec-chain/` directory confirms initialization
+- **Any Directory**: Works in any folder after running `/init-spec-chain`
+
+### **v2.0 Features**: Simplified Execution & Parallel Processing
 - **File-Based Architecture**: All prompts now use simplified file-based loading instead of complex argument passing
 - **Parallel Execution**: Independent documents generate simultaneously, reducing total time by 25-33%
 - **Single Argument Interface**: All prompts now only require the spec name as an argument
@@ -121,45 +129,49 @@ Phase 5: Planning & Implementation Rules (2 steps - sequential)
 ## 📁 Project Structure
 
 ```
-spec-chain/
+any-directory/                      # Any directory where you run /init-spec-chain
+├── .spec-chain/                    # Created by /init-spec-chain
+│   ├── APP_DETAILS.md              # Your application details
+│   ├── APP_DETAILS.md.template     # Template for new projects
+│   ├── assets/
+│   │   ├── inspiration/
+│   │   │   ├── visual/            # Visual design references
+│   │   │   └── functional/        # Functional/UX references
+│   │   └── playbooks/             # Development playbooks
+│   └── specs/
+│       ├── SPECS.md               # Generated documentation guide
+│       └── [timestamp]/           # Each run creates timestamped folder
+└── [your existing files]          # Your existing project files remain untouched
+
+spec-chain package:
 ├── .claude/
 │   ├── CLAUDE.md                   # Claude Code guidance
 │   └── commands/
-│       ├── COMMANDS.md                 # Command documentation
-│       ├── prime.md                    # Context priming
-│       └── spec-chain/                 # All spec-chain commands and prompts
-│           ├── init-spec-chain.md          # Initialize project structure
-│           ├── validate-spec-chain.md      # Validate setup
-│           ├── run-spec-chain.md           # Generate documentation
-│           └── [9 doc-prompt files]        # Document generation prompts
-├── ai_docs/
-│   ├── AI_DOCS.md                  # AI documentation overview
-│   ├── extended_thinking.md        # Claude extended thinking guide
-│   ├── implement-tool-use.md       # Tool use implementation guide
-│   └── prompt_caching.md          # Prompt caching optimization
-├── assets/
-│   └── inspiration/
-│       ├── visual/                 # Visual design references
-│       └── functional/             # Functional/UX references
-├── specs/
-│   ├── SPECS.md                    # Generated documentation guide
-│   └── [timestamp]/                # Each run creates timestamped folder
-└── APP_DETAILS.md                  # Your application details
+│       ├── COMMANDS.md             # Command documentation
+│       ├── prime.md                # Context priming
+│       └── spec-chain/             # All spec-chain commands
+│           ├── init-spec-chain.md      # Initialize project
+│           ├── validate-spec-chain.md  # Validate setup
+│           ├── run-spec-chain.md       # Generate docs
+│           └── [9 doc-prompt files]    # Document generation prompts
+└── [documentation files]
 
 ## 🛠️ Key Commands
 
 ### 🎲 init-spec-chain
-Initializes a new Spec Chain project:
-- Creates required directory structure
-- Generates APP_DETAILS.md template with detailed instructions
-- Sets up inspiration directories with guides
+Initializes spec-chain in the current directory:
+- Creates `.spec-chain/` directory structure
+- Generates `.spec-chain/APP_DETAILS.md` template with detailed instructions
+- Sets up `.spec-chain/assets/inspiration/` directories with guides
+- Works in any directory - transforms it into a spec-chain enabled project
 
 ### ✅ validate-spec-chain
-Validates your project setup:
-- Checks all directories and files exist
-- Validates APP_DETAILS.md completeness
-- Reports on inspiration materials
+Validates spec-chain setup in the current directory:
+- Checks `.spec-chain/` directory exists and is properly initialized
+- Validates `.spec-chain/APP_DETAILS.md` completeness
+- Reports on inspiration materials in `.spec-chain/assets/`
 - Provides detailed status report with ✅/⚠️/❌ indicators
+- Confirms the directory is ready for documentation generation
 
 ### 🚀 run-spec-chain
 Generates complete documentation suite:
