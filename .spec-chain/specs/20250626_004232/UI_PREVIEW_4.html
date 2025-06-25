@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Artistic Expression</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --paper-white: #faf8f3;
+            --warm-cream: #f5e6d3;
+            --sketch-brown: #8b6f47;
+            --ink-blue: #2c5aa0;
+            --watercolor-blue: rgba(44, 90, 160, 0.15);
+            --pencil-gray: #5a5a5a;
+            --eraser-pink: #ff9999;
+            --highlight-yellow: #ffd93d;
+            --shadow-soft: 0 4px 20px rgba(139, 111, 71, 0.1);
+            --shadow-paper: 2px 2px 10px rgba(139, 111, 71, 0.2);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--paper-white);
+            color: var(--pencil-gray);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 111, 71, 0.03) 2px,
+                    rgba(139, 111, 71, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 111, 71, 0.03) 2px,
+                    rgba(139, 111, 71, 0.03) 4px
+                ),
+                radial-gradient(ellipse at top left, var(--warm-cream) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(255, 217, 61, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Paper Card Styles */
+        .paper-card {
+            background: white;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: var(--shadow-paper);
+            transform: rotate(-0.5deg);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .paper-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent 30%, rgba(139, 111, 71, 0.1) 100%);
+            border-radius: 5px;
+            z-index: -1;
+        }
+        
+        .paper-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(139, 111, 71, 0.02) 10px,
+                    rgba(139, 111, 71, 0.02) 20px
+                );
+            pointer-events: none;
+        }
+        
+        .paper-card:hover {
+            transform: rotate(0deg) scale(1.02);
+            box-shadow: 0 8px 30px rgba(139, 111, 71, 0.2);
+        }
+        
+        /* Handwritten Fonts */
+        .handwritten {
+            font-family: 'Kalam', cursive;
+        }
+        
+        .handwritten-light {
+            font-family: 'Caveat', cursive;
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            display: none;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            transform: rotate(-2deg);
+            animation: floatPaper 6s ease-in-out infinite;
+        }
+        
+        @keyframes floatPaper {
+            0%, 100% { transform: rotate(-2deg) translateY(0px); }
+            50% { transform: rotate(-1deg) translateY(-10px); }
+        }
+        
+        .login-title {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: var(--ink-blue);
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--highlight-yellow);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+        
+        .sketch-input {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border: 2px solid var(--sketch-brown);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            font-family: 'Kalam', cursive;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .sketch-input:focus {
+            outline: none;
+            border-color: var(--ink-blue);
+            background: white;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(44, 90, 160, 0.2);
+        }
+        
+        .sketch-button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: var(--ink-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-family: 'Kalam', cursive;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: rotate(-1deg);
+        }
+        
+        .sketch-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .sketch-button:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 6px 20px rgba(44, 90, 160, 0.3);
+        }
+        
+        .sketch-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Dashboard */
+        .dashboard-screen {
+            display: none;
+        }
+        
+        .artistic-header {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-paper);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .artistic-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: var(--watercolor-blue);
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .welcome-text {
+            font-size: 32px;
+            color: var(--ink-blue);
+            margin-bottom: 5px;
+        }
+        
+        .nav-pills {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-pill {
+            padding: 10px 20px;
+            background: var(--warm-cream);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-family: 'Kalam', cursive;
+            font-weight: 600;
+            color: var(--pencil-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-pill::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--highlight-yellow);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-pill:hover, .nav-pill.active {
+            border-color: var(--sketch-brown);
+            transform: translateY(-2px) rotate(-1deg);
+        }
+        
+        .nav-pill:hover::before, .nav-pill.active::before {
+            width: 100%;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: sketchIn 0.6s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes sketchIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) rotate(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            padding: 30px;
+            text-align: center;
+            transform: rotate(var(--rotation, -1deg));
+            cursor: pointer;
+        }
+        
+        .stat-card:nth-child(1) { --rotation: -1.5deg; }
+        .stat-card:nth-child(2) { --rotation: 1deg; }
+        .stat-card:nth-child(3) { --rotation: -0.8deg; }
+        .stat-card:nth-child(4) { --rotation: 1.2deg; }
+        
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .sketch-circle {
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--ink-blue);
+            border-radius: 50%;
+            position: relative;
+            animation: wobble 4s ease-in-out infinite;
+        }
+        
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            75% { transform: rotate(-3deg); }
+        }
+        
+        .sketch-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: var(--ink-blue);
+        }
+        
+        .stat-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--ink-blue);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 18px;
+            color: var(--pencil-gray);
+        }
+        
+        /* Contract Viewer */
+        .contract-paper {
+            background: white;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: var(--shadow-paper);
+            position: relative;
+            transform: rotate(-0.5deg);
+        }
+        
+        .contract-paper::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            bottom: 40px;
+            border: 1px solid rgba(139, 111, 71, 0.2);
+            border-radius: 3px;
+        }
+        
+        .contract-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .contract-title {
+            font-size: 36px;
+            color: var(--ink-blue);
+            margin-bottom: 20px;
+        }
+        
+        .contract-content {
+            line-height: 1.8;
+            color: var(--pencil-gray);
+            position: relative;
+        }
+        
+        .contract-content p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .highlight-marker {
+            background: linear-gradient(transparent 40%, var(--highlight-yellow) 40%, var(--highlight-yellow) 90%, transparent 90%);
+            padding: 0 4px;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px dashed var(--sketch-brown);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .signature-box {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid var(--pencil-gray);
+            margin: 20px 0 10px;
+            position: relative;
+            height: 60px;
+        }
+        
+        .signature-text {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: var(--ink-blue);
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Expense Form */
+        .expense-form {
+            background: white;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: var(--shadow-paper);
+            transform: rotate(-1deg);
+        }
+        
+        .form-doodle {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .doodle-1 {
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            transform: rotate(15deg);
+        }
+        
+        .doodle-2 {
+            bottom: 20px;
+            left: 20px;
+            font-size: 30px;
+            transform: rotate(-20deg);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .sketch-label {
+            display: block;
+            margin-bottom: 10px;
+            font-family: 'Kalam', cursive;
+            font-size: 18px;
+            color: var(--ink-blue);
+            font-weight: 600;
+        }
+        
+        .sketch-select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--sketch-brown);
+            border-radius: 5px;
+            background: white;
+            font-size: 16px;
+            font-family: 'Kalam', cursive;
+            color: var(--pencil-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b6f47' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .receipt-upload {
+            border: 3px dashed var(--sketch-brown);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: var(--warm-cream);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .receipt-upload:hover {
+            border-color: var(--ink-blue);
+            background: white;
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--sketch-brown);
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Schedule Timeline */
+        .timeline-container {
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--sketch-brown);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-start;
+            padding-right: 50%;
+        }
+        
+        .timeline-item:nth-child(even) {
+            justify-content: flex-end;
+            padding-left: 50%;
+        }
+        
+        .timeline-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-paper);
+            max-width: 400px;
+            width: 100%;
+            transform: rotate(var(--card-rotation, -1deg));
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(1) .timeline-card { --card-rotation: -2deg; }
+        .timeline-item:nth-child(2) .timeline-card { --card-rotation: 1.5deg; }
+        .timeline-item:nth-child(3) .timeline-card { --card-rotation: -1deg; }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--ink-blue);
+            border: 4px solid var(--paper-white);
+            border-radius: 50%;
+            z-index: 3;
+        }
+        
+        .event-date {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: var(--ink-blue);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .event-title {
+            font-family: 'Kalam', cursive;
+            font-size: 20px;
+            color: var(--pencil-gray);
+            margin-bottom: 5px;
+        }
+        
+        .event-location {
+            font-size: 14px;
+            color: var(--sketch-brown);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                padding-left: 60px !important;
+                padding-right: 20px !important;
+                justify-content: flex-start !important;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-section {
+                flex-direction: column;
+            }
+            
+            .login-title {
+                font-size: 36px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+        }
+        
+        .spinner-circle {
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--warm-cream);
+            border-top-color: var(--ink-blue);
+            border-radius: 50%;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-paper);
+            transform: translateY(100px) rotate(-2deg);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateY(0) rotate(-1deg);
+            opacity: 1;
+        }
+        
+        .toast-message {
+            font-family: 'Kalam', cursive;
+            font-size: 18px;
+            color: var(--pencil-gray);
+        }
+        
+        /* Logout Button */
+        .logout-btn {
+            padding: 8px 20px;
+            background: var(--eraser-pink);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Kalam', cursive;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 4px 15px rgba(255, 153, 153, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner">
+        <div class="spinner-circle"></div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-message" id="toastMessage"></div>
+    </div>
+    
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="paper-card login-card">
+            <h1 class="login-title handwritten">BIG Live</h1>
+            <p class="handwritten-light" style="text-align: center; font-size: 24px; margin-bottom: 30px; color: var(--sketch-brown);">
+                Your creative journey starts here ✨
+            </p>
+            <form id="loginForm">
+                <input type="email" class="sketch-input" placeholder="Your email..." required>
+                <input type="password" class="sketch-input" placeholder="Your secret password..." required>
+                <button type="submit" class="sketch-button">Let's Go! →</button>
+            </form>
+            <p class="handwritten-light" style="text-align: center; margin-top: 20px; font-size: 18px; color: var(--pencil-gray);">
+                Forgot password? Don't worry, we've all been there...
+            </p>
+        </div>
+    </div>
+    
+    <!-- Dashboard Screen -->
+    <div class="dashboard-screen" id="dashboardScreen">
+        <div class="container">
+            <!-- Header -->
+            <div class="artistic-header">
+                <div class="header-content">
+                    <div>
+                        <h1 class="welcome-text handwritten">Welcome back, Artist! 🎨</h1>
+                        <p class="handwritten-light" style="font-size: 20px; color: var(--sketch-brown);">
+                            Let's make today count!
+                        </p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <nav class="nav-pills" style="margin-top: 20px;">
+                    <div class="nav-pill active" onclick="showSection('overview')">Overview</div>
+                    <div class="nav-pill" onclick="showSection('contracts')">Contracts</div>
+                    <div class="nav-pill" onclick="showSection('expenses')">Expenses</div>
+                    <div class="nav-pill" onclick="showSection('schedule')">Schedule</div>
+                </nav>
+            </div>
+            
+            <!-- Overview Section -->
+            <div class="content-section active" id="overview">
+                <div class="dashboard-grid">
+                    <div class="paper-card stat-card" onclick="showSection('contracts')">
+                        <div class="stat-icon">
+                            <div class="sketch-circle">
+                                <div class="sketch-icon">📄</div>
+                            </div>
+                        </div>
+                        <div class="stat-value handwritten">12</div>
+                        <div class="stat-label handwritten-light">Active Contracts</div>
+                    </div>
+                    
+                    <div class="paper-card stat-card" onclick="showSection('expenses')">
+                        <div class="stat-icon">
+                            <div class="sketch-circle">
+                                <div class="sketch-icon">💰</div>
+                            </div>
+                        </div>
+                        <div class="stat-value handwritten">$3,240</div>
+                        <div class="stat-label handwritten-light">Pending Expenses</div>
+                    </div>
+                    
+                    <div class="paper-card stat-card" onclick="showSection('schedule')">
+                        <div class="stat-icon">
+                            <div class="sketch-circle">
+                                <div class="sketch-icon">📅</div>
+                            </div>
+                        </div>
+                        <div class="stat-value handwritten">8</div>
+                        <div class="stat-label handwritten-light">Upcoming Shows</div>
+                    </div>
+                    
+                    <div class="paper-card stat-card">
+                        <div class="stat-icon">
+                            <div class="sketch-circle">
+                                <div class="sketch-icon">⭐</div>
+                            </div>
+                        </div>
+                        <div class="stat-value handwritten">94%</div>
+                        <div class="stat-label handwritten-light">Performance Rating</div>
+                    </div>
+                </div>
+                
+                <div class="paper-card" style="margin-top: 30px; padding: 30px;">
+                    <h2 class="handwritten" style="font-size: 28px; margin-bottom: 20px; color: var(--ink-blue);">
+                        Quick Notes 📝
+                    </h2>
+                    <div style="font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.8; color: var(--pencil-gray);">
+                        <p>• Remember to submit receipts for last week's travel ✈️</p>
+                        <p>• New contract from Jazz Club awaiting signature 🎷</p>
+                        <p>• Team meeting scheduled for Friday @ 3pm ☕</p>
+                        <p>• Great job on the Symphony Hall performance! 🎭</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contracts Section -->
+            <div class="content-section" id="contracts">
+                <h2 class="handwritten" style="font-size: 36px; margin-bottom: 30px; color: var(--ink-blue);">
+                    Your Contracts 📜
+                </h2>
+                
+                <div class="contract-paper">
+                    <div class="contract-header">
+                        <h3 class="contract-title handwritten">Performance Agreement</h3>
+                        <p class="handwritten-light" style="font-size: 20px; color: var(--sketch-brown);">
+                            Jazz Club International - 2024 Season
+                        </p>
+                    </div>
+                    
+                    <div class="contract-content">
+                        <p>This agreement is entered into between <span class="highlight-marker">BIG Live Agency</span> 
+                        (hereinafter "Agency") and <span class="highlight-marker">Jazz Club International</span> 
+                        (hereinafter "Venue") for professional performance services.</p>
+                        
+                        <p><strong>Performance Details:</strong><br>
+                        The Artist shall perform a series of <span class="highlight-marker">12 shows</span> 
+                        during the 2024 season, with each performance lasting approximately 90 minutes.</p>
+                        
+                        <p><strong>Compensation:</strong><br>
+                        The Venue agrees to pay the Artist a fee of <span class="highlight-marker">$2,500 per show</span>, 
+                        totaling $30,000 for the complete series.</p>
+                    </div>
+                    
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="signature-line">
+                                <span class="signature-text">Sarah Johnson</span>
+                            </div>
+                            <p class="handwritten-light">Artist Representative</p>
+                        </div>
+                        <div class="signature-box">
+                            <div class="signature-line">
+                                <span class="signature-text">Michael Chen</span>
+                            </div>
+                            <p class="handwritten-light">Venue Manager</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <div class="paper-card" style="padding: 20px; cursor: pointer;">
+                        <h4 class="handwritten" style="color: var(--ink-blue); margin-bottom: 10px;">Symphony Hall</h4>
+                        <p class="handwritten-light" style="font-size: 18px;">Status: Active ✓</p>
+                        <p style="color: var(--pencil-gray);">Next performance: Dec 15</p>
+                    </div>
+                    <div class="paper-card" style="padding: 20px; cursor: pointer;">
+                        <h4 class="handwritten" style="color: var(--ink-blue); margin-bottom: 10px;">Blue Note Cafe</h4>
+                        <p class="handwritten-light" style="font-size: 18px;">Status: Pending 🕐</p>
+                        <p style="color: var(--pencil-gray);">Awaiting signature</p>
+                    </div>
+                    <div class="paper-card" style="padding: 20px; cursor: pointer;">
+                        <h4 class="handwritten" style="color: var(--ink-blue); margin-bottom: 10px;">City Theater</h4>
+                        <p class="handwritten-light" style="font-size: 18px;">Status: Active ✓</p>
+                        <p style="color: var(--pencil-gray);">6 shows remaining</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expenses Section -->
+            <div class="content-section" id="expenses">
+                <h2 class="handwritten" style="font-size: 36px; margin-bottom: 30px; color: var(--ink-blue);">
+                    Submit Expense 💸
+                </h2>
+                
+                <div class="expense-form paper-card" style="position: relative;">
+                    <span class="form-doodle doodle-1">💡</span>
+                    <span class="form-doodle doodle-2">✨</span>
+                    
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label class="sketch-label">What did you spend on?</label>
+                            <select class="sketch-select" required>
+                                <option value="">Choose a category...</option>
+                                <option value="travel">✈️ Travel & Transport</option>
+                                <option value="accommodation">🏨 Accommodation</option>
+                                <option value="meals">🍽️ Meals & Entertainment</option>
+                                <option value="equipment">🎸 Equipment & Supplies</option>
+                                <option value="other">📦 Other Expenses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="sketch-label">How much? 💰</label>
+                            <input type="number" class="sketch-input" placeholder="$0.00" step="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="sketch-label">Tell us more...</label>
+                            <textarea class="sketch-input" rows="3" placeholder="What's the story behind this expense?" style="resize: none;"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="sketch-label">Got a receipt? 📸</label>
+                            <div class="receipt-upload">
+                                <div class="upload-icon">📎</div>
+                                <p class="handwritten" style="font-size: 20px; color: var(--sketch-brown);">
+                                    Drop it here or click to browse
+                                </p>
+                                <p style="font-size: 14px; color: var(--pencil-gray); margin-top: 10px;">
+                                    JPG, PNG or PDF (max 5MB)
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="sketch-button">Submit Expense ✓</button>
+                    </form>
+                </div>
+                
+                <div class="paper-card" style="margin-top: 30px; padding: 30px;">
+                    <h3 class="handwritten" style="font-size: 28px; margin-bottom: 20px; color: var(--ink-blue);">
+                        Recent Submissions 📋
+                    </h3>
+                    <div style="space-y: 15px;">
+                        <div style="padding: 15px; background: var(--warm-cream); border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <p class="handwritten" style="font-size: 20px; color: var(--ink-blue);">Hotel Stay - NYC</p>
+                                    <p style="color: var(--pencil-gray);">Dec 8, 2024</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p class="handwritten" style="font-size: 24px; color: var(--ink-blue);">$245.00</p>
+                                    <span style="background: var(--highlight-yellow); padding: 2px 10px; border-radius: 15px; font-size: 14px;">Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 15px; background: var(--warm-cream); border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <p class="handwritten" style="font-size: 20px; color: var(--ink-blue);">Train Tickets</p>
+                                    <p style="color: var(--pencil-gray);">Dec 5, 2024</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p class="handwritten" style="font-size: 24px; color: var(--ink-blue);">$89.50</p>
+                                    <span style="background: #90EE90; padding: 2px 10px; border-radius: 15px; font-size: 14px;">Approved</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schedule Section -->
+            <div class="content-section" id="schedule">
+                <h2 class="handwritten" style="font-size: 36px; margin-bottom: 30px; color: var(--ink-blue); text-align: center;">
+                    Your Creative Journey 🎭
+                </h2>
+                
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-card">
+                            <div class="event-date">December 15, 2024</div>
+                            <div class="event-title">Symphony Hall Performance</div>
+                            <div class="event-location">
+                                <span>📍</span> Boston, MA • 7:30 PM
+                            </div>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-card">
+                            <div class="event-date">December 18, 2024</div>
+                            <div class="event-title">Jazz Club Special</div>
+                            <div class="event-location">
+                                <span>📍</span> New York, NY • 9:00 PM
+                            </div>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-card">
+                            <div class="event-date">December 22, 2024</div>
+                            <div class="event-title">Holiday Concert</div>
+                            <div class="event-location">
+                                <span>📍</span> Chicago, IL • 8:00 PM
+                            </div>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                </div>
+                
+                <div class="paper-card" style="margin: 40px auto; max-width: 600px; padding: 30px; text-align: center;">
+                    <h3 class="handwritten" style="font-size: 28px; color: var(--ink-blue); margin-bottom: 20px;">
+                        Ready for your next adventure? 🚀
+                    </h3>
+                    <p class="handwritten-light" style="font-size: 20px; color: var(--pencil-gray); margin-bottom: 20px;">
+                        "Every performance is a chance to touch someone's soul"
+                    </p>
+                    <button class="sketch-button" style="max-width: 300px; margin: 0 auto;">
+                        View Full Calendar →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showScreen('login');
+            
+            // Add paper texture animation
+            document.addEventListener('mousemove', function(e) {
+                const cards = document.querySelectorAll('.paper-card');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const deltaX = (x - centerX) / centerX;
+                    const deltaY = (y - centerY) / centerY;
+                    
+                    if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
+                        card.style.transform = `perspective(1000px) rotateY(${deltaX * 2}deg) rotateX(${-deltaY * 2}deg)`;
+                    }
+                });
+            });
+        });
+        
+        // Screen Management
+        function showScreen(screen) {
+            document.querySelectorAll('[id$="Screen"]').forEach(s => s.style.display = 'none');
+            if (screen === 'login') {
+                document.getElementById('loginScreen').style.display = 'flex';
+            } else {
+                document.getElementById(screen + 'Screen').style.display = 'block';
+            }
+        }
+        
+        // Section Management
+        function showSection(section) {
+            // Update nav pills
+            document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.getElementById(section).classList.add('active');
+            
+            // Show loading animation
+            showLoading();
+            setTimeout(hideLoading, 300);
+        }
+        
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            // Simulate login
+            setTimeout(() => {
+                hideLoading();
+                showScreen('dashboard');
+                showToast('Welcome back! Let\'s create something amazing today! 🎨');
+            }, 1500);
+        });
+        
+        // Expense Form
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            setTimeout(() => {
+                hideLoading();
+                showToast('Expense submitted! We\'ll review it with love 💕');
+                e.target.reset();
+            }, 1000);
+        });
+        
+        // Loading Functions
+        function showLoading() {
+            document.querySelector('.loading-spinner').style.display = 'block';
+        }
+        
+        function hideLoading() {
+            document.querySelector('.loading-spinner').style.display = 'none';
+        }
+        
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Logout
+        function logout() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                showScreen('login');
+                showToast('See you soon! Keep creating! 🌟');
+            }, 500);
+        }
+        
+        // Receipt Upload
+        document.querySelector('.receipt-upload').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,.pdf';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    showToast(`Receipt "${file.name}" selected! 📸`);
+                }
+            };
+            input.click();
+        });
+        
+        // Add playful interactions
+        document.querySelectorAll('.sketch-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'rotate(-2deg) scale(1.05)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'rotate(-1deg) scale(1)';
+            });
+        });
+        
+        // Stat card interactions
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.sketch-circle');
+                icon.style.animation = 'wobble 0.5s ease-in-out';
+                setTimeout(() => {
+                    icon.style.animation = 'wobble 4s ease-in-out infinite';
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

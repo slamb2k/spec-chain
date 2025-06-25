@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Industrial Design</title>
+    <style>
+        /* Industrial Design System - Component Architecture */
+        :root {
+            /* Core Colors */
+            --primary: #37474F;
+            --primary-light: #546E7A;
+            --primary-dark: #263238;
+            --accent: #FF6F00;
+            --accent-light: #FFB74D;
+            --success: #00C853;
+            --warning: #FF6F00;
+            --error: #D50000;
+            --info: #0091EA;
+            
+            /* Neutral Palette */
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #EEEEEE;
+            --gray-300: #E0E0E0;
+            --gray-400: #BDBDBD;
+            --gray-500: #9E9E9E;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --gray-900: #212121;
+            
+            /* System Variables */
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border: #E0E0E0;
+            
+            /* Industrial Shadows */
+            --shadow-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --shadow-3: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            
+            /* Typography Scale */
+            --font-mono: 'Roboto Mono', 'Courier New', monospace;
+            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            /* Component Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-xxl: 48px;
+            
+            /* Industrial Grid */
+            --grid-unit: 8px;
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Component: Typography */
+        .heading-1 {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .heading-2 {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .heading-3 {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .body-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .caption {
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 13px;
+        }
+
+        /* Component: Grid System */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        .grid-cols-1 { grid-template-columns: 1fr; }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+        /* Component: Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-1);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-2);
+        }
+
+        .card-header {
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            color: var(--text-secondary);
+        }
+
+        /* Component: Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-sm) var(--space-lg);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-1);
+        }
+
+        .btn-primary:active {
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-100);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-light);
+        }
+
+        /* Component: Forms */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-size: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all 0.2s ease;
+            font-family: var(--font-sans);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(55, 71, 79, 0.2);
+        }
+
+        /* Component: Status Indicators */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        .status-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-error {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Keyboard Navigation Indicators */
+        .kbd-indicator {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: var(--space-lg);
+            background: var(--primary-dark);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            box-shadow: var(--shadow-2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .kbd-indicator.active {
+            display: block;
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+        }
+
+        .login-panel {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-3);
+        }
+
+        .login-header {
+            background: var(--primary);
+            color: white;
+            padding: var(--space-xl);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .login-tagline {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .login-body {
+            padding: var(--space-xl);
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+        /* Component: Top Bar */
+        .top-bar {
+            background: var(--primary);
+            color: white;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow-1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar-brand {
+            padding: 0 var(--space-lg);
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .top-bar-nav {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .top-bar-item {
+            padding: 0 var(--space-lg);
+            height: 48px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .top-bar-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .top-bar-item.active {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .top-bar-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .top-bar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .kbd-hint {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            opacity: 0.7;
+            margin-left: var(--space-sm);
+        }
+
+        /* Component: Side Panel */
+        .layout-container {
+            display: flex;
+        }
+
+        .side-panel {
+            width: 240px;
+            background: var(--gray-100);
+            border-right: 1px solid var(--border);
+            min-height: calc(100vh - 48px);
+            padding: var(--space-lg);
+        }
+
+        .side-panel-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .side-panel-title {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .side-menu {
+            list-style: none;
+        }
+
+        .side-menu-item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .side-menu-link {
+            display: block;
+            padding: var(--space-sm) var(--space-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .side-menu-link:hover {
+            background: var(--gray-200);
+            border-left-color: var(--primary-light);
+        }
+
+        .side-menu-link.active {
+            background: var(--surface);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: var(--space-xl);
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* Component: Data Table */
+        .data-table {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-1);
+        }
+
+        .data-table thead {
+            background: var(--gray-100);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .data-table th {
+            padding: var(--space-md);
+            text-align: left;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .data-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .data-table tbody tr:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        /* Component: Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+            font-family: var(--font-mono);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .stat-change {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        /* Component: Action Bar */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--gray-100);
+            border: 1px solid var(--border);
+        }
+
+        .action-bar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex: 1;
+        }
+
+        .action-bar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        /* Component: Search Box */
+        .search-box {
+            position: relative;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            padding-left: 36px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* Component: Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: var(--gray-100);
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .modal-body {
+            padding: var(--space-lg);
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            background: var(--gray-100);
+            padding: var(--space-md) var(--space-lg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-md);
+        }
+
+        /* Quick Command Palette */
+        .command-palette {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            background: var(--surface);
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow-3);
+            display: none;
+            z-index: 2000;
+        }
+
+        .command-palette.active {
+            display: block;
+        }
+
+        .command-input {
+            width: 100%;
+            padding: var(--space-lg);
+            font-size: 18px;
+            border: none;
+            background: var(--gray-100);
+            font-family: var(--font-mono);
+        }
+
+        .command-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .command-item {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .command-item:hover,
+        .command-item.selected {
+            background: var(--gray-100);
+        }
+
+        .command-item-text {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .command-shortcut {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--gray-200);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        /* Keyboard Shortcuts Guide */
+        .shortcuts-guide {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-3);
+            padding: var(--space-lg);
+            display: none;
+            z-index: 500;
+            min-width: 300px;
+        }
+
+        .shortcuts-guide.active {
+            display: block;
+        }
+
+        .shortcuts-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            font-size: 12px;
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 4px;
+        }
+
+        .key {
+            background: var(--gray-200);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            border-radius: 2px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .side-panel {
+                display: none;
+            }
+
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-cols-2,
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .command-palette {
+                width: 90%;
+            }
+        }
+
+        /* Focus Styles */
+        *:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        a:focus {
+            outline-offset: 0;
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Keyboard Indicator -->
+    <div class="kbd-indicator" id="kbdIndicator"></div>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-panel">
+            <div class="login-header">
+                <h1 class="login-logo">BIG LIVE PORTAL</h1>
+                <p class="login-tagline">Industrial-Grade Artist Management</p>
+            </div>
+            <div class="login-body">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" required autofocus>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-input" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        SIGN IN
+                    </button>
+                </form>
+                
+                <div style="text-align: center; margin-top: var(--space-lg);">
+                    <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 12px;">
+                        FORGOT PASSWORD?
+                    </a>
+                </div>
+
+                <div style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border);">
+                    <p class="caption" style="text-align: center;">
+                        Press <span class="key">?</span> for keyboard shortcuts
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-brand">BIG LIVE</div>
+            <nav class="top-bar-nav">
+                <a href="#" class="top-bar-item active" data-section="overview">
+                    OVERVIEW
+                    <span class="kbd-hint">[1]</span>
+                </a>
+                <a href="#" class="top-bar-item" data-section="contracts">
+                    CONTRACTS
+                    <span class="kbd-hint">[2]</span>
+                </a>
+                <a href="#" class="top-bar-item" data-section="expenses">
+                    EXPENSES
+                    <span class="kbd-hint">[3]</span>
+                </a>
+                <a href="#" class="top-bar-item" data-section="schedule">
+                    SCHEDULE
+                    <span class="kbd-hint">[4]</span>
+                </a>
+            </nav>
+            <div class="top-bar-right">
+                <button class="top-bar-item" onclick="openCommandPalette()" style="background: none; border: none; cursor: pointer;">
+                    <span class="mono">⌘K</span>
+                </button>
+                <div class="top-bar-item">
+                    <span>SARAH CHEN</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Layout Container -->
+        <div class="layout-container">
+            <!-- Side Panel -->
+            <aside class="side-panel">
+                <div class="side-panel-section">
+                    <h3 class="side-panel-title">Quick Actions</h3>
+                    <ul class="side-menu">
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link" onclick="showNewContract()">
+                                + New Contract
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link" onclick="showNewExpense()">
+                                + Submit Expense
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                + Add Event
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="side-panel-section">
+                    <h3 class="side-panel-title">Filters</h3>
+                    <ul class="side-menu">
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link active">
+                                All Items
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                Pending Actions
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                This Week
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                This Month
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="side-panel-section">
+                    <h3 class="side-panel-title">System</h3>
+                    <div style="padding: var(--space-md);">
+                        <div class="caption">Version 1.0.0</div>
+                        <div class="caption">Last sync: 2 min ago</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Overview Section -->
+                <section id="overview-section" class="content-section">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard Overview</h1>
+                        <p class="page-subtitle">Real-time performance metrics and system status</p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card" tabindex="0">
+                            <div class="stat-value">03</div>
+                            <div class="stat-label">Active Contracts</div>
+                            <div class="stat-change positive">+1</div>
+                        </div>
+                        <div class="stat-card" tabindex="0">
+                            <div class="stat-value">$2,847</div>
+                            <div class="stat-label">Pending Expenses</div>
+                            <div class="stat-change negative">+12%</div>
+                        </div>
+                        <div class="stat-card" tabindex="0">
+                            <div class="stat-value">08</div>
+                            <div class="stat-label">Upcoming Events</div>
+                            <div class="stat-change positive">ON TRACK</div>
+                        </div>
+                        <div class="stat-card" tabindex="0">
+                            <div class="stat-value">92%</div>
+                            <div class="stat-label">Compliance Rate</div>
+                            <div class="stat-change positive">+3%</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">RECENT ACTIVITY</h2>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>TIMESTAMP</th>
+                                        <th>TYPE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr tabindex="0">
+                                        <td class="mono">2024-03-12 14:32</td>
+                                        <td>CONTRACT</td>
+                                        <td>Spring Tour Contract uploaded</td>
+                                        <td><span class="status status-pending">PENDING</span></td>
+                                    </tr>
+                                    <tr tabindex="0">
+                                        <td class="mono">2024-03-12 11:45</td>
+                                        <td>EXPENSE</td>
+                                        <td>Transportation claim submitted</td>
+                                        <td><span class="status status-active">APPROVED</span></td>
+                                    </tr>
+                                    <tr tabindex="0">
+                                        <td class="mono">2024-03-11 16:20</td>
+                                        <td>SCHEDULE</td>
+                                        <td>Rehearsal time updated</td>
+                                        <td><span class="status status-active">CONFIRMED</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contracts Section -->
+                <section id="contracts-section" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h1 class="page-title">Contract Management</h1>
+                        <p class="page-subtitle">Digital contract tracking and signature workflow</p>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="action-bar">
+                        <div class="action-bar-left">
+                            <div class="search-box">
+                                <input type="text" class="search-input" placeholder="Search contracts...">
+                                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                                </svg>
+                            </div>
+                            <select class="form-input" style="width: auto;">
+                                <option>All Statuses</option>
+                                <option>Pending</option>
+                                <option>Signed</option>
+                                <option>Expired</option>
+                            </select>
+                        </div>
+                        <div class="action-bar-right">
+                            <button class="btn btn-secondary">EXPORT</button>
+                            <button class="btn btn-accent" onclick="showNewContract()">NEW CONTRACT</button>
+                        </div>
+                    </div>
+
+                    <!-- Contracts Table -->
+                    <div class="card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>CONTRACT ID</th>
+                                    <th>TITLE</th>
+                                    <th>VENUE</th>
+                                    <th>PERIOD</th>
+                                    <th>VALUE</th>
+                                    <th>STATUS</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr tabindex="0">
+                                    <td class="mono">CTR-2024-0312</td>
+                                    <td>2024 Spring Tour Contract</td>
+                                    <td>Lincoln Center</td>
+                                    <td>Mar 15 - Apr 30</td>
+                                    <td class="mono">$45,000</td>
+                                    <td><span class="status status-pending">PENDING</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">SIGN</button>
+                                    </td>
+                                </tr>
+                                <tr tabindex="0">
+                                    <td class="mono">CTR-2024-0245</td>
+                                    <td>Symphony Hall Residency</td>
+                                    <td>Boston Symphony</td>
+                                    <td>Feb 1-28</td>
+                                    <td class="mono">$32,000</td>
+                                    <td><span class="status status-active">SIGNED</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm">VIEW</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Expenses Section -->
+                <section id="expenses-section" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h1 class="page-title">Expense Management</h1>
+                        <p class="page-subtitle">Submit and track reimbursement claims</p>
+                    </div>
+
+                    <div class="grid grid-cols-3" style="margin-bottom: var(--space-xl);">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">PENDING APPROVAL</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-value" style="color: var(--warning);">$1,247</div>
+                                <div class="caption">5 items awaiting review</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">THIS MONTH</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-value">$3,892</div>
+                                <div class="caption">12 claims processed</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">YTD TOTAL</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-value">$18,453</div>
+                                <div class="caption">Within budget limits</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-accent" onclick="showNewExpense()" style="margin-bottom: var(--space-lg);">
+                        SUBMIT NEW EXPENSE
+                    </button>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">RECENT EXPENSES</h2>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>DATE</th>
+                                    <th>REFERENCE</th>
+                                    <th>CATEGORY</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>AMOUNT</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr tabindex="0">
+                                    <td class="mono">2024-03-12</td>
+                                    <td class="mono">EXP-0847</td>
+                                    <td>TRANSPORT</td>
+                                    <td>Taxi to Lincoln Center</td>
+                                    <td class="mono">$45.00</td>
+                                    <td><span class="status status-pending">PENDING</span></td>
+                                </tr>
+                                <tr tabindex="0">
+                                    <td class="mono">2024-03-11</td>
+                                    <td class="mono">EXP-0846</td>
+                                    <td>ACCOMMODATION</td>
+                                    <td>Hotel - Boston (2 nights)</td>
+                                    <td class="mono">$378.00</td>
+                                    <td><span class="status status-active">APPROVED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Schedule Section -->
+                <section id="schedule-section" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h1 class="page-title">Performance Schedule</h1>
+                        <p class="page-subtitle">Rehearsals, performances, and events timeline</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">TODAY - MARCH 12, 2024</h2>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: grid; gap: var(--space-md);">
+                                <div style="display: flex; gap: var(--space-lg); padding: var(--space-md); background: var(--gray-50);">
+                                    <div class="mono" style="color: var(--primary); font-weight: 500;">10:00</div>
+                                    <div style="flex: 1;">
+                                        <div class="heading-3">Morning Rehearsal</div>
+                                        <div class="caption">Studio A, Lincoln Center</div>
+                                    </div>
+                                    <span class="status status-active">CONFIRMED</span>
+                                </div>
+                                <div style="display: flex; gap: var(--space-lg); padding: var(--space-md); background: var(--gray-50);">
+                                    <div class="mono" style="color: var(--primary); font-weight: 500;">14:00</div>
+                                    <div style="flex: 1;">
+                                        <div class="heading-3">Technical Run-through</div>
+                                        <div class="caption">Main Stage</div>
+                                    </div>
+                                    <span class="status status-active">CONFIRMED</span>
+                                </div>
+                                <div style="display: flex; gap: var(--space-lg); padding: var(--space-md); background: var(--gray-50);">
+                                    <div class="mono" style="color: var(--primary); font-weight: 500;">19:30</div>
+                                    <div style="flex: 1;">
+                                        <div class="heading-3">Evening Performance</div>
+                                        <div class="caption">David Geffen Hall</div>
+                                    </div>
+                                    <span class="status status-pending">CHECK-IN REQUIRED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div class="command-palette" id="commandPalette">
+        <input type="text" class="command-input" id="commandInput" placeholder="Type a command or search...">
+        <div class="command-results" id="commandResults">
+            <div class="command-item selected">
+                <div class="command-item-text">
+                    <span>📄</span>
+                    <span>View Contracts</span>
+                </div>
+                <span class="command-shortcut">Alt+2</span>
+            </div>
+            <div class="command-item">
+                <div class="command-item-text">
+                    <span>💰</span>
+                    <span>Submit Expense</span>
+                </div>
+                <span class="command-shortcut">Alt+E</span>
+            </div>
+            <div class="command-item">
+                <div class="command-item-text">
+                    <span>📅</span>
+                    <span>Today's Schedule</span>
+                </div>
+                <span class="command-shortcut">Alt+4</span>
+            </div>
+            <div class="command-item">
+                <div class="command-item-text">
+                    <span>✍️</span>
+                    <span>Sign Pending Contract</span>
+                </div>
+                <span class="command-shortcut">Alt+S</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Guide -->
+    <div class="shortcuts-guide" id="shortcutsGuide">
+        <h3 class="shortcuts-title">KEYBOARD SHORTCUTS</h3>
+        <div class="shortcut-item">
+            <span>Command Palette</span>
+            <div class="shortcut-keys">
+                <span class="key">Ctrl</span>
+                <span class="key">K</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>Navigate Sections</span>
+            <div class="shortcut-keys">
+                <span class="key">1-4</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>Quick Search</span>
+            <div class="shortcut-keys">
+                <span class="key">/</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>New Expense</span>
+            <div class="shortcut-keys">
+                <span class="key">Alt</span>
+                <span class="key">E</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>New Contract</span>
+            <div class="shortcut-keys">
+                <span class="key">Alt</span>
+                <span class="key">C</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>Navigate Tables</span>
+            <div class="shortcut-keys">
+                <span class="key">↑↓</span>
+            </div>
+        </div>
+        <div class="shortcut-item">
+            <span>Select/Action</span>
+            <div class="shortcut-keys">
+                <span class="key">Enter</span>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: var(--space-lg);">
+            <button class="btn btn-secondary" onclick="hideShortcuts()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- New Contract Modal -->
+    <div class="modal" id="contractModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">NEW CONTRACT</h2>
+                <button class="btn btn-secondary" onclick="closeModal('contractModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Contract Title</label>
+                        <input type="text" class="form-input" placeholder="e.g., Summer Concert Series">
+                    </div>
+                    <div class="grid grid-cols-2">
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Venue</label>
+                        <input type="text" class="form-input" placeholder="Enter venue name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contract Value</label>
+                        <input type="number" class="form-input" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Document</label>
+                        <input type="file" class="form-input" accept=".pdf,.doc,.docx">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('contractModal')">CANCEL</button>
+                <button class="btn btn-primary">UPLOAD CONTRACT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Expense Modal -->
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">SUBMIT EXPENSE</h2>
+                <button class="btn btn-secondary" onclick="closeModal('expenseModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Expense Date</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input">
+                            <option>Transportation</option>
+                            <option>Accommodation</option>
+                            <option>Meals</option>
+                            <option>Equipment</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount</label>
+                        <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-input" placeholder="Brief description">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Receipt</label>
+                        <input type="file" class="form-input" accept="image/*,.pdf">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('expenseModal')">CANCEL</button>
+                <button class="btn btn-accent">SUBMIT EXPENSE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentSection = 'overview';
+        let commandPaletteOpen = false;
+        let selectedCommandIndex = 0;
+
+        // Login handler
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            // Show loading state
+            const button = e.target.querySelector('.btn-primary');
+            button.textContent = 'AUTHENTICATING...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                showKbdIndicator('Logged in as ' + email);
+                initializeKeyboardShortcuts();
+            }, 1500);
+        }
+
+        // Section navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            
+            // Update nav
+            document.querySelectorAll('.top-bar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionName) {
+                    item.classList.add('active');
+                }
+            });
+            
+            currentSection = sectionName;
+            showKbdIndicator('Switched to ' + sectionName.toUpperCase());
+        }
+
+        // Keyboard indicator
+        function showKbdIndicator(text) {
+            const indicator = document.getElementById('kbdIndicator');
+            indicator.textContent = text;
+            indicator.classList.add('active');
+            
+            setTimeout(() => {
+                indicator.classList.remove('active');
+            }, 2000);
+        }
+
+        // Initialize keyboard shortcuts
+        function initializeKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Command palette
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    toggleCommandPalette();
+                }
+                
+                // Section navigation (1-4)
+                if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            showSection('overview');
+                            break;
+                        case '2':
+                            showSection('contracts');
+                            break;
+                        case '3':
+                            showSection('expenses');
+                            break;
+                        case '4':
+                            showSection('schedule');
+                            break;
+                        case '/':
+                            e.preventDefault();
+                            focusSearch();
+                            break;
+                        case '?':
+                            e.preventDefault();
+                            toggleShortcutsGuide();
+                            break;
+                    }
+                }
+                
+                // Alt shortcuts
+                if (e.altKey) {
+                    switch(e.key.toLowerCase()) {
+                        case 'e':
+                            e.preventDefault();
+                            showNewExpense();
+                            break;
+                        case 'c':
+                            e.preventDefault();
+                            showNewContract();
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            signPendingContract();
+                            break;
+                    }
+                }
+                
+                // Escape key
+                if (e.key === 'Escape') {
+                    closeAllModals();
+                }
+                
+                // Table navigation
+                if (currentSection !== 'overview' && !commandPaletteOpen) {
+                    const activeElement = document.activeElement;
+                    const rows = document.querySelectorAll(`#${currentSection}-section tbody tr`);
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        navigateTable(rows, 1);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        navigateTable(rows, -1);
+                    } else if (e.key === 'Enter' && activeElement.tagName === 'TR') {
+                        e.preventDefault();
+                        activeElement.querySelector('button')?.click();
+                    }
+                }
+                
+                // Command palette navigation
+                if (commandPaletteOpen) {
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        navigateCommands(1);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        navigateCommands(-1);
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        executeCommand();
+                    }
+                }
+            });
+        }
+
+        // Command palette
+        function toggleCommandPalette() {
+            const palette = document.getElementById('commandPalette');
+            commandPaletteOpen = !commandPaletteOpen;
+            
+            if (commandPaletteOpen) {
+                palette.classList.add('active');
+                document.getElementById('commandInput').focus();
+                document.getElementById('commandInput').value = '';
+            } else {
+                palette.classList.remove('active');
+            }
+        }
+
+        function openCommandPalette() {
+            toggleCommandPalette();
+        }
+
+        function navigateCommands(direction) {
+            const items = document.querySelectorAll('.command-item');
+            items[selectedCommandIndex].classList.remove('selected');
+            
+            selectedCommandIndex += direction;
+            if (selectedCommandIndex < 0) selectedCommandIndex = items.length - 1;
+            if (selectedCommandIndex >= items.length) selectedCommandIndex = 0;
+            
+            items[selectedCommandIndex].classList.add('selected');
+            items[selectedCommandIndex].scrollIntoView({ block: 'nearest' });
+        }
+
+        function executeCommand() {
+            const selected = document.querySelector('.command-item.selected');
+            const text = selected.querySelector('.command-item-text span:last-child').textContent;
+            
+            toggleCommandPalette();
+            
+            switch(text) {
+                case 'View Contracts':
+                    showSection('contracts');
+                    break;
+                case 'Submit Expense':
+                    showNewExpense();
+                    break;
+                case 'Today\'s Schedule':
+                    showSection('schedule');
+                    break;
+                case 'Sign Pending Contract':
+                    signPendingContract();
+                    break;
+            }
+        }
+
+        // Table navigation
+        function navigateTable(rows, direction) {
+            const currentIndex = Array.from(rows).findIndex(row => row === document.activeElement);
+            let newIndex = currentIndex + direction;
+            
+            if (newIndex < 0) newIndex = rows.length - 1;
+            if (newIndex >= rows.length) newIndex = 0;
+            
+            rows[newIndex].focus();
+        }
+
+        // Search focus
+        function focusSearch() {
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+                showKbdIndicator('Search mode activated');
+            }
+        }
+
+        // Shortcuts guide
+        function toggleShortcutsGuide() {
+            const guide = document.getElementById('shortcutsGuide');
+            guide.classList.toggle('active');
+        }
+
+        function hideShortcuts() {
+            document.getElementById('shortcutsGuide').classList.remove('active');
+        }
+
+        // Modal functions
+        function showNewContract() {
+            document.getElementById('contractModal').classList.add('active');
+            showKbdIndicator('New contract form opened');
+        }
+
+        function showNewExpense() {
+            document.getElementById('expenseModal').classList.add('active');
+            showKbdIndicator('New expense form opened');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            toggleCommandPalette();
+            hideShortcuts();
+        }
+
+        function signPendingContract() {
+            showKbdIndicator('Opening contract signature workflow...');
+            // In real app, would open signature flow
+        }
+
+        // Navigation clicks
+        document.querySelectorAll('.top-bar-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = item.dataset.section;
+                if (section) {
+                    showSection(section);
+                }
+            });
+        });
+
+        // Side menu clicks
+        document.querySelectorAll('.side-menu-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.side-menu-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Focus first input
+            document.getElementById('email').focus();
+            
+            // Show shortcuts hint after 3 seconds
+            setTimeout(() => {
+                if (document.getElementById('loginScreen').style.display !== 'none') {
+                    showKbdIndicator('Press ? for keyboard shortcuts');
+                }
+            }, 3000);
+        });
+
+        // Command input filtering
+        document.getElementById('commandInput')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.command-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+            
+            // Reset selection
+            selectedCommandIndex = 0;
+            const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+            if (visibleItems.length > 0) {
+                items.forEach(item => item.classList.remove('selected'));
+                visibleItems[0].classList.add('selected');
+            }
+        });
+
+        // Add focus styles to interactive elements
+        document.addEventListener('focusin', (e) => {
+            if (e.target.matches('tr, .stat-card')) {
+                showKbdIndicator(`Selected: ${e.target.textContent.substring(0, 30)}...`);
+            }
+        });
+
+        // Stat card keyboard interaction
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const label = card.querySelector('.stat-label').textContent;
+                    switch(label) {
+                        case 'Active Contracts':
+                            showSection('contracts');
+                            break;
+                        case 'Pending Expenses':
+                            showSection('expenses');
+                            break;
+                        case 'Upcoming Events':
+                            showSection('schedule');
+                            break;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

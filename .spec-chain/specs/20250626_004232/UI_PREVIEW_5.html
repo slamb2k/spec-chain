@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Data Visualization Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1976D2;
+            --primary-dark: #1565C0;
+            --primary-light: #42A5F5;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --info: #00BCD4;
+            --dark: #263238;
+            --gray-900: #212529;
+            --gray-800: #343a40;
+            --gray-700: #495057;
+            --gray-600: #6c757d;
+            --gray-500: #adb5bd;
+            --gray-400: #ced4da;
+            --gray-300: #dee2e6;
+            --gray-200: #e9ecef;
+            --gray-100: #f8f9fa;
+            --white: #ffffff;
+            --font-mono: 'Fira Code', 'Consolas', monospace;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow: 0 2px 6px rgba(0,0,0,0.15);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.15);
+            --radius: 4px;
+            --radius-lg: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--gray-900);
+            background: var(--gray-100);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Grid System */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+        /* Canvas Background */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* Data Metrics */
+        .metric-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin: 8px 0;
+            color: var(--dark);
+        }
+
+        .metric-chart {
+            height: 60px;
+            margin-top: 16px;
+            position: relative;
+        }
+
+        .metric-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .metric-trend.up {
+            color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .metric-trend.down {
+            color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 300px;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .table-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gray-50);
+        }
+
+        .table-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 24px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: var(--gray-50);
+        }
+
+        .data-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .data-badge.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .data-badge.warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .data-badge.info {
+            background: rgba(0, 188, 212, 0.1);
+            color: var(--info);
+        }
+
+        /* Timeline */
+        .timeline-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            overflow-x: auto;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 16px;
+        }
+
+        .timeline-days {
+            display: flex;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 12px;
+        }
+
+        .timeline-day {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+
+        .timeline-events {
+            position: relative;
+            min-height: 200px;
+        }
+
+        .timeline-track {
+            position: relative;
+            height: 40px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-event {
+            position: absolute;
+            height: 32px;
+            background: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: var(--white);
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .timeline-event:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: var(--radius);
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Sparkline */
+        .sparkline {
+            display: inline-block;
+            width: 100%;
+            height: 40px;
+        }
+
+        /* Progress Ring */
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Heatmap */
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            padding: 16px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            background: var(--gray-200);
+            border-radius: 2px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .grid-cols-2 { grid-template-columns: 1fr; }
+            .grid-cols-3 { grid-template-columns: 1fr; }
+            .grid-cols-4 { grid-template-columns: 1fr; }
+            .chart-svg { height: 200px; }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        .login-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+            padding: 24px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+
+        .login-stat {
+            text-align: center;
+        }
+
+        .login-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: var(--font-mono);
+        }
+
+        .login-stat-label {
+            font-size: 11px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Activity Monitor */
+        .activity-monitor {
+            height: 60px;
+            margin: 20px 0;
+            position: relative;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .activity-bar {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+            transition: height 0.3s ease;
+            opacity: 0.8;
+        }
+
+        /* Hidden by default */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <div class="login-logo">BL</div>
+                    <h1 class="login-title">BIG Live Portal</h1>
+                    <p class="login-subtitle">Performance Analytics Dashboard</p>
+                </div>
+
+                <div class="login-stats">
+                    <div class="login-stat">
+                        <div class="login-stat-value">2,847</div>
+                        <div class="login-stat-label">Active Artists</div>
+                    </div>
+                    <div class="login-stat">
+                        <div class="login-stat-value">98.4%</div>
+                        <div class="login-stat-label">System Uptime</div>
+                    </div>
+                    <div class="login-stat">
+                        <div class="login-stat-value">1.2ms</div>
+                        <div class="login-stat-label">Avg Response</div>
+                    </div>
+                </div>
+
+                <div class="activity-monitor" id="activityMonitor"></div>
+
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" placeholder="artist@biglive.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Sign In
+                    </button>
+                </form>
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <canvas id="loginSparkline" class="sparkline"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardScreen" class="screen">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="container">
+                <div class="nav-content">
+                    <a href="#" class="nav-brand">
+                        <div class="nav-logo">BL</div>
+                        <span>BIG Live Portal</span>
+                    </a>
+                    <div class="nav-menu">
+                        <a href="#" class="nav-link active">Dashboard</a>
+                        <a href="#" class="nav-link">Contracts</a>
+                        <a href="#" class="nav-link">Expenses</a>
+                        <a href="#" class="nav-link">Schedule</a>
+                        <a href="#" class="nav-link">Analytics</a>
+                        <button onclick="logout()" class="btn btn-icon btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="container" style="padding: 32px 20px;">
+            <!-- Metrics Row -->
+            <div class="grid grid-cols-4" style="margin-bottom: 32px;">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-label">Revenue YTD</div>
+                        <span class="metric-trend up">↑ 12.5%</span>
+                    </div>
+                    <div class="metric-value">$847.2K</div>
+                    <div class="metric-chart" id="revenueSparkline"></div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-label">Active Contracts</div>
+                        <span class="metric-trend up">↑ 8</span>
+                    </div>
+                    <div class="metric-value">42</div>
+                    <div class="metric-chart">
+                        <svg class="progress-ring" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle class="progress-ring-circle" cx="40" cy="40" r="35" fill="none" 
+                                    stroke="#1976D2" stroke-width="8" stroke-linecap="round"
+                                    stroke-dasharray="220" stroke-dashoffset="55"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-label">Performance Score</div>
+                        <span class="metric-trend up">↑ 2.1</span>
+                    </div>
+                    <div class="metric-value">94.7</div>
+                    <div class="metric-chart" id="performanceSparkline"></div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-label">Upcoming Shows</div>
+                        <span class="metric-trend down">↓ 3</span>
+                    </div>
+                    <div class="metric-value">18</div>
+                    <div class="metric-chart" id="showsSparkline"></div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-2" style="margin-bottom: 32px;">
+                <!-- Revenue Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Revenue Analysis</h3>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #1976D2;"></div>
+                                <span>Shows</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #42A5F5;"></div>
+                                <span>Merchandise</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #90CAF9;"></div>
+                                <span>Streaming</span>
+                            </div>
+                        </div>
+                    </div>
+                    <svg class="chart-svg" id="revenueChart"></svg>
+                </div>
+
+                <!-- Performance Distribution -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Performance Distribution</h3>
+                    </div>
+                    <svg class="chart-svg" id="distributionChart"></svg>
+                </div>
+            </div>
+
+            <!-- Schedule Timeline -->
+            <div class="timeline-container" style="margin-bottom: 32px;">
+                <div class="timeline-header">
+                    <h3 class="chart-title">Schedule Overview</h3>
+                    <div class="chart-legend">
+                        <button class="btn btn-secondary">← Previous</button>
+                        <span style="font-weight: 600;">June 24 - June 30, 2025</span>
+                        <button class="btn btn-secondary">Next →</button>
+                    </div>
+                </div>
+                <div class="timeline-days">
+                    <div class="timeline-day">Mon 24</div>
+                    <div class="timeline-day">Tue 25</div>
+                    <div class="timeline-day">Wed 26</div>
+                    <div class="timeline-day">Thu 27</div>
+                    <div class="timeline-day">Fri 28</div>
+                    <div class="timeline-day">Sat 29</div>
+                    <div class="timeline-day">Sun 30</div>
+                </div>
+                <div class="timeline-events" id="timelineEvents"></div>
+            </div>
+
+            <!-- Data Tables -->
+            <div class="grid grid-cols-2" style="margin-bottom: 32px;">
+                <!-- Recent Contracts -->
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Contracts</h3>
+                        <div class="table-controls">
+                            <button class="btn btn-icon btn-secondary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contract ID</th>
+                                <th>Venue</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">CNT-2025-847</td>
+                                <td>Madison Square Garden</td>
+                                <td>$125,000</td>
+                                <td><span class="data-badge success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">CNT-2025-846</td>
+                                <td>Hollywood Bowl</td>
+                                <td>$98,500</td>
+                                <td><span class="data-badge success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">CNT-2025-845</td>
+                                <td>Red Rocks Amphitheatre</td>
+                                <td>$87,000</td>
+                                <td><span class="data-badge warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">CNT-2025-844</td>
+                                <td>The O2 Arena</td>
+                                <td>$142,000</td>
+                                <td><span class="data-badge info">Review</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Expense Breakdown -->
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">Expense Categories</h3>
+                        <div class="table-controls">
+                            <button class="btn btn-icon btn-secondary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>% of Total</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Travel & Transport</td>
+                                <td>$34,280</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                            <div style="width: 35%; height: 100%; background: var(--primary);"></div>
+                                        </div>
+                                        <span style="font-family: var(--font-mono); font-size: 12px;">35%</span>
+                                    </div>
+                                </td>
+                                <td><span class="metric-trend up">↑ 8%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Equipment</td>
+                                <td>$28,950</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                            <div style="width: 28%; height: 100%; background: var(--info);"></div>
+                                        </div>
+                                        <span style="font-family: var(--font-mono); font-size: 12px;">28%</span>
+                                    </div>
+                                </td>
+                                <td><span class="metric-trend down">↓ 3%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Accommodation</td>
+                                <td>$22,470</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                            <div style="width: 22%; height: 100%; background: var(--success);"></div>
+                                        </div>
+                                        <span style="font-family: var(--font-mono); font-size: 12px;">22%</span>
+                                    </div>
+                                </td>
+                                <td><span class="metric-trend up">↑ 12%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Marketing</td>
+                                <td>$15,300</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+                                            <div style="width: 15%; height: 100%; background: var(--warning);"></div>
+                                        </div>
+                                        <span style="font-family: var(--font-mono); font-size: 12px;">15%</span>
+                                    </div>
+                                </td>
+                                <td><span class="metric-trend up">↑ 5%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Activity Heatmap -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Activity Heatmap - Last 12 Weeks</h3>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e9ecef;"></div>
+                            <span>Low</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90CAF9;"></div>
+                            <span>Medium</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #1976D2;"></div>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="heatmap" id="activityHeatmap"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Background Canvas Animation
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            };
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                
+                if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#1976D2';
+                ctx.fill();
+            });
+            
+            // Draw connections
+            particles.forEach((particle1, i) => {
+                particles.slice(i + 1).forEach(particle2 => {
+                    const dx = particle1.x - particle2.x;
+                    const dy = particle1.y - particle2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particle1.x, particle1.y);
+                        ctx.lineTo(particle2.x, particle2.y);
+                        ctx.strokeStyle = `rgba(25, 118, 210, ${1 - distance / 100})`;
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Initialize particles
+        resizeCanvas();
+        for (let i = 0; i < 50; i++) {
+            particles.push(createParticle());
+        }
+        animateParticles();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Activity Monitor
+        function createActivityMonitor() {
+            const monitor = document.getElementById('activityMonitor');
+            const barCount = 40;
+            
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'activity-bar';
+                bar.style.left = `${(i / barCount) * 100}%`;
+                bar.style.height = '0%';
+                monitor.appendChild(bar);
+            }
+            
+            setInterval(() => {
+                const bars = monitor.querySelectorAll('.activity-bar');
+                bars.forEach(bar => {
+                    const height = Math.random() * 100;
+                    bar.style.height = `${height}%`;
+                });
+            }, 200);
+        }
+
+        // Sparkline Charts
+        function drawSparkline(canvasId, data, color = '#1976D2') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const max = Math.max(...data);
+            const min = Math.min(...data);
+            const range = max - min;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            
+            data.forEach((value, index) => {
+                const x = (index / (data.length - 1)) * width;
+                const y = height - ((value - min) / range) * height * 0.8 - height * 0.1;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Fill area
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fillStyle = color + '20';
+            ctx.fill();
+        }
+
+        // Generate random data
+        function generateRandomData(count, min, max) {
+            return Array.from({ length: count }, () => 
+                Math.random() * (max - min) + min
+            );
+        }
+
+        // Revenue Chart (Stacked Bar)
+        function drawRevenueChart() {
+            const svg = document.getElementById('revenueChart');
+            if (!svg) return;
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const data = {
+                shows: [45, 52, 48, 58, 62, 71],
+                merchandise: [12, 15, 14, 18, 20, 23],
+                streaming: [8, 9, 11, 12, 14, 16]
+            };
+            
+            const width = svg.clientWidth;
+            const height = 300;
+            const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+            
+            svg.innerHTML = '';
+            
+            // Create scales
+            const xScale = chartWidth / months.length;
+            const maxValue = 120;
+            const yScale = chartHeight / maxValue;
+            
+            // Draw axes
+            const axisGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            axisGroup.setAttribute('transform', `translate(${margin.left}, ${margin.top})`);
+            
+            // Y-axis
+            for (let i = 0; i <= 5; i++) {
+                const y = chartHeight - (i * chartHeight / 5);
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', 0);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', chartWidth);
+                line.setAttribute('y2', y);
+                line.setAttribute('stroke', '#e9ecef');
+                axisGroup.appendChild(line);
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', -10);
+                text.setAttribute('y', y + 5);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#6c757d');
+                text.textContent = `$${i * 24}K`;
+                axisGroup.appendChild(text);
+            }
+            
+            // Draw bars
+            months.forEach((month, i) => {
+                const x = i * xScale + xScale * 0.2;
+                const barWidth = xScale * 0.6;
+                
+                let y = chartHeight;
+                
+                // Shows
+                const showsHeight = data.shows[i] * yScale;
+                const showsBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                showsBar.setAttribute('x', x);
+                showsBar.setAttribute('y', y - showsHeight);
+                showsBar.setAttribute('width', barWidth);
+                showsBar.setAttribute('height', showsHeight);
+                showsBar.setAttribute('fill', '#1976D2');
+                showsBar.setAttribute('rx', '2');
+                axisGroup.appendChild(showsBar);
+                y -= showsHeight;
+                
+                // Merchandise
+                const merchHeight = data.merchandise[i] * yScale;
+                const merchBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                merchBar.setAttribute('x', x);
+                merchBar.setAttribute('y', y - merchHeight);
+                merchBar.setAttribute('width', barWidth);
+                merchBar.setAttribute('height', merchHeight);
+                merchBar.setAttribute('fill', '#42A5F5');
+                merchBar.setAttribute('rx', '2');
+                axisGroup.appendChild(merchBar);
+                y -= merchHeight;
+                
+                // Streaming
+                const streamHeight = data.streaming[i] * yScale;
+                const streamBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                streamBar.setAttribute('x', x);
+                streamBar.setAttribute('y', y - streamHeight);
+                streamBar.setAttribute('width', barWidth);
+                streamBar.setAttribute('height', streamHeight);
+                streamBar.setAttribute('fill', '#90CAF9');
+                streamBar.setAttribute('rx', '2');
+                axisGroup.appendChild(streamBar);
+                
+                // Month label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', x + barWidth / 2);
+                text.setAttribute('y', chartHeight + 20);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#6c757d');
+                text.textContent = month;
+                axisGroup.appendChild(text);
+            });
+            
+            svg.appendChild(axisGroup);
+        }
+
+        // Distribution Chart (Donut)
+        function drawDistributionChart() {
+            const svg = document.getElementById('distributionChart');
+            if (!svg) return;
+            
+            const data = [
+                { label: 'Live Shows', value: 65, color: '#1976D2' },
+                { label: 'Corporate', value: 20, color: '#42A5F5' },
+                { label: 'Private', value: 10, color: '#90CAF9' },
+                { label: 'Other', value: 5, color: '#BBDEFB' }
+            ];
+            
+            const width = svg.clientWidth;
+            const height = 300;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 3;
+            const innerRadius = radius * 0.6;
+            
+            svg.innerHTML = '';
+            
+            let startAngle = -Math.PI / 2;
+            const total = data.reduce((sum, d) => sum + d.value, 0);
+            
+            data.forEach((segment, i) => {
+                const angle = (segment.value / total) * Math.PI * 2;
+                const endAngle = startAngle + angle;
+                
+                const x1 = centerX + Math.cos(startAngle) * radius;
+                const y1 = centerY + Math.sin(startAngle) * radius;
+                const x2 = centerX + Math.cos(endAngle) * radius;
+                const y2 = centerY + Math.sin(endAngle) * radius;
+                const x3 = centerX + Math.cos(endAngle) * innerRadius;
+                const y3 = centerY + Math.sin(endAngle) * innerRadius;
+                const x4 = centerX + Math.cos(startAngle) * innerRadius;
+                const y4 = centerY + Math.sin(startAngle) * innerRadius;
+                
+                const largeArc = angle > Math.PI ? 1 : 0;
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `
+                    M ${x1} ${y1}
+                    A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}
+                    L ${x3} ${y3}
+                    A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4}
+                    Z
+                `);
+                path.setAttribute('fill', segment.color);
+                path.setAttribute('stroke', 'white');
+                path.setAttribute('stroke-width', '2');
+                svg.appendChild(path);
+                
+                // Label
+                const labelAngle = startAngle + angle / 2;
+                const labelRadius = radius + 20;
+                const labelX = centerX + Math.cos(labelAngle) * labelRadius;
+                const labelY = centerY + Math.sin(labelAngle) * labelRadius;
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', labelX);
+                text.setAttribute('y', labelY);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#495057');
+                text.setAttribute('font-weight', '600');
+                text.textContent = `${segment.value}%`;
+                svg.appendChild(text);
+                
+                startAngle = endAngle;
+            });
+            
+            // Center text
+            const centerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            centerText.setAttribute('x', centerX);
+            centerText.setAttribute('y', centerY);
+            centerText.setAttribute('text-anchor', 'middle');
+            centerText.setAttribute('font-size', '24');
+            centerText.setAttribute('font-weight', '700');
+            centerText.setAttribute('fill', '#212529');
+            centerText.textContent = '100%';
+            svg.appendChild(centerText);
+            
+            const subText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            subText.setAttribute('x', centerX);
+            subText.setAttribute('y', centerY + 20);
+            subText.setAttribute('text-anchor', 'middle');
+            subText.setAttribute('font-size', '12');
+            subText.setAttribute('fill', '#6c757d');
+            subText.textContent = 'Total Events';
+            svg.appendChild(subText);
+        }
+
+        // Timeline Events
+        function createTimelineEvents() {
+            const container = document.getElementById('timelineEvents');
+            if (!container) return;
+            
+            const events = [
+                { day: 1, start: 2, duration: 3, title: 'Madison Square Garden', color: '#1976D2' },
+                { day: 2, start: 1, duration: 2, title: 'Sound Check', color: '#42A5F5' },
+                { day: 3, start: 4, duration: 3, title: 'Hollywood Bowl', color: '#1976D2' },
+                { day: 4, start: 0, duration: 1, title: 'Press Conference', color: '#FF9800' },
+                { day: 5, start: 3, duration: 4, title: 'Red Rocks Show', color: '#1976D2' },
+                { day: 6, start: 2, duration: 3, title: 'VIP Meet & Greet', color: '#4CAF50' },
+                { day: 6, start: 5, duration: 2, title: 'After Party', color: '#9C27B0' }
+            ];
+            
+            container.innerHTML = '';
+            
+            events.forEach(event => {
+                const track = document.createElement('div');
+                track.className = 'timeline-track';
+                
+                const eventEl = document.createElement('div');
+                eventEl.className = 'timeline-event';
+                eventEl.style.left = `${(event.day - 1) * 14.28 + event.start * 2}%`;
+                eventEl.style.width = `${event.duration * 2}%`;
+                eventEl.style.background = event.color;
+                eventEl.textContent = event.title;
+                
+                track.appendChild(eventEl);
+                container.appendChild(track);
+            });
+        }
+
+        // Activity Heatmap
+        function createActivityHeatmap() {
+            const container = document.getElementById('activityHeatmap');
+            if (!container) return;
+            
+            const weeks = 12;
+            const days = 7;
+            const colors = ['#e9ecef', '#90CAF9', '#42A5F5', '#1976D2', '#1565C0'];
+            
+            for (let week = 0; week < weeks; week++) {
+                for (let day = 0; day < days; day++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    const intensity = Math.floor(Math.random() * 5);
+                    cell.style.background = colors[intensity];
+                    cell.title = `Week ${week + 1}, Day ${day + 1}: ${intensity * 2} activities`;
+                    container.appendChild(cell);
+                }
+            }
+        }
+
+        // Login function
+        function login(event) {
+            event.preventDefault();
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('dashboardScreen').classList.add('active');
+            initializeDashboard();
+        }
+
+        // Logout function
+        function logout() {
+            document.getElementById('dashboardScreen').classList.remove('active');
+            document.getElementById('loginScreen').classList.add('active');
+        }
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            // Draw sparklines
+            drawSparkline('revenueSparkline', generateRandomData(20, 60, 100));
+            drawSparkline('performanceSparkline', generateRandomData(20, 80, 95), '#4CAF50');
+            drawSparkline('showsSparkline', generateRandomData(20, 10, 25), '#FF9800');
+            
+            // Draw charts
+            drawRevenueChart();
+            drawDistributionChart();
+            createTimelineEvents();
+            createActivityHeatmap();
+        }
+
+        // Initialize login screen
+        createActivityMonitor();
+        drawSparkline('loginSparkline', generateRandomData(30, 20, 80));
+
+        // Update time
+        setInterval(() => {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            // Update any time displays if needed
+        }, 1000);
+    </script>
+</body>
+</html>

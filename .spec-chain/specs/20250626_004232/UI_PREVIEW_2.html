@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Glass Morphism UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1976D2;
+            --primary-light: #42a5f5;
+            --primary-dark: #0d47a1;
+            --glass-white: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --backdrop-blur: 20px;
+            --glass-blur: 10px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0d47a1 0%, #1976D2 50%, #42a5f5 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        .bg-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #42a5f5 0%, transparent 70%);
+            top: -150px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #1976D2 0%, transparent 70%);
+            bottom: -200px;
+            right: -150px;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #64b5f6 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            animation-duration: 35s;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(100px, -100px) scale(1.1);
+            }
+            66% {
+                transform: translate(-100px, 100px) scale(0.9);
+            }
+        }
+
+        /* Glass Container Base */
+        .glass-container {
+            background: var(--glass-white);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.5) 50%, 
+                transparent 100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Navigation */
+        .nav-glass {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #64b5f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Login Section */
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 3rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .glass-input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .glass-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(66, 165, 245, 0.3);
+        }
+
+        .glass-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .glass-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .glass-button:hover::before {
+            left: 100%;
+        }
+
+        .glass-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(66, 165, 245, 0.4);
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            display: none;
+            min-height: 100vh;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding-top: 2rem;
+        }
+
+        .stat-card {
+            padding: 2rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #64b5f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .glow-icon {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Contract Viewer */
+        .contract-viewer {
+            display: none;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contract-card {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .contract-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .contract-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: #81c784;
+        }
+
+        .contract-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(5px);
+        }
+
+        /* Expense Form */
+        .expense-section {
+            display: none;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expense-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 3rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .glass-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+        }
+
+        .glass-select option {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover .file-upload-label {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-light);
+        }
+
+        /* Schedule View */
+        .schedule-section {
+            display: none;
+            padding: 5rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .schedule-timeline {
+            max-width: 1000px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 3rem;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(66, 165, 245, 0.6);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 20px);
+            background: linear-gradient(to bottom, var(--primary-light), transparent);
+        }
+
+        .timeline-card {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-time {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-location {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(66, 165, 245, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 40px rgba(66, 165, 245, 0.6);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-glass {
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .login-box, .expense-form {
+                padding: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .timeline-item {
+                padding-left: 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Particle Effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particle-float 15s infinite linear;
+        }
+
+        @keyframes particle-float {
+            from {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav-glass" id="navbar" style="display: none;">
+        <div class="nav-content">
+            <div class="logo">BIG Live Portal</div>
+            <div class="nav-menu">
+                <span id="userRole" style="margin-right: 2rem;">Artist</span>
+                <button class="glass-button" style="width: auto; padding: 0.5rem 1.5rem;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <div class="glass-container login-box">
+            <h1 class="login-title">Welcome Back</h1>
+            <form onsubmit="login(event)">
+                <div class="glass-input-group">
+                    <input type="email" class="glass-input" placeholder="Email Address" required>
+                </div>
+                <div class="glass-input-group">
+                    <input type="password" class="glass-input" placeholder="Password" required>
+                </div>
+                <div class="glass-input-group">
+                    <select class="glass-select" id="roleSelect">
+                        <option value="artist">Artist</option>
+                        <option value="admin">Administrator</option>
+                        <option value="accountant">Accountant</option>
+                    </select>
+                </div>
+                <button type="submit" class="glass-button">Sign In</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section" id="dashboardSection">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Dashboard Overview</h1>
+        <div class="dashboard-grid">
+            <div class="glass-container stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Active Contracts</div>
+                <div class="glow-icon">📄</div>
+            </div>
+            <div class="glass-container stat-card">
+                <div class="stat-number">$4,850</div>
+                <div class="stat-label">Pending Expenses</div>
+                <div class="glow-icon">💰</div>
+            </div>
+            <div class="glass-container stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Upcoming Shows</div>
+                <div class="glow-icon">🎭</div>
+            </div>
+            <div class="glass-container stat-card">
+                <div class="stat-number">94%</div>
+                <div class="stat-label">Payment Rate</div>
+                <div class="glow-icon">📊</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contract Viewer -->
+    <section class="contract-viewer" id="contractSection">
+        <div class="glass-container contract-card">
+            <div class="contract-header">
+                <h2>Performance Contract #2024-001</h2>
+                <span class="contract-status">Active</span>
+            </div>
+            <div class="contract-details">
+                <div class="detail-row">
+                    <span>Client</span>
+                    <strong>Madison Square Garden</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Performance Date</span>
+                    <strong>July 15, 2024</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Contract Value</span>
+                    <strong>$25,000</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Payment Terms</span>
+                    <strong>50% advance, 50% post-show</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Technical Requirements</span>
+                    <strong>Full stage setup provided</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expense Form -->
+    <section class="expense-section" id="expenseSection">
+        <div class="glass-container expense-form">
+            <h2 class="form-title">Submit Expense</h2>
+            <form onsubmit="submitExpense(event)">
+                <div class="glass-input-group">
+                    <select class="glass-select" required>
+                        <option value="">Select Category</option>
+                        <option value="travel">Travel</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="glass-input-group">
+                    <input type="text" class="glass-input" placeholder="Description" required>
+                </div>
+                <div class="glass-input-group">
+                    <input type="number" class="glass-input" placeholder="Amount ($)" step="0.01" required>
+                </div>
+                <div class="glass-input-group">
+                    <input type="date" class="glass-input" required>
+                </div>
+                <div class="glass-input-group">
+                    <div class="file-upload">
+                        <input type="file" id="receipt" accept="image/*,.pdf">
+                        <label for="receipt" class="file-upload-label">
+                            Upload Receipt (Optional)
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="glass-button">Submit Expense</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Schedule View -->
+    <section class="schedule-section" id="scheduleSection">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Upcoming Schedule</h1>
+        <div class="schedule-timeline">
+            <div class="timeline-item">
+                <div class="glass-container timeline-card">
+                    <div class="event-time">July 15, 2024 - 8:00 PM</div>
+                    <div class="event-title">Madison Square Garden Performance</div>
+                    <div class="event-location">New York, NY</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="glass-container timeline-card">
+                    <div class="event-time">July 20, 2024 - 7:30 PM</div>
+                    <div class="event-title">Hollywood Bowl Concert</div>
+                    <div class="event-location">Los Angeles, CA</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="glass-container timeline-card">
+                    <div class="event-time">July 25, 2024 - 9:00 PM</div>
+                    <div class="event-title">Red Rocks Amphitheatre</div>
+                    <div class="event-location">Morrison, CO</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="glass-container timeline-card">
+                    <div class="event-time">August 2, 2024 - 7:00 PM</div>
+                    <div class="event-title">Grant Park Music Festival</div>
+                    <div class="event-location">Chicago, IL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Button -->
+    <div class="fab" id="fab" style="display: none;" onclick="toggleMenu()">
+        <span style="font-size: 24px;">+</span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (navbar.style.display !== 'none') {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.1)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.05)';
+                }
+            }
+        });
+
+        // Login function
+        function login(event) {
+            event.preventDefault();
+            showLoading();
+            
+            setTimeout(() => {
+                const role = document.getElementById('roleSelect').value;
+                document.getElementById('userRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashboardSection').style.display = 'block';
+                document.getElementById('navbar').style.display = 'block';
+                document.getElementById('fab').style.display = 'flex';
+                hideLoading();
+            }, 1500);
+        }
+
+        // Logout function
+        function logout() {
+            showLoading();
+            setTimeout(() => {
+                document.getElementById('loginSection').style.display = 'flex';
+                document.getElementById('dashboardSection').style.display = 'none';
+                document.getElementById('contractSection').style.display = 'none';
+                document.getElementById('expenseSection').style.display = 'none';
+                document.getElementById('scheduleSection').style.display = 'none';
+                document.getElementById('navbar').style.display = 'none';
+                document.getElementById('fab').style.display = 'none';
+                hideLoading();
+            }, 1000);
+        }
+
+        // Submit expense
+        function submitExpense(event) {
+            event.preventDefault();
+            showLoading();
+            setTimeout(() => {
+                alert('Expense submitted successfully!');
+                event.target.reset();
+                hideLoading();
+            }, 1500);
+        }
+
+        // Toggle menu
+        let menuOpen = false;
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                showSectionMenu();
+            }
+        }
+
+        // Show section menu
+        function showSectionMenu() {
+            const sections = ['Dashboard', 'Contracts', 'Expenses', 'Schedule'];
+            const menu = document.createElement('div');
+            menu.className = 'glass-container';
+            menu.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                right: 2rem;
+                padding: 1rem;
+                z-index: 999;
+                animation: slideUp 0.3s ease-out;
+            `;
+            
+            sections.forEach(section => {
+                const btn = document.createElement('button');
+                btn.className = 'glass-button';
+                btn.style.cssText = 'width: 150px; margin: 0.5rem 0; padding: 0.75rem;';
+                btn.textContent = section;
+                btn.onclick = () => {
+                    navigateToSection(section.toLowerCase());
+                    document.body.removeChild(menu);
+                    menuOpen = false;
+                };
+                menu.appendChild(btn);
+            });
+            
+            document.body.appendChild(menu);
+            
+            // Remove menu on outside click
+            setTimeout(() => {
+                document.addEventListener('click', function removeMenu(e) {
+                    if (!menu.contains(e.target) && e.target.id !== 'fab') {
+                        if (document.body.contains(menu)) {
+                            document.body.removeChild(menu);
+                            menuOpen = false;
+                        }
+                        document.removeEventListener('click', removeMenu);
+                    }
+                });
+            }, 100);
+        }
+
+        // Navigate to section
+        function navigateToSection(section) {
+            showLoading();
+            const sections = ['dashboard', 'contract', 'expense', 'schedule'];
+            
+            setTimeout(() => {
+                sections.forEach(s => {
+                    document.getElementById(s + 'Section').style.display = 'none';
+                });
+                
+                if (section === 'contracts') section = 'contract';
+                else if (section === 'expenses') section = 'expense';
+                
+                document.getElementById(section + 'Section').style.display = 'block';
+                window.scrollTo(0, 0);
+                hideLoading();
+            }, 500);
+        }
+
+        // Loading functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Add hover effect to cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.stat-card, .timeline-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    card.style.background = `
+                        radial-gradient(
+                            circle at ${x}px ${y}px,
+                            rgba(255, 255, 255, 0.15) 0%,
+                            rgba(255, 255, 255, 0.1) 40%,
+                            rgba(255, 255, 255, 0.05) 100%
+                        )
+                    `;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.background = '';
+                });
+            });
+        });
+
+        // Add parallax effect on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.querySelectorAll('.orb').forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

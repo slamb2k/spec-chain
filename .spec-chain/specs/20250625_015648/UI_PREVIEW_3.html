@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Organic Innovation</title>
+    <style>
+        /* Organic Innovation Design System */
+        :root {
+            --primary: #00ACC1;
+            --primary-light: #4DD0E1;
+            --primary-dark: #00838F;
+            --secondary: #AB47BC;
+            --secondary-light: #CE93D8;
+            --success: #66BB6A;
+            --warning: #FFB74D;
+            --error: #EF5350;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --text-primary: #263238;
+            --text-secondary: #546E7A;
+            --text-light: #90A4AE;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Organic Background Pattern */
+        .organic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--primary-light) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--secondary-light) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--warning) 0%, transparent 50%);
+            animation: breathe 20s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .login-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s var(--curve);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            top: -100px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 20px); }
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 8px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .tagline {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: #F5F5F5;
+            transition: all 0.3s var(--curve);
+            color: var(--text-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--surface);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 172, 193, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-label {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+            pointer-events: none;
+            transition: all 0.3s var(--curve);
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -10px;
+            left: 16px;
+            font-size: 12px;
+            background: var(--surface);
+            padding: 0 8px;
+            color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 172, 193, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 172, 193, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .nav-header {
+            background: var(--surface);
+            padding: 20px 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .greeting-text h1 {
+            font-size: 24px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .greeting-text p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s var(--curve);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .nav-btn:hover {
+            background: #F5F5F5;
+            transform: scale(1.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 24px;
+            padding-bottom: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Data Visualization Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--curve);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card-bg {
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-1);
+            opacity: 0.05;
+            border-radius: 50%;
+            transition: all 0.6s var(--curve);
+        }
+
+        .stat-card:hover .stat-card-bg {
+            transform: scale(1.2) rotate(45deg);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        /* Mini Chart */
+        .mini-chart {
+            height: 60px;
+            margin-top: 16px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: drawLine 2s ease-out;
+        }
+
+        @keyframes drawLine {
+            from {
+                stroke-dasharray: 1000;
+                stroke-dashoffset: 1000;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .chart-area {
+            fill: url(#gradient);
+            opacity: 0.2;
+            animation: fadeIn 2s ease-out;
+        }
+
+        /* Contract List */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            background: #F5F5F5;
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+            color: var(--text-secondary);
+        }
+
+        .toggle-btn.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .contracts-container {
+            display: grid;
+            gap: 16px;
+        }
+
+        .contract-item {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s var(--curve);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contract-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-3);
+            transform: scaleY(0);
+            transition: transform 0.3s var(--curve);
+            transform-origin: bottom;
+        }
+
+        .contract-item:hover::before {
+            transform: scaleY(1);
+            transform-origin: top;
+        }
+
+        .contract-item:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .contract-status-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .status-signed {
+            background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+        }
+
+        .contract-details {
+            flex: 1;
+        }
+
+        .contract-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .contract-info {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .contract-action {
+            padding: 12px 24px;
+            background: var(--gradient-3);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+            white-space: nowrap;
+        }
+
+        .contract-action:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 172, 193, 0.3);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-2);
+            border-radius: 50%;
+            box-shadow: 0 6px 20px rgba(171, 71, 188, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transition: all 0.3s var(--curve);
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 10px 30px rgba(171, 71, 188, 0.5);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+            color: var(--text-secondary);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-3);
+            border-radius: 0 0 3px 3px;
+            transition: transform 0.3s var(--curve);
+        }
+
+        .nav-item.active::before {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            transition: transform 0.3s var(--curve);
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Expense Visualization */
+        .expense-chart-container {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 24px;
+            animation: slideIn 0.8s var(--curve);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-period {
+            display: flex;
+            gap: 8px;
+        }
+
+        .period-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--primary-light);
+            background: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .period-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .donut-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .donut-svg {
+            width: 200px;
+            height: 200px;
+            transform: rotate(-90deg);
+        }
+
+        .donut-segment {
+            fill: none;
+            stroke-width: 40;
+            stroke-linecap: round;
+            animation: drawSegment 1.5s ease-out;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+        }
+
+        @keyframes drawSegment {
+            from {
+                stroke-dasharray: 0 1000;
+            }
+        }
+
+        .donut-segment:hover {
+            filter: brightness(1.1);
+            transform: scale(1.05);
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s var(--curve);
+        }
+
+        .legend-item:hover {
+            transform: translateX(4px);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .legend-label {
+            color: var(--text-primary);
+        }
+
+        .legend-value {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Schedule Timeline */
+        .schedule-view {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .timeline-container {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 47px;
+            top: 60px;
+            bottom: 24px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+        }
+
+        .timeline-event {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 32px;
+            position: relative;
+            animation: slideUp 0.6s var(--curve) backwards;
+        }
+
+        .timeline-event:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-event:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-event:nth-child(3) { animation-delay: 0.3s; }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 4px solid var(--surface);
+            box-shadow: 0 0 0 2px var(--primary-light);
+            flex-shrink: 0;
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: #F5F5F5;
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s var(--curve);
+        }
+
+        .timeline-content:hover {
+            background: var(--surface);
+            box-shadow: var(--shadow-soft);
+            transform: translateX(4px);
+        }
+
+        .event-time {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .event-location {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Number Counter Animation */
+        .counter {
+            display: inline-block;
+            animation: countUp 2s ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .donut-chart {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .main-content {
+                padding: 16px;
+                padding-bottom: 100px;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #121212;
+                --surface: #1E1E1E;
+                --text-primary: #FFFFFF;
+                --text-secondary: #B3B3B3;
+                --text-light: #666666;
+            }
+
+            .form-input {
+                background: #2C2C2C;
+                color: white;
+            }
+
+            .stat-card-bg {
+                opacity: 0.02;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="organic-bg"></div>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card">
+            <div class="login-decoration"></div>
+            <h1 class="logo">BIG Live Portal</h1>
+            <p class="tagline">Where art meets innovation</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder=" " required id="email">
+                    <label class="form-label" for="email">Email address</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder=" " required id="password">
+                    <label class="form-label" for="password">Password</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    Sign In
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="#" style="color: var(--primary); text-decoration: none;">Forgot your password?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Header -->
+        <header class="nav-header">
+            <div class="user-greeting">
+                <div class="user-avatar">SC</div>
+                <div class="greeting-text">
+                    <h1>Welcome back, Sarah!</h1>
+                    <p>Ready for today's performance?</p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showNotifications()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button class="nav-btn" onclick="showSettings()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="showContractDetails()">
+                    <div class="stat-card-bg"></div>
+                    <div class="stat-header">
+                        <h3 class="stat-title">Active Contracts</h3>
+                        <div class="stat-icon">📄</div>
+                    </div>
+                    <div class="stat-value counter" data-target="3">0</div>
+                    <div class="stat-change">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        <span>1 new this week</span>
+                    </div>
+                    <div class="mini-chart">
+                        <svg class="chart-svg">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:var(--primary);stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:var(--primary);stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <path class="chart-area" d="M0,50 L50,40 L100,35 L150,20 L200,25 L250,15 L250,60 L0,60 Z"/>
+                            <path class="chart-line" d="M0,50 L50,40 L100,35 L150,20 L200,25 L250,15"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showExpenseDetails()">
+                    <div class="stat-card-bg"></div>
+                    <div class="stat-header">
+                        <h3 class="stat-title">Pending Expenses</h3>
+                        <div class="stat-icon">💳</div>
+                    </div>
+                    <div class="stat-value">$<span class="counter" data-target="2847">0</span></div>
+                    <div class="stat-change">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        <span>5 awaiting approval</span>
+                    </div>
+                    <div class="mini-chart">
+                        <svg class="chart-svg">
+                            <path class="chart-area" d="M0,40 L50,45 L100,30 L150,35 L200,20 L250,25 L250,60 L0,60 Z"/>
+                            <path class="chart-line" d="M0,40 L50,45 L100,30 L150,35 L200,20 L250,25"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-bg"></div>
+                    <div class="stat-header">
+                        <h3 class="stat-title">Performances</h3>
+                        <div class="stat-icon">🎭</div>
+                    </div>
+                    <div class="stat-value counter" data-target="12">0</div>
+                    <div class="stat-change">
+                        <span>This month</span>
+                    </div>
+                    <div class="mini-chart">
+                        <svg class="chart-svg">
+                            <path class="chart-area" d="M0,55 L50,50 L100,40 L150,45 L200,30 L250,35 L250,60 L0,60 Z"/>
+                            <path class="chart-line" d="M0,55 L50,50 L100,40 L150,45 L200,30 L250,35"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expense Chart -->
+            <div class="expense-chart-container" id="expenseChart">
+                <div class="chart-header">
+                    <h2 class="chart-title">Expense Breakdown</h2>
+                    <div class="chart-period">
+                        <button class="period-btn active">Week</button>
+                        <button class="period-btn">Month</button>
+                        <button class="period-btn">Year</button>
+                    </div>
+                </div>
+                <div class="donut-chart">
+                    <svg class="donut-svg" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#F5F5F5" stroke-width="40"/>
+                        <circle class="donut-segment" cx="100" cy="100" r="80" 
+                                stroke="#4DD0E1" 
+                                stroke-dasharray="125.6 376.8"
+                                data-category="Transportation"/>
+                        <circle class="donut-segment" cx="100" cy="100" r="80" 
+                                stroke="#AB47BC" 
+                                stroke-dasharray="94.2 376.8"
+                                stroke-dashoffset="-125.6"
+                                data-category="Accommodation"/>
+                        <circle class="donut-segment" cx="100" cy="100" r="80" 
+                                stroke="#66BB6A" 
+                                stroke-dasharray="75.4 376.8"
+                                stroke-dashoffset="-219.8"
+                                data-category="Meals"/>
+                        <circle class="donut-segment" cx="100" cy="100" r="80" 
+                                stroke="#FFB74D" 
+                                stroke-dasharray="81.6 376.8"
+                                stroke-dashoffset="-295.2"
+                                data-category="Equipment"/>
+                    </svg>
+                    <div class="chart-legend">
+                        <div class="legend-item" data-category="Transportation">
+                            <div class="legend-color" style="background: #4DD0E1;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">Transportation</span>
+                                <span class="legend-value">$847</span>
+                            </div>
+                        </div>
+                        <div class="legend-item" data-category="Accommodation">
+                            <div class="legend-color" style="background: #AB47BC;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">Accommodation</span>
+                                <span class="legend-value">$635</span>
+                            </div>
+                        </div>
+                        <div class="legend-item" data-category="Meals">
+                            <div class="legend-color" style="background: #66BB6A;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">Meals</span>
+                                <span class="legend-value">$508</span>
+                            </div>
+                        </div>
+                        <div class="legend-item" data-category="Equipment">
+                            <div class="legend-color" style="background: #FFB74D;"></div>
+                            <div class="legend-text">
+                                <span class="legend-label">Equipment</span>
+                                <span class="legend-value">$550</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contracts Section -->
+            <div class="contracts-section" id="contractsSection">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Contracts</h2>
+                    <div class="view-toggle">
+                        <button class="toggle-btn active">List</button>
+                        <button class="toggle-btn">Grid</button>
+                    </div>
+                </div>
+
+                <div class="contracts-container">
+                    <div class="contract-item" onclick="viewContract()">
+                        <div class="contract-status-icon status-pending">📝</div>
+                        <div class="contract-details">
+                            <h3 class="contract-title">2024 Spring Tour Contract</h3>
+                            <div class="contract-info">
+                                <span>📅 Mar 15 - Apr 30</span>
+                                <span>📍 Lincoln Center</span>
+                                <span>💰 $45,000</span>
+                            </div>
+                        </div>
+                        <button class="contract-action">Sign Now</button>
+                    </div>
+
+                    <div class="contract-item">
+                        <div class="contract-status-icon status-signed">✅</div>
+                        <div class="contract-details">
+                            <h3 class="contract-title">Symphony Hall Residency</h3>
+                            <div class="contract-info">
+                                <span>📅 Feb 1-28</span>
+                                <span>📍 Boston</span>
+                                <span>💰 $32,000</span>
+                            </div>
+                        </div>
+                        <button class="contract-action" style="background: #E0E0E0; color: var(--text-secondary);">Completed</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Timeline -->
+            <div class="schedule-view" id="scheduleView">
+                <div class="section-header">
+                    <h2 class="section-title">Today's Schedule</h2>
+                    <button class="toggle-btn" onclick="toggleCalendarView()">Calendar View</button>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="timeline-event">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="event-time">10:00 AM - 12:00 PM</div>
+                            <h3 class="event-title">Morning Rehearsal</h3>
+                            <div class="event-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-secondary)">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                                Studio A, Lincoln Center
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="event-time">2:00 PM - 4:00 PM</div>
+                            <h3 class="event-title">Technical Run-through</h3>
+                            <div class="event-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-secondary)">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                                Main Stage
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="event-time">7:30 PM - 10:00 PM</div>
+                            <h3 class="event-title">Evening Performance</h3>
+                            <div class="event-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-secondary)">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                                David Geffen Hall
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" onclick="showView('dashboard')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showView('contracts')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                <span class="nav-label">Contracts</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showView('expenses')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.93.66 1.64 2.08 1.64 1.96 0 2.37-.79 2.37-1.54 0-1.06-.92-1.38-2.07-1.59-1.93-.35-3.61-.87-3.61-3.17 0-1.91 1.4-2.97 3.04-3.3V5h2.67v1.71c1.63.39 2.75 1.48 2.85 3.08h-1.96c-.05-.8-.38-1.6-1.56-1.6-1.26 0-2 .68-2 1.35 0 .78.61 1.06 2.07 1.3 2.24.35 3.61 1.12 3.61 3.44 0 1.83-1.09 3.1-3.51 3.41z"/>
+                </svg>
+                <span class="nav-label">Expenses</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showView('schedule')">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                </svg>
+                <span class="nav-label">Schedule</span>
+            </a>
+        </nav>
+
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="openNewExpense()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Login Handler
+        function handleLogin(e) {
+            e.preventDefault();
+            const button = e.target.querySelector('.btn-primary');
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loader"></span> Signing in...';
+            button.disabled = true;
+            
+            // Add ripple effect
+            createRipple(button, e);
+            
+            setTimeout(() => {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                animateCounters();
+                initializeCharts();
+            }, 1500);
+        }
+
+        // Ripple Effect
+        function createRipple(element, event) {
+            const ripple = document.createElement('span');
+            ripple.className = 'btn-ripple';
+            
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            element.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                updateCounter();
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Chart animations are handled by CSS
+            const segments = document.querySelectorAll('.donut-segment');
+            segments.forEach((segment, index) => {
+                segment.style.animationDelay = `${index * 0.2}s`;
+            });
+        }
+
+        // Navigation
+        function showView(view) {
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Hide all sections
+            document.getElementById('expenseChart').style.display = 'none';
+            document.getElementById('contractsSection').style.display = 'none';
+            document.getElementById('scheduleView').style.display = 'none';
+            
+            // Show relevant sections
+            switch(view) {
+                case 'dashboard':
+                    document.getElementById('expenseChart').style.display = 'block';
+                    document.getElementById('contractsSection').style.display = 'block';
+                    break;
+                case 'contracts':
+                    document.getElementById('contractsSection').style.display = 'block';
+                    break;
+                case 'expenses':
+                    document.getElementById('expenseChart').style.display = 'block';
+                    break;
+                case 'schedule':
+                    document.getElementById('scheduleView').style.display = 'block';
+                    break;
+            }
+        }
+
+        // Interactive Chart
+        document.querySelectorAll('.donut-segment').forEach(segment => {
+            segment.addEventListener('mouseenter', function() {
+                const category = this.dataset.category;
+                document.querySelectorAll('.legend-item').forEach(item => {
+                    if (item.dataset.category === category) {
+                        item.style.transform = 'translateX(8px)';
+                        item.style.fontWeight = '600';
+                    }
+                });
+            });
+            
+            segment.addEventListener('mouseleave', function() {
+                document.querySelectorAll('.legend-item').forEach(item => {
+                    item.style.transform = 'translateX(0)';
+                    item.style.fontWeight = '400';
+                });
+            });
+        });
+
+        // Legend Hover
+        document.querySelectorAll('.legend-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                const category = this.dataset.category;
+                document.querySelectorAll('.donut-segment').forEach(segment => {
+                    if (segment.dataset.category === category) {
+                        segment.style.filter = 'brightness(1.2)';
+                        segment.style.transform = 'scale(1.05)';
+                    } else {
+                        segment.style.opacity = '0.5';
+                    }
+                });
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                document.querySelectorAll('.donut-segment').forEach(segment => {
+                    segment.style.filter = '';
+                    segment.style.transform = '';
+                    segment.style.opacity = '1';
+                });
+            });
+        });
+
+        // Period Toggle
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Re-animate chart
+                const segments = document.querySelectorAll('.donut-segment');
+                segments.forEach(segment => {
+                    const dasharray = segment.style.strokeDasharray;
+                    segment.style.strokeDasharray = '0 1000';
+                    setTimeout(() => {
+                        segment.style.strokeDasharray = dasharray;
+                    }, 100);
+                });
+            });
+        });
+
+        // Action Functions
+        function openNewExpense() {
+            alert('Opening expense submission form...');
+        }
+
+        function viewContract() {
+            alert('Opening contract details...');
+        }
+
+        function showContractDetails() {
+            showView('contracts');
+            document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+            document.querySelector('.nav-item:nth-child(1)').classList.remove('active');
+        }
+
+        function showExpenseDetails() {
+            showView('expenses');
+            document.querySelector('.nav-item:nth-child(3)').classList.add('active');
+            document.querySelector('.nav-item:nth-child(1)').classList.remove('active');
+        }
+
+        // Add click ripple to all buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.btn, .nav-btn, .contract-action, .fab')) {
+                createRipple(e.target, e);
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            // Add subtle animations on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.stat-card, .contract-item, .timeline-event').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

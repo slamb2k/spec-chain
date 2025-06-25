@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Glass Morphism Voice UI</title>
+    <style>
+        /* Glass Morphism Design System with Accessibility Focus */
+        :root {
+            --primary: #2196F3;
+            --primary-light: #64B5F6;
+            --primary-dark: #1565C0;
+            --success: #66BB6A;
+            --error: #EF5350;
+            --warning: #FFA726;
+            --glass-white: rgba(255, 255, 255, 0.1);
+            --glass-light: rgba(255, 255, 255, 0.2);
+            --glass-medium: rgba(255, 255, 255, 0.3);
+            --glass-dark: rgba(0, 0, 0, 0.1);
+            --text-primary: #1A237E;
+            --text-secondary: #3949AB;
+            --text-light: #7986CB;
+            --backdrop-blur: 20px;
+            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.18);
+            --focus-ring: 0 0 0 4px rgba(33, 150, 243, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glass-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent);
+            filter: blur(40px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .glass-orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .glass-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 5s;
+        }
+
+        .glass-orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(100px, -100px) rotate(120deg); }
+            66% { transform: translate(-100px, 100px) rotate(240deg); }
+        }
+
+        /* Glass Components */
+        .glass-panel {
+            background: var(--glass-white);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border-radius: 20px;
+            border: var(--border-glass);
+            box-shadow: var(--shadow-glass);
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            background: var(--glass-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
+        }
+
+        /* Voice UI Indicator */
+        .voice-indicator {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 80px;
+            height: 80px;
+            background: var(--glass-medium);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border-radius: 50%;
+            border: var(--border-glass);
+            box-shadow: var(--shadow-glass);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .voice-indicator:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-indicator.active {
+            animation: pulse 1.5s infinite;
+            background: var(--primary-light);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+
+        .voice-icon {
+            width: 40px;
+            height: 40px;
+            fill: var(--text-primary);
+        }
+
+        /* Voice Feedback */
+        .voice-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-medium);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            padding: 40px 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 2000;
+            text-align: center;
+            min-width: 400px;
+        }
+
+        .voice-feedback.active {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .voice-text {
+            font-size: 24px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .voice-waves {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+            gap: 8px;
+        }
+
+        .wave {
+            width: 4px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .wave:nth-child(2) { animation-delay: 0.1s; }
+        .wave:nth-child(3) { animation-delay: 0.2s; }
+        .wave:nth-child(4) { animation-delay: 0.3s; }
+        .wave:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 30px; }
+            50% { height: 60px; }
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            font-size: 20px;
+        }
+
+        /* Accessible Form Elements */
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            background: var(--glass-light);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--focus-ring);
+            background: var(--glass-medium);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* High Contrast Buttons */
+        .btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Skip Links for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 8px 0;
+            font-weight: 600;
+            z-index: 3000;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header-content {
+            background: var(--glass-light);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border-radius: 24px;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-glass);
+        }
+
+        .greeting {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .voice-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: var(--glass-white);
+            border-radius: 30px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .voice-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 100px;
+        }
+
+        /* Contract Cards with Focus States */
+        .contract-card {
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .contract-card:hover {
+            transform: translateY(-4px) rotateX(5deg);
+        }
+
+        .contract-card:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .contract-status {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            padding: 8px 16px;
+            background: var(--warning);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .contract-status.signed {
+            background: var(--success);
+        }
+
+        .contract-content {
+            padding-top: 60px;
+        }
+
+        .contract-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .contract-details {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .contract-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        /* Expense Summary Cards */
+        .expense-card {
+            background: linear-gradient(135deg, var(--glass-light), var(--glass-white));
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .expense-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--glass-medium);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .expense-info h3 {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .expense-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Schedule Timeline */
+        .schedule-timeline {
+            background: var(--glass-white);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .timeline-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .timeline-date {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .event-item {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--glass-light);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-item:hover {
+            background: var(--glass-medium);
+            transform: translateX(8px);
+        }
+
+        .event-item:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .event-time {
+            min-width: 100px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .event-details h4 {
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .event-location {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Accessibility Features Panel */
+        .accessibility-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--glass-medium);
+            backdrop-filter: blur(30px);
+            padding: 32px;
+            transition: right 0.3s ease;
+            z-index: 1500;
+            overflow-y: auto;
+        }
+
+        .accessibility-panel.open {
+            right: 0;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+
+        .accessibility-option {
+            margin-bottom: 24px;
+        }
+
+        .option-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            width: 60px;
+            height: 32px;
+            background: var(--glass-light);
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(28px);
+        }
+
+        /* Floating Action Menu */
+        .fab-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .fab-main {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 24px;
+        }
+
+        .fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(33, 150, 243, 0.5);
+        }
+
+        .fab-main:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .fab-options {
+            position: absolute;
+            bottom: 90px;
+            right: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .fab-menu.open .fab-options {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .fab-option {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .fab-label {
+            background: var(--glass-medium);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .fab-button {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-medium);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+            background: var(--glass-light);
+        }
+
+        /* High Contrast Mode */
+        body.high-contrast {
+            background: #000;
+        }
+
+        body.high-contrast .glass-panel {
+            background: #000;
+            border: 2px solid #FFF;
+            box-shadow: none;
+        }
+
+        body.high-contrast .text-primary,
+        body.high-contrast .contract-title,
+        body.high-contrast .greeting {
+            color: #FFF;
+        }
+
+        body.high-contrast .text-secondary,
+        body.high-contrast .contract-details {
+            color: #FFE082;
+        }
+
+        body.high-contrast .form-input {
+            background: #000;
+            border: 2px solid #FFF;
+            color: #FFF;
+        }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus Visible */
+        *:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accessibility-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .greeting {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="glass-orb"></div>
+        <div class="glass-orb"></div>
+        <div class="glass-orb"></div>
+    </div>
+
+    <!-- Voice Feedback Modal -->
+    <div class="voice-feedback" id="voiceFeedback" role="status" aria-live="polite">
+        <div class="voice-text" id="voiceText">Listening...</div>
+        <div class="voice-waves">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card glass-panel">
+            <h1 class="logo">BIG Live Portal</h1>
+            <p class="tagline">Your accessible performance hub</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="your@email.com" 
+                        required
+                        aria-required="true"
+                        aria-describedby="email-help"
+                    >
+                    <span id="email-help" class="sr-only">Enter your personal email address</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="Enter your password" 
+                        required
+                        aria-required="true"
+                        aria-describedby="password-help"
+                    >
+                    <span id="password-help" class="sr-only">Enter your account password</span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    Sign In
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="#" style="color: var(--primary); font-size: 18px;">Forgot your password?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard" id="dashboard" role="main">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="greeting" id="main-content">Welcome back, Sarah!</h1>
+                <div class="voice-status">
+                    <div class="voice-dot"></div>
+                    <span>Voice commands active</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-grid">
+            <!-- Pending Contracts -->
+            <article 
+                class="glass-panel contract-card" 
+                tabindex="0" 
+                role="button"
+                aria-label="Spring Tour Contract - Pending signature"
+                onclick="showContractDetail()"
+            >
+                <div class="contract-status">Pending</div>
+                <div class="contract-content">
+                    <h2 class="contract-title">2024 Spring Tour Contract</h2>
+                    <p class="contract-details">
+                        Lincoln Center presents a series of 15 performances featuring contemporary classical works.
+                    </p>
+                    <div class="contract-meta">
+                        <span>📅 Mar 15 - Apr 30</span>
+                        <span>📍 New York</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Signed Contract -->
+            <article 
+                class="glass-panel contract-card" 
+                tabindex="0" 
+                role="button"
+                aria-label="Symphony Hall Residency - Signed"
+            >
+                <div class="contract-status signed">Signed</div>
+                <div class="contract-content">
+                    <h2 class="contract-title">Symphony Hall Residency</h2>
+                    <p class="contract-details">
+                        Boston Symphony Orchestra collaboration for winter concert series.
+                    </p>
+                    <div class="contract-meta">
+                        <span>📅 Feb 1-28</span>
+                        <span>✅ Completed</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Expense Summary -->
+            <article class="glass-panel expense-card" role="region" aria-label="Expense summary">
+                <div class="expense-icon">💰</div>
+                <div class="expense-info">
+                    <h3>Pending Expenses</h3>
+                    <div class="expense-amount">$1,247.50</div>
+                </div>
+            </article>
+
+            <!-- Quick Stats -->
+            <article class="glass-panel expense-card" role="region" aria-label="Performance statistics">
+                <div class="expense-icon">🎭</div>
+                <div class="expense-info">
+                    <h3>This Month</h3>
+                    <div class="expense-amount">8 Shows</div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Schedule Timeline -->
+        <section class="schedule-timeline" role="region" aria-label="Today's schedule">
+            <div class="timeline-header">
+                <h2 class="timeline-title">Today's Schedule</h2>
+                <time class="timeline-date" datetime="2024-03-12">Tuesday, March 12</time>
+            </div>
+
+            <div class="timeline-events">
+                <article 
+                    class="event-item" 
+                    tabindex="0" 
+                    role="button"
+                    aria-label="Morning Rehearsal at 10:00 AM"
+                >
+                    <time class="event-time">10:00 AM</time>
+                    <div class="event-details">
+                        <h4>Morning Rehearsal</h4>
+                        <p class="event-location">Studio A, Lincoln Center</p>
+                    </div>
+                </article>
+
+                <article 
+                    class="event-item" 
+                    tabindex="0" 
+                    role="button"
+                    aria-label="Technical Run-through at 2:00 PM"
+                >
+                    <time class="event-time">2:00 PM</time>
+                    <div class="event-details">
+                        <h4>Technical Run-through</h4>
+                        <p class="event-location">Main Stage</p>
+                    </div>
+                </article>
+
+                <article 
+                    class="event-item" 
+                    tabindex="0" 
+                    role="button"
+                    aria-label="Evening Performance at 7:30 PM"
+                >
+                    <time class="event-time">7:30 PM</time>
+                    <div class="event-details">
+                        <h4>Evening Performance</h4>
+                        <p class="event-location">David Geffen Hall</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Voice Control Indicator -->
+    <button 
+        class="voice-indicator" 
+        id="voiceButton"
+        onclick="toggleVoice()"
+        aria-label="Activate voice commands"
+        title="Click to use voice commands"
+    >
+        <svg class="voice-icon" viewBox="0 0 24 24">
+            <path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1.2-9.1c0-.66.54-1.2 1.2-1.2.66 0 1.2.54 1.2 1.2l-.01 6.2c0 .66-.53 1.2-1.19 1.2-.66 0-1.2-.54-1.2-1.2V5.9zM17.3 12c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+        </svg>
+    </button>
+
+    <!-- Floating Action Menu -->
+    <div class="fab-menu" id="fabMenu">
+        <div class="fab-options">
+            <div class="fab-option">
+                <span class="fab-label">Submit Expense</span>
+                <button class="fab-button" onclick="openExpenseForm()" aria-label="Submit new expense">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary)">
+                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="fab-option">
+                <span class="fab-label">View Calendar</span>
+                <button class="fab-button" onclick="showCalendar()" aria-label="View full calendar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary)">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="fab-option">
+                <span class="fab-label">Accessibility</span>
+                <button class="fab-button" onclick="openAccessibility()" aria-label="Open accessibility settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary)">
+                        <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button class="fab-main" onclick="toggleFab()" aria-label="Open action menu">
+            <span id="fabIcon">+</span>
+        </button>
+    </div>
+
+    <!-- Accessibility Panel -->
+    <aside class="accessibility-panel" id="accessibilityPanel" role="complementary" aria-label="Accessibility settings">
+        <h2 class="panel-header">Accessibility Settings</h2>
+        
+        <div class="accessibility-option">
+            <div class="option-label">
+                <span>High Contrast Mode</span>
+                <button class="toggle" onclick="toggleHighContrast()" aria-pressed="false" aria-label="Toggle high contrast mode">
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="accessibility-option">
+            <div class="option-label">
+                <span>Large Text</span>
+                <button class="toggle" onclick="toggleLargeText()" aria-pressed="false" aria-label="Toggle large text">
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="accessibility-option">
+            <div class="option-label">
+                <span>Reduce Motion</span>
+                <button class="toggle" onclick="toggleReduceMotion()" aria-pressed="false" aria-label="Toggle reduced motion">
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="accessibility-option">
+            <div class="option-label">
+                <span>Voice Navigation</span>
+                <button class="toggle active" aria-pressed="true" aria-label="Toggle voice navigation">
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="accessibility-option">
+            <div class="option-label">
+                <span>Keyboard Shortcuts</span>
+                <button class="toggle active" aria-pressed="true" aria-label="Toggle keyboard shortcuts">
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="closeAccessibility()" style="margin-top: 32px;">
+            Close Settings
+        </button>
+    </aside>
+
+    <script>
+        // Voice Recognition Setup
+        let recognition;
+        let isListening = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.toLowerCase();
+                processVoiceCommand(command);
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                showVoiceFeedback('Sorry, I didn\'t catch that. Please try again.');
+                setTimeout(() => hideVoiceFeedback(), 3000);
+            };
+
+            recognition.onend = function() {
+                isListening = false;
+                document.getElementById('voiceButton').classList.remove('active');
+                hideVoiceFeedback();
+            };
+        }
+
+        function toggleVoice() {
+            if (!recognition) {
+                alert('Voice recognition is not supported in your browser.');
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+                document.getElementById('voiceButton').classList.remove('active');
+                hideVoiceFeedback();
+            } else {
+                recognition.start();
+                isListening = true;
+                document.getElementById('voiceButton').classList.add('active');
+                showVoiceFeedback('Listening...');
+            }
+        }
+
+        function processVoiceCommand(command) {
+            console.log('Voice command:', command);
+            showVoiceFeedback(`Processing: "${command}"`);
+
+            // Command processing
+            if (command.includes('show contracts') || command.includes('view contracts')) {
+                showVoiceFeedback('Showing your contracts');
+                // Navigate to contracts view
+            } else if (command.includes('submit expense') || command.includes('new expense')) {
+                showVoiceFeedback('Opening expense form');
+                openExpenseForm();
+            } else if (command.includes('today schedule') || command.includes('what\'s today')) {
+                showVoiceFeedback('Here\'s your schedule for today');
+                // Show today's schedule
+            } else if (command.includes('sign contract')) {
+                showVoiceFeedback('Opening pending contract');
+                showContractDetail();
+            } else if (command.includes('help')) {
+                showVoiceFeedback('You can say: "Show contracts", "Submit expense", "Today\'s schedule", or "Sign contract"');
+            } else {
+                showVoiceFeedback('Sorry, I didn\'t understand that command. Say "help" for options.');
+            }
+
+            setTimeout(() => hideVoiceFeedback(), 3000);
+        }
+
+        function showVoiceFeedback(text) {
+            const feedback = document.getElementById('voiceFeedback');
+            const voiceText = document.getElementById('voiceText');
+            voiceText.textContent = text;
+            feedback.classList.add('active');
+        }
+
+        function hideVoiceFeedback() {
+            document.getElementById('voiceFeedback').classList.remove('active');
+        }
+
+        // Login Handler
+        function handleLogin(e) {
+            e.preventDefault();
+            const button = e.target.querySelector('.btn-primary');
+            button.textContent = 'Signing in...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                announceScreenChange('Dashboard loaded. Welcome back, Sarah!');
+            }, 1500);
+        }
+
+        // FAB Menu
+        let fabOpen = false;
+        function toggleFab() {
+            fabOpen = !fabOpen;
+            const fabMenu = document.getElementById('fabMenu');
+            const fabIcon = document.getElementById('fabIcon');
+            
+            if (fabOpen) {
+                fabMenu.classList.add('open');
+                fabIcon.style.transform = 'rotate(45deg)';
+            } else {
+                fabMenu.classList.remove('open');
+                fabIcon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Accessibility Panel
+        function openAccessibility() {
+            document.getElementById('accessibilityPanel').classList.add('open');
+            announceScreenChange('Accessibility settings opened');
+        }
+
+        function closeAccessibility() {
+            document.getElementById('accessibilityPanel').classList.remove('open');
+            announceScreenChange('Accessibility settings closed');
+        }
+
+        // Accessibility Toggles
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            event.currentTarget.classList.toggle('active');
+            const isActive = document.body.classList.contains('high-contrast');
+            event.currentTarget.setAttribute('aria-pressed', isActive);
+            announceScreenChange(isActive ? 'High contrast mode enabled' : 'High contrast mode disabled');
+        }
+
+        function toggleLargeText() {
+            document.body.style.fontSize = document.body.style.fontSize === '125%' ? '100%' : '125%';
+            event.currentTarget.classList.toggle('active');
+            const isActive = event.currentTarget.classList.contains('active');
+            event.currentTarget.setAttribute('aria-pressed', isActive);
+            announceScreenChange(isActive ? 'Large text enabled' : 'Large text disabled');
+        }
+
+        function toggleReduceMotion() {
+            document.body.classList.toggle('reduce-motion');
+            event.currentTarget.classList.toggle('active');
+            const isActive = event.currentTarget.classList.contains('active');
+            event.currentTarget.setAttribute('aria-pressed', isActive);
+            announceScreenChange(isActive ? 'Reduced motion enabled' : 'Reduced motion disabled');
+        }
+
+        // Screen Reader Announcements
+        function announceScreenChange(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            setTimeout(() => announcement.remove(), 1000);
+        }
+
+        // Navigation Functions
+        function showContractDetail() {
+            showVoiceFeedback('Opening contract details...');
+            announceScreenChange('Contract details view opened');
+        }
+
+        function openExpenseForm() {
+            toggleFab();
+            showVoiceFeedback('Expense form opened');
+            announceScreenChange('New expense form opened');
+        }
+
+        function showCalendar() {
+            toggleFab();
+            showVoiceFeedback('Calendar view opened');
+            announceScreenChange('Calendar view opened');
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            // Alt + V for voice commands
+            if (e.altKey && e.key === 'v') {
+                e.preventDefault();
+                toggleVoice();
+            }
+            // Alt + A for accessibility settings
+            else if (e.altKey && e.key === 'a') {
+                e.preventDefault();
+                openAccessibility();
+            }
+            // Alt + E for new expense
+            else if (e.altKey && e.key === 'e') {
+                e.preventDefault();
+                openExpenseForm();
+            }
+            // Escape to close panels
+            else if (e.key === 'Escape') {
+                if (document.getElementById('accessibilityPanel').classList.contains('open')) {
+                    closeAccessibility();
+                } else if (fabOpen) {
+                    toggleFab();
+                }
+            }
+        });
+
+        // Initialize ARIA live regions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add keyboard shortcut hints
+            const shortcuts = [
+                { key: 'Alt+V', action: 'Voice commands' },
+                { key: 'Alt+A', action: 'Accessibility settings' },
+                { key: 'Alt+E', action: 'New expense' },
+                { key: 'Tab', action: 'Navigate forward' },
+                { key: 'Shift+Tab', action: 'Navigate backward' },
+                { key: 'Enter', action: 'Activate element' }
+            ];
+
+            // Focus management
+            const focusableElements = document.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+
+            // Announce page load
+            announceScreenChange('BIG Live Portal loaded. Press Alt+H for help with keyboard shortcuts.');
+        });
+    </script>
+</body>
+</html>

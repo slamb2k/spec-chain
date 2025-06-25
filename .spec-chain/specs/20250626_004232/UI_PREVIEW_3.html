@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Zen Minimalist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --zen-primary: #1976D2;
+            --zen-text: #333333;
+            --zen-light: #f8f9fa;
+            --zen-border: #e0e0e0;
+            --zen-focus: rgba(25, 118, 210, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--zen-text);
+            background: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Zen Containers */
+        .zen-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .zen-card {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: var(--zen-text);
+        }
+
+        /* Zen Form Elements */
+        .zen-input {
+            width: 100%;
+            padding: 20px 0;
+            border: none;
+            border-bottom: 1px solid var(--zen-border);
+            font-size: 16px;
+            background: transparent;
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+        }
+
+        .zen-input:focus {
+            outline: none;
+            border-bottom-color: var(--zen-primary);
+        }
+
+        .zen-input::placeholder {
+            color: #999;
+            font-weight: 300;
+        }
+
+        .zen-button {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            background: var(--zen-primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+            margin-top: 20px;
+        }
+
+        .zen-button:hover {
+            background: #1565C0;
+            transform: translateY(-1px);
+        }
+
+        .zen-button:active {
+            transform: translateY(0);
+        }
+
+        .zen-button-ghost {
+            background: transparent;
+            color: var(--zen-primary);
+            border: 1px solid var(--zen-primary);
+        }
+
+        .zen-button-ghost:hover {
+            background: var(--zen-focus);
+        }
+
+        /* Navigation */
+        .zen-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 1px solid var(--zen-border);
+        }
+
+        .zen-nav-title {
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        .zen-menu-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .zen-menu-line {
+            width: 20px;
+            height: 1px;
+            background: var(--zen-text);
+            transition: all 0.3s ease;
+        }
+
+        /* Dashboard Elements */
+        .zen-metric {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--zen-border);
+        }
+
+        .zen-metric:last-child {
+            border-bottom: none;
+        }
+
+        .zen-metric-value {
+            font-size: 36px;
+            font-weight: 200;
+            margin-bottom: 10px;
+            color: var(--zen-primary);
+        }
+
+        .zen-metric-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 300;
+        }
+
+        /* Contract Viewer */
+        .zen-contract {
+            line-height: 2;
+            font-size: 16px;
+            color: var(--zen-text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .zen-contract h3 {
+            font-size: 18px;
+            font-weight: 400;
+            margin: 40px 0 20px;
+        }
+
+        .zen-contract p {
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        /* Timeline */
+        .zen-timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .zen-timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .zen-timeline-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--zen-primary);
+            border-radius: 50%;
+            margin-right: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .zen-timeline-content {
+            flex: 1;
+        }
+
+        .zen-timeline-time {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .zen-timeline-title {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .zen-timeline::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 40px;
+            bottom: 40px;
+            width: 1px;
+            background: var(--zen-border);
+        }
+
+        /* Expense Form */
+        .zen-form-group {
+            margin-bottom: 40px;
+        }
+
+        .zen-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 300;
+        }
+
+        .zen-select {
+            width: 100%;
+            padding: 20px 0;
+            border: none;
+            border-bottom: 1px solid var(--zen-border);
+            font-size: 16px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .zen-select:focus {
+            outline: none;
+            border-bottom-color: var(--zen-primary);
+        }
+
+        /* Floating Action */
+        .zen-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--zen-primary);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zen-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+        }
+
+        /* Transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .zen-card {
+                padding: 40px 20px;
+            }
+
+            .zen-container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .zen-metric-value {
+                font-size: 28px;
+            }
+        }
+
+        /* Loading State */
+        .zen-loader {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--zen-border);
+            border-top-color: var(--zen-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login" class="page active">
+        <div class="zen-container">
+            <div class="zen-card">
+                <h1>Welcome</h1>
+                <form onsubmit="login(event)">
+                    <input type="email" class="zen-input" placeholder="Email" required>
+                    <input type="password" class="zen-input" placeholder="Password" required>
+                    <button type="submit" class="zen-button">Enter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="page">
+        <nav class="zen-nav">
+            <span class="zen-nav-title">Portal</span>
+            <button class="zen-menu-button" onclick="toggleMenu()">
+                <span class="zen-menu-line"></span>
+                <span class="zen-menu-line"></span>
+                <span class="zen-menu-line"></span>
+            </button>
+        </nav>
+
+        <div class="zen-container" style="padding-top: 120px;">
+            <h1>Hello, Sarah</h1>
+            
+            <div class="zen-card">
+                <div class="zen-metric">
+                    <div class="zen-metric-value">3</div>
+                    <div class="zen-metric-label">Active Contracts</div>
+                </div>
+                <div class="zen-metric">
+                    <div class="zen-metric-value">$2,450</div>
+                    <div class="zen-metric-label">Pending Expenses</div>
+                </div>
+                <div class="zen-metric">
+                    <div class="zen-metric-value">7</div>
+                    <div class="zen-metric-label">Upcoming Shows</div>
+                </div>
+            </div>
+
+            <button class="zen-button" onclick="showPage('contracts')">View Contracts</button>
+            <button class="zen-button zen-button-ghost" onclick="showPage('schedule')">View Schedule</button>
+        </div>
+
+        <button class="zen-fab" onclick="showPage('expense')">+</button>
+    </div>
+
+    <!-- Contracts -->
+    <div id="contracts" class="page">
+        <nav class="zen-nav">
+            <span class="zen-nav-title">Contracts</span>
+            <button class="zen-menu-button" onclick="showPage('dashboard')">×</button>
+        </nav>
+
+        <div class="zen-container" style="padding-top: 120px;">
+            <div class="zen-contract">
+                <h1>Broadway Spring Season</h1>
+                
+                <h3>Terms</h3>
+                <p>Performance period from March 1 to May 31, 2024</p>
+                <p>Eight shows per week, Tuesday through Sunday</p>
+                <p>Compensation: $3,500 per week</p>
+
+                <h3>Responsibilities</h3>
+                <p>Lead role as specified in production notes</p>
+                <p>Attendance at all scheduled rehearsals</p>
+                <p>Publicity appearances as requested</p>
+
+                <h3>Benefits</h3>
+                <p>Health insurance coverage provided</p>
+                <p>Two complimentary tickets per performance</p>
+                <p>Travel and accommodation allowance included</p>
+            </div>
+
+            <button class="zen-button" onclick="alert('Contract signed')">Sign Contract</button>
+        </div>
+    </div>
+
+    <!-- Schedule -->
+    <div id="schedule" class="page">
+        <nav class="zen-nav">
+            <span class="zen-nav-title">Schedule</span>
+            <button class="zen-menu-button" onclick="showPage('dashboard')">×</button>
+        </nav>
+
+        <div class="zen-container" style="padding-top: 120px;">
+            <h1>This Week</h1>
+            
+            <div class="zen-timeline">
+                <div class="zen-timeline-item">
+                    <div class="zen-timeline-dot"></div>
+                    <div class="zen-timeline-content">
+                        <div class="zen-timeline-time">Today, 2:00 PM</div>
+                        <div class="zen-timeline-title">Rehearsal - Act 2</div>
+                    </div>
+                </div>
+                <div class="zen-timeline-item">
+                    <div class="zen-timeline-dot"></div>
+                    <div class="zen-timeline-content">
+                        <div class="zen-timeline-time">Today, 7:30 PM</div>
+                        <div class="zen-timeline-title">Evening Performance</div>
+                    </div>
+                </div>
+                <div class="zen-timeline-item">
+                    <div class="zen-timeline-dot"></div>
+                    <div class="zen-timeline-content">
+                        <div class="zen-timeline-time">Tomorrow, 10:00 AM</div>
+                        <div class="zen-timeline-title">Costume Fitting</div>
+                    </div>
+                </div>
+                <div class="zen-timeline-item">
+                    <div class="zen-timeline-dot"></div>
+                    <div class="zen-timeline-content">
+                        <div class="zen-timeline-time">Tomorrow, 7:30 PM</div>
+                        <div class="zen-timeline-title">Evening Performance</div>
+                    </div>
+                </div>
+                <div class="zen-timeline-item">
+                    <div class="zen-timeline-dot"></div>
+                    <div class="zen-timeline-content">
+                        <div class="zen-timeline-time">Thursday, 2:00 PM</div>
+                        <div class="zen-timeline-title">Matinee Performance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense -->
+    <div id="expense" class="page">
+        <nav class="zen-nav">
+            <span class="zen-nav-title">New Expense</span>
+            <button class="zen-menu-button" onclick="showPage('dashboard')">×</button>
+        </nav>
+
+        <div class="zen-container" style="padding-top: 120px;">
+            <form onsubmit="submitExpense(event)">
+                <div class="zen-form-group">
+                    <label class="zen-label">Amount</label>
+                    <input type="number" class="zen-input" placeholder="0.00" step="0.01" required>
+                </div>
+
+                <div class="zen-form-group">
+                    <label class="zen-label">Category</label>
+                    <select class="zen-select" required>
+                        <option value="">Select category</option>
+                        <option value="travel">Travel</option>
+                        <option value="meals">Meals</option>
+                        <option value="supplies">Supplies</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="zen-form-group">
+                    <label class="zen-label">Description</label>
+                    <input type="text" class="zen-input" placeholder="Brief description" required>
+                </div>
+
+                <button type="submit" class="zen-button">Submit Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show requested page
+            setTimeout(() => {
+                document.getElementById(pageId).classList.add('active');
+            }, 100);
+        }
+
+        function login(event) {
+            event.preventDefault();
+            showPage('dashboard');
+        }
+
+        function submitExpense(event) {
+            event.preventDefault();
+            alert('Expense submitted successfully');
+            showPage('dashboard');
+        }
+
+        function toggleMenu() {
+            // Simple menu toggle - in real app would show menu
+            alert('Menu would open here');
+        }
+
+        // Touch gesture support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swiped left - could navigate forward
+            }
+            if (touchEndX > touchStartX + 50) {
+                // Swiped right - could go back
+                const activePage = document.querySelector('.page.active');
+                if (activePage.id !== 'login' && activePage.id !== 'dashboard') {
+                    showPage('dashboard');
+                }
+            }
+        }
+
+        // Mindful loading states
+        document.querySelectorAll('.zen-button').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.type !== 'submit') {
+                    this.innerHTML = '<div class="zen-loader" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+                    setTimeout(() => {
+                        this.innerHTML = this.textContent;
+                    }, 500);
+                }
+            });
+        });
+
+        // Focus management for accessibility
+        document.querySelectorAll('.zen-input, .zen-select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement?.classList.add('focused');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement?.classList.remove('focused');
+            });
+        });
+    </script>
+</body>
+</html>

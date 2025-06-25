@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Live Portal - Professional Elegance</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1976D2;
+            --primary-dark: #1565C0;
+            --primary-light: #42A5F5;
+            --text-primary: #212121;
+            --text-secondary: #616161;
+            --text-light: #9E9E9E;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F5F5F5;
+            --bg-tertiary: #FAFAFA;
+            --border-color: #E0E0E0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .screen {
+            min-height: 100vh;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Skip to Content Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            min-height: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            transition: var(--transition);
+            background: var(--bg-primary);
+            min-height: 48px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .form-input:invalid {
+            border-color: var(--error);
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 3rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--primary-blue);
+            font-weight: 300;
+            font-size: 2.5rem;
+        }
+
+        .logo p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            background: var(--bg-secondary);
+            color: var(--primary-blue);
+        }
+
+        .nav-link.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-blue);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--primary-blue);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .table tr:focus-within {
+            outline: 3px solid var(--primary-light);
+            outline-offset: -3px;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+        }
+
+        /* Calendar View */
+        .calendar-container {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .calendar-day {
+            background: var(--bg-primary);
+            padding: 0.5rem;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .calendar-day-header {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            text-align: center;
+            padding: 1rem 0.5rem;
+        }
+
+        .calendar-event {
+            background: var(--primary-light);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .calendar-event:hover {
+            background: var(--primary-blue);
+            transform: translateX(2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            background: var(--bg-tertiary);
+        }
+
+        .file-upload:hover,
+        .file-upload:focus-within {
+            border-color: var(--primary-blue);
+            background: var(--bg-secondary);
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: var(--bg-primary);
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: var(--shadow-lg);
+                transition: right 0.3s ease-in-out;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                font-size: 0.875rem;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 600px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Focus Visible */
+        :focus-visible {
+            outline: 3px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav-header,
+            .btn,
+            .modal {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-card fade-in">
+                <div class="logo">
+                    <h1>BIG Live Portal</h1>
+                    <p>Performer Management System</p>
+                </div>
+                <form id="loginForm" aria-label="Login Form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-input" required 
+                               aria-required="true" aria-describedby="email-error"
+                               placeholder="artist@example.com">
+                        <span id="email-error" class="sr-only" role="alert"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-input" required 
+                               aria-required="true" aria-describedby="password-error"
+                               placeholder="Enter your password">
+                        <span id="password-error" class="sr-only" role="alert"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Sign In
+                    </button>
+                    <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                        <a href="#" style="color: var(--primary-blue); text-decoration: none;">Forgot Password?</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="screen">
+        <nav class="nav-header" role="navigation" aria-label="Main Navigation">
+            <div class="container">
+                <div class="nav-container">
+                    <a href="#" class="nav-brand">BIG Live Portal</a>
+                    <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+                        ☰
+                    </button>
+                    <ul class="nav-menu" role="menubar">
+                        <li role="none"><a href="#" class="nav-link active" role="menuitem" data-page="overview">Overview</a></li>
+                        <li role="none"><a href="#" class="nav-link" role="menuitem" data-page="contracts">Contracts</a></li>
+                        <li role="none"><a href="#" class="nav-link" role="menuitem" data-page="expenses">Expenses</a></li>
+                        <li role="none"><a href="#" class="nav-link" role="menuitem" data-page="schedule">Schedule</a></li>
+                        <li role="none"><a href="#" class="nav-link" role="menuitem" onclick="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main id="main-content" class="container" style="padding: 2rem 1rem;">
+            <!-- Overview Page -->
+            <div id="overviewPage" class="page active">
+                <h1>Welcome, Sarah Johnson</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Here's your performance overview</p>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card" tabindex="0" role="article" aria-label="Active Contracts">
+                        <div class="stat-label">Active Contracts</div>
+                        <div class="stat-value">12</div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">3 pending signature</p>
+                    </div>
+                    <div class="stat-card" tabindex="0" role="article" aria-label="Upcoming Shows">
+                        <div class="stat-label">Upcoming Shows</div>
+                        <div class="stat-value">28</div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Next: Tomorrow at 8PM</p>
+                    </div>
+                    <div class="stat-card" tabindex="0" role="article" aria-label="Pending Expenses">
+                        <div class="stat-label">Pending Expenses</div>
+                        <div class="stat-value">$3,450</div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">5 items awaiting approval</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h2>Recent Activity</h2>
+                    <table class="table" role="table" aria-label="Recent Activity">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader">Type</th>
+                                <th role="columnheader">Description</th>
+                                <th role="columnheader">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-25</td>
+                                <td role="cell">Contract</td>
+                                <td role="cell">Lincoln Theater - Summer Series</td>
+                                <td role="cell"><span class="badge badge-success">Signed</span></td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-24</td>
+                                <td role="cell">Expense</td>
+                                <td role="cell">Travel - Chicago Performance</td>
+                                <td role="cell"><span class="badge badge-warning">Pending</span></td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-23</td>
+                                <td role="cell">Schedule</td>
+                                <td role="cell">Rehearsal - Main Stage</td>
+                                <td role="cell"><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Contracts Page -->
+            <div id="contractsPage" class="page" style="display: none;">
+                <h1>Contracts</h1>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <p style="color: var(--text-secondary);">Manage your performance contracts</p>
+                    <button class="btn btn-primary" onclick="showContractModal()">View Sample Contract</button>
+                </div>
+
+                <div class="table-container">
+                    <table class="table" role="table" aria-label="Contracts">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Contract ID</th>
+                                <th role="columnheader">Venue</th>
+                                <th role="columnheader">Performance Date</th>
+                                <th role="columnheader">Amount</th>
+                                <th role="columnheader">Status</th>
+                                <th role="columnheader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">#C-2025-001</td>
+                                <td role="cell">Lincoln Theater</td>
+                                <td role="cell">2025-07-15</td>
+                                <td role="cell">$5,000</td>
+                                <td role="cell"><span class="badge badge-warning">Pending Signature</span></td>
+                                <td role="cell">
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" 
+                                            onclick="showContractModal()">View</button>
+                                </td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">#C-2025-002</td>
+                                <td role="cell">Blue Note Jazz Club</td>
+                                <td role="cell">2025-07-22</td>
+                                <td role="cell">$3,500</td>
+                                <td role="cell"><span class="badge badge-success">Active</span></td>
+                                <td role="cell">
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View</button>
+                                </td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">#C-2025-003</td>
+                                <td role="cell">Symphony Hall</td>
+                                <td role="cell">2025-08-10</td>
+                                <td role="cell">$8,000</td>
+                                <td role="cell"><span class="badge badge-success">Active</span></td>
+                                <td role="cell">
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Expenses Page -->
+            <div id="expensesPage" class="page" style="display: none;">
+                <h1>Expense Management</h1>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <p style="color: var(--text-secondary);">Submit and track your performance expenses</p>
+                    <button class="btn btn-primary" onclick="showExpenseModal()">Submit New Expense</button>
+                </div>
+
+                <div class="dashboard-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card" tabindex="0">
+                        <div class="stat-label">Total Submitted</div>
+                        <div class="stat-value">$12,340</div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">This month</p>
+                    </div>
+                    <div class="stat-card" tabindex="0">
+                        <div class="stat-label">Approved</div>
+                        <div class="stat-value">$8,890</div>
+                        <p style="color: var(--success); font-size: 0.875rem;">72% approval rate</p>
+                    </div>
+                    <div class="stat-card" tabindex="0">
+                        <div class="stat-label">Pending Review</div>
+                        <div class="stat-value">$3,450</div>
+                        <p style="color: var(--warning); font-size: 0.875rem;">5 items</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table" role="table" aria-label="Expenses">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Date</th>
+                                <th role="columnheader">Category</th>
+                                <th role="columnheader">Description</th>
+                                <th role="columnheader">Amount</th>
+                                <th role="columnheader">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-24</td>
+                                <td role="cell">Travel</td>
+                                <td role="cell">Flight to Chicago - Performance</td>
+                                <td role="cell">$450</td>
+                                <td role="cell"><span class="badge badge-warning">Pending</span></td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-23</td>
+                                <td role="cell">Equipment</td>
+                                <td role="cell">Microphone Cable Replacement</td>
+                                <td role="cell">$120</td>
+                                <td role="cell"><span class="badge badge-success">Approved</span></td>
+                            </tr>
+                            <tr role="row" tabindex="0">
+                                <td role="cell">2025-06-22</td>
+                                <td role="cell">Accommodation</td>
+                                <td role="cell">Hotel - Boston Performance</td>
+                                <td role="cell">$280</td>
+                                <td role="cell"><span class="badge badge-success">Approved</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Schedule Page -->
+            <div id="schedulePage" class="page" style="display: none;">
+                <h1>Performance Schedule</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">View your upcoming performances and rehearsals</p>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="btn btn-secondary" onclick="previousMonth()">← Previous</button>
+                        <h2 id="currentMonth">July 2025</h2>
+                        <button class="btn btn-secondary" onclick="nextMonth()">Next →</button>
+                    </div>
+                    <div class="calendar-grid" role="grid" aria-label="Performance Calendar">
+                        <div class="calendar-day-header" role="columnheader">Sun</div>
+                        <div class="calendar-day-header" role="columnheader">Mon</div>
+                        <div class="calendar-day-header" role="columnheader">Tue</div>
+                        <div class="calendar-day-header" role="columnheader">Wed</div>
+                        <div class="calendar-day-header" role="columnheader">Thu</div>
+                        <div class="calendar-day-header" role="columnheader">Fri</div>
+                        <div class="calendar-day-header" role="columnheader">Sat</div>
+                        <!-- Calendar Days -->
+                        <div class="calendar-day" role="gridcell" tabindex="0"></div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">1</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">2</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">3
+                            <div class="calendar-event" role="button" tabindex="0">Rehearsal 2PM</div>
+                        </div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">4</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">5</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">6</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">7</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">8</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">9</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">10</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">11</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">12</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">13</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">14</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">15
+                            <div class="calendar-event" role="button" tabindex="0">Lincoln Theater 8PM</div>
+                        </div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">16</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">17</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">18</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">19</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">20</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">21</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">22
+                            <div class="calendar-event" role="button" tabindex="0">Blue Note 7PM</div>
+                            <div class="calendar-event" role="button" tabindex="0">Blue Note 10PM</div>
+                        </div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">23</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">24</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">25</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">26</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">27</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">28</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">29</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">30</div>
+                        <div class="calendar-day" role="gridcell" tabindex="0">31</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Contract Modal -->
+    <div id="contractModal" class="modal" role="dialog" aria-labelledby="contractModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="contractModalTitle">Performance Contract - Lincoln Theater</h2>
+                <button class="modal-close" onclick="closeModal('contractModal')" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 2rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Contract #C-2025-001</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                        <div>
+                            <strong>Performance Date:</strong><br>
+                            July 15, 2025 at 8:00 PM
+                        </div>
+                        <div>
+                            <strong>Compensation:</strong><br>
+                            $5,000 USD
+                        </div>
+                        <div>
+                            <strong>Venue:</strong><br>
+                            Lincoln Theater, Main Stage
+                        </div>
+                        <div>
+                            <strong>Duration:</strong><br>
+                            90 minutes (2 sets)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--bg-secondary); margin-bottom: 2rem;">
+                    <h3>Terms and Conditions</h3>
+                    <p style="line-height: 1.8;">
+                        This Performance Agreement is entered into between Lincoln Theater ("Venue") and 
+                        Sarah Johnson ("Artist") for a live musical performance. The Artist agrees to 
+                        perform two 45-minute sets with a 15-minute intermission. The Venue will provide 
+                        professional sound and lighting equipment, as well as a sound engineer. 
+                        Payment will be made within 48 hours of the performance completion.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Electronic Signature</h3>
+                    <div class="form-group">
+                        <label for="signatureName" class="form-label">Type your full name to sign</label>
+                        <input type="text" id="signatureName" class="form-input" 
+                               placeholder="Sarah Johnson" aria-required="true">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="signContract()">Sign Contract</button>
+                    <button class="btn btn-secondary" onclick="closeModal('contractModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="expenseModal" class="modal" role="dialog" aria-labelledby="expenseModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="expenseModalTitle">Submit New Expense</h2>
+                <button class="modal-close" onclick="closeModal('expenseModal')" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="expenseForm" aria-label="Expense Submission Form">
+                <div class="form-group">
+                    <label for="expenseDate" class="form-label">Date</label>
+                    <input type="date" id="expenseDate" class="form-input" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="expenseCategory" class="form-label">Category</label>
+                    <select id="expenseCategory" class="form-input" required aria-required="true">
+                        <option value="">Select category</option>
+                        <option value="travel">Travel</option>
+                        <option value="accommodation">Accommodation</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="meals">Meals</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expenseAmount" class="form-label">Amount ($)</label>
+                    <input type="number" id="expenseAmount" class="form-input" 
+                           min="0" step="0.01" required aria-required="true" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="expenseDescription" class="form-label">Description</label>
+                    <textarea id="expenseDescription" class="form-input" rows="3" 
+                              required aria-required="true" 
+                              placeholder="Provide details about this expense"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="expenseReceipt" class="form-label">Upload Receipt</label>
+                    <div class="file-upload" role="button" tabindex="0" 
+                         onclick="document.getElementById('expenseReceipt').click()"
+                         onkeypress="if(event.key === 'Enter') document.getElementById('expenseReceipt').click()">
+                        <input type="file" id="expenseReceipt" class="file-upload-input" 
+                               accept="image/*,.pdf" aria-label="Upload receipt file">
+                        <p>Click to upload receipt (PDF or Image)</p>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Max file size: 5MB</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Submit Expense</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentScreen = 'login';
+        let currentPage = 'overview';
+        let currentMonth = 6; // July 2025
+        let currentYear = 2025;
+
+        // Screen Navigation
+        function showScreen(screenName) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            const screen = document.getElementById(screenName + 'Screen');
+            if (screen) {
+                screen.classList.add('active');
+                currentScreen = screenName;
+                
+                // Announce screen change for screen readers
+                announceChange(`Now viewing ${screenName} screen`);
+            }
+        }
+
+        // Page Navigation within Dashboard
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            const page = document.getElementById(pageName + 'Page');
+            if (page) {
+                page.style.display = 'block';
+                page.classList.add('fade-in');
+                currentPage = pageName;
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageName) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Announce page change
+                announceChange(`Now viewing ${pageName} page`);
+            }
+        }
+
+        // Modal Management
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+                
+                // Focus management
+                const firstFocusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (firstFocusable) {
+                    setTimeout(() => firstFocusable.focus(), 100);
+                }
+                
+                // Trap focus within modal
+                trapFocus(modal);
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+                
+                // Return focus to trigger element
+                const trigger = document.activeElement;
+                if (trigger) {
+                    trigger.focus();
+                }
+            }
+        }
+
+        function showContractModal() {
+            showModal('contractModal');
+        }
+
+        function showExpenseModal() {
+            showModal('expenseModal');
+        }
+
+        // Form Handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simple validation
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                // Simulate login
+                announceChange('Login successful. Loading dashboard...');
+                setTimeout(() => {
+                    showScreen('dashboard');
+                    showPage('overview');
+                }, 500);
+            }
+        });
+
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate expense submission
+            announceChange('Expense submitted successfully');
+            closeModal('expenseModal');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Navigation Event Listeners
+        document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                showPage(page);
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            const isExpanded = navMenu.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Calendar Navigation
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateCalendarHeader();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendarHeader();
+        }
+
+        function updateCalendarHeader() {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent = `${months[currentMonth]} ${currentYear}`;
+        }
+
+        // Contract Signing
+        function signContract() {
+            const signatureName = document.getElementById('signatureName').value;
+            if (signatureName) {
+                announceChange('Contract signed successfully');
+                closeModal('contractModal');
+                
+                // Update contract status in table
+                const pendingBadge = document.querySelector('.badge-warning');
+                if (pendingBadge) {
+                    pendingBadge.className = 'badge badge-success';
+                    pendingBadge.textContent = 'Signed';
+                }
+            } else {
+                announceChange('Please enter your name to sign the contract');
+            }
+        }
+
+        // Logout Function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                announceChange('Logging out...');
+                setTimeout(() => {
+                    showScreen('login');
+                    // Reset form
+                    document.getElementById('loginForm').reset();
+                }, 300);
+            }
+        }
+
+        // Accessibility Helpers
+        function announceChange(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.classList.add('sr-only');
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        function trapFocus(element) {
+            const focusableElements = element.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            lastFocusable.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            firstFocusable.focus();
+                            e.preventDefault();
+                        }
+                    }
+                } else if (e.key === 'Escape') {
+                    closeModal(element.id);
+                }
+            });
+        }
+
+        // File Upload Enhancement
+        document.getElementById('expenseReceipt').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file selected';
+            const fileUpload = this.closest('.file-upload');
+            const message = fileUpload.querySelector('p');
+            message.textContent = `Selected: ${fileName}`;
+            announceChange(`File selected: ${fileName}`);
+        });
+
+        // Keyboard Navigation for Tables
+        document.querySelectorAll('.table tr[tabindex="0"]').forEach(row => {
+            row.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const button = this.querySelector('button');
+                    if (button) {
+                        button.click();
+                    }
+                }
+            });
+        });
+
+        // Calendar Event Handlers
+        document.querySelectorAll('.calendar-event').forEach(event => {
+            event.addEventListener('click', function() {
+                alert(`Event Details: ${this.textContent}\n\nIn a real application, this would show full event details.`);
+            });
+            
+            event.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial focus
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.focus();
+            }
+            
+            // Add loading states to buttons
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.type === 'submit' || this.classList.contains('btn-primary')) {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<span class="loading"></span> Processing...';
+                        this.disabled = true;
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }, 1000);
+                    }
+                });
+            });
+            
+            // Responsive table handling
+            if (window.innerWidth < 768) {
+                document.querySelectorAll('.table').forEach(table => {
+                    table.setAttribute('role', 'list');
+                    table.querySelectorAll('tr').forEach(row => {
+                        row.setAttribute('role', 'listitem');
+                    });
+                });
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            // Close mobile menu on desktop resize
+            if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Performance optimization - Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -10% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards for animation
+        document.querySelectorAll('.card, .stat-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Service Worker Registration (for offline capability in production)
+        if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // Service worker registration failed, app will work normally
+                });
+            });
+        }
+    </script>
+</body>
+</html>
