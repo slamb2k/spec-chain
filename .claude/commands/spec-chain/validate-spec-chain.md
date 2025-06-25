@@ -24,10 +24,10 @@ This command uses Claude Code's file system tools (Read, LS, Glob) to perform al
 ### 1. Directory Structure Check
 
 The following directories are validated:
-- `/specs` - For generated documentation output
-- `/assets/inspiration/visual` - For visual inspiration materials
-- `/assets/inspiration/functional` - For functional inspiration materials
-- `/.claude/commands/spec-chain` - For spec-chain command files
+- `specs` - For generated documentation output
+- `assets/inspiration/visual` - For visual inspiration materials
+- `assets/inspiration/functional` - For functional inspiration materials
+- `.claude/commands/spec-chain` - For spec-chain command files
 
 ### 2. Required Files Check
 
