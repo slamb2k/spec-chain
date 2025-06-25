@@ -10,6 +10,6 @@ eza . --tree --git-ignore
 
 README.md
 .claude/CLAUDE.md
-.claude/commands/COMMANDS.md
+.claude/commands/spec-chain/COMMANDS.md
 ai_docs/AI_DOCS.md
 specs/SPECS.md

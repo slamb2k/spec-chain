@@ -185,9 +185,9 @@ spec-chain package:
 ├── .claude/
 │   ├── CLAUDE.md                   # Claude Code guidance
 │   └── commands/
-│       ├── COMMANDS.md             # Command documentation
 │       ├── prime.md                # Context priming
 │       └── spec-chain/             # All spec-chain commands
+│           ├── COMMANDS.md             # Command documentation
 │           ├── init-spec-chain.md      # Initialize project
 │           ├── validate-spec-chain.md  # Validate setup
 │           ├── run-spec-chain.md       # Generate docs

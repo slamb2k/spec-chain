@@ -6,9 +6,9 @@ This directory contains custom Claude Code commands for the Spec Chain project. 
 
 ```
 .claude/commands/
-├── README.md                    # This file
 ├── prime.md                     # Context priming command
 └── spec-chain/                  # Spec Chain documentation system
+    ├── COMMANDS.md                  # This file
     ├── init-spec-chain.md           # Project initialization
     ├── validate-spec-chain.md       # Setup validation
     ├── run-spec-chain.md           # Documentation generation pipeline

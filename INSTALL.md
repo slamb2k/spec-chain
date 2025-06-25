@@ -131,9 +131,9 @@ curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/instal
    ├── .claude/
    │   ├── CLAUDE.md
    │   └── commands/
-   │       ├── COMMANDS.md
    │       ├── prime.md
    │       └── spec-chain/
+   │           ├── COMMANDS.md
    │           └── [all command files]
    └── [your existing files]
    ```

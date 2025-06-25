@@ -148,8 +148,8 @@ install_files() {
     
     # List of files to download
     local files=(
-        "commands/COMMANDS.md"
         "commands/prime.md"
+        "commands/spec-chain/COMMANDS.md"
         "commands/spec-chain/init-spec-chain.md"
         "commands/spec-chain/validate-spec-chain.md"
         "commands/spec-chain/run-spec-chain.md"

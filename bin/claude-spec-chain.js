@@ -102,8 +102,8 @@ const commands = {
                 log.success('Removed existing installation');
             }
             
-            // Copy files, skipping CLAUDE.md to avoid conflicts
-            copyRecursive(sourceDir, claudeDir, ['CLAUDE.md']);
+            // Copy files, skipping CLAUDE.md and prime.md to avoid conflicts
+            copyRecursive(sourceDir, claudeDir, ['CLAUDE.md', 'prime.md']);
             log.success('Spec-chain commands installed successfully!');
             
             console.log('\nAvailable commands in Claude Code:');
