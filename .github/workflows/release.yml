@@ -49,13 +49,13 @@ jobs:
           # Create claude-commands.tar.gz
           tar -czf claude-commands.tar.gz .claude/
           
-          # Create full release archive with install scripts
+          # Create full release archive with install script
           mkdir -p release-temp
           cp -r .claude release-temp/
           cp install.sh release-temp/
-          cp install.ps1 release-temp/
           cp README.md release-temp/
           cp LICENSE release-temp/ 2>/dev/null || echo "No LICENSE file"
+          cp INSTALL.md release-temp/
           
           cd release-temp
           zip -r ../spec-chain-${{ steps.get_version.outputs.VERSION }}.zip .
@@ -84,15 +84,12 @@ jobs:
             claude-spec-chain install
             ```
             
-            **Shell script:**
+            **Shell script (Linux/macOS/WSL):**
             ```bash
             curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
             ```
             
-            **PowerShell:**
-            ```powershell
-            irm https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 | iex
-            ```
+            **Note:** Windows users should use WSL (Windows Subsystem for Linux)
             
             ### Manual Installation
             
@@ -152,8 +149,8 @@ jobs:
           # Update README.md
           sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" README.md
           sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" install.sh
-          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" install.ps1
           sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" package.json
+          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" INSTALL.md
       
       - name: Commit changes
         run: |

@@ -9,7 +9,6 @@ This guide provides detailed instructions for installing the spec-chain commands
 - [Installation Methods](#installation-methods)
   - [npm (Recommended)](#npm-recommended)
   - [Shell Script](#shell-script)
-  - [PowerShell](#powershell)
   - [Manual Installation](#manual-installation)
   - [Git Clone](#git-clone)
 - [Global vs Local Installation](#global-vs-local-installation)
@@ -21,28 +20,24 @@ This guide provides detailed instructions for installing the spec-chain commands
 ## Prerequisites
 
 - **Claude Code**: You must have access to [Claude Code](https://claude.ai/code)
+- **Linux Environment**: Claude Code runs on Linux (including WSL for Windows users)
 - **Project Directory**: A directory where you want to use spec-chain
 - **Optional**: Node.js/npm for npm installation method
 
 ## Quick Install
 
-Choose one of these methods based on your platform:
-
-### macOS/Linux/WSL
+### Shell Script (Linux/macOS/WSL)
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash
 ```
 
-### Windows
-```powershell
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex
-```
-
-### Any Platform (with npm)
+### npm (Any Platform with Node.js)
 ```bash
 npm install -g claude-spec-chain
 claude-spec-chain install
 ```
+
+**Note:** Windows users must use WSL (Windows Subsystem for Linux) as Claude Code only runs on Linux.
 
 ## Installation Methods
 
@@ -87,7 +82,7 @@ npx claude-spec-chain install
 
 ### Shell Script
 
-For Unix-like systems (macOS, Linux, WSL).
+For Linux, macOS, and WSL (Windows Subsystem for Linux).
 
 #### Local Installation (Default)
 
@@ -113,33 +108,6 @@ claude-spec-chain install
 curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash -s -- --force
 ```
 
-### PowerShell
-
-For Windows systems.
-
-#### Local Installation (Default)
-
-```powershell
-# Install to current directory
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex
-```
-
-#### Global Installation
-
-```powershell
-# Install globally
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex -Global
-
-# Then in any project
-claude-spec-chain install
-```
-
-#### Force Installation
-
-```powershell
-# Overwrite existing installation
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex -Force
-```
 
 ### Manual Installation
 
@@ -239,11 +207,6 @@ npm update claude-spec-chain
 curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash -s -- --force
 ```
 
-### PowerShell Method
-```powershell
-# Reinstall with latest version
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex -Force
-```
 
 ## Uninstalling
 
@@ -267,9 +230,6 @@ npm uninstall claude-spec-chain
 rm -rf ~/.claude-commands/spec-chain
 rm -f ~/.local/bin/claude-spec-chain
 
-# Windows
-Remove-Item -Recurse -Force "$env:USERPROFILE\.claude-commands\spec-chain"
-Remove-Item -Force "$env:USERPROFILE\.local\bin\claude-spec-chain.*"
 ```
 
 ## Troubleshooting
@@ -284,8 +244,6 @@ The global command might not be in your PATH. Add to your shell configuration:
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
-# PowerShell
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:USERPROFILE\.local\bin", "User")
 ```
 
 #### "Permission denied" errors
@@ -324,10 +282,11 @@ curl -fsSL --insecure https://... | bash
 - May need to allow script execution in System Preferences
 - Use Homebrew for system-wide tools: `brew install node`
 
-### Windows
-- Run PowerShell as Administrator for global installs
-- Enable script execution: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
-- Consider using Windows Terminal for better experience
+### Windows (via WSL)
+- Claude Code requires WSL (Windows Subsystem for Linux)
+- Install WSL: `wsl --install` in PowerShell as Administrator
+- Use Linux instructions within WSL
+- Access files from Windows at `\\wsl$\Ubuntu\...`
 
 ### Linux
 - Package managers vary by distribution

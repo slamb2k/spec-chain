@@ -14,15 +14,12 @@ npm install -g claude-spec-chain
 claude-spec-chain install
 ```
 
-**Using shell script (Unix/macOS/Linux/WSL):**
+**Using shell script (Linux/macOS/WSL):**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash
 ```
 
-**Using PowerShell (Windows):**
-```powershell
-irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex
-```
+**Note:** Claude Code runs on Linux. Windows users should use WSL (Windows Subsystem for Linux).
 
 ### Other Installation Methods
 
