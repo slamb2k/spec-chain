@@ -1,0 +1,41 @@
+# Development files
+.git/
+.github/
+.gitignore
+.spec-chain/
+ai_docs/
+docs/
+spec_chain/
+UI_PREVIEW_*.html
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Build files
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keep only necessary files for npm package
+# .claude/ directory is included by default
+# bin/ directory is included by default  
+# lib/ directory is included by default
+# README.md is included by default
+# LICENSE is included by default
+# package.json is included by default
+# INSTALL.md is included by default

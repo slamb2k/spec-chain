@@ -4,6 +4,48 @@ A comprehensive system of AI prompts that work together to generate complete pro
 
 **Use spec-chain in any project:** Simply run `/init-spec-chain` in any directory to initialize it for spec-chain usage. All generated content is isolated in a `.spec-chain` directory for portability and clean project organization.
 
+## 📦 Installation
+
+### Quick Install (Recommended)
+
+**Using npm (global installation):**
+```bash
+npm install -g claude-spec-chain
+claude-spec-chain install
+```
+
+**Using shell script (Unix/macOS/Linux/WSL):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash
+```
+
+**Using PowerShell (Windows):**
+```powershell
+irm https://raw.githubusercontent.com/yourusername/spec-chain/main/install.ps1 | iex
+```
+
+### Other Installation Methods
+
+**Download and extract:**
+1. Download the latest release from [GitHub Releases](https://github.com/yourusername/spec-chain/releases)
+2. Extract the `.claude` directory to your project root
+3. Open your project in Claude Code
+
+**Git clone:**
+```bash
+git clone https://github.com/yourusername/spec-chain.git
+cp -r spec-chain/.claude your-project/
+```
+
+**Global installation with shell script:**
+```bash
+# Install globally to ~/.claude-commands/spec-chain
+curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash -s -- --global
+
+# Then in any project:
+claude-spec-chain install
+```
+
 ## 🚀 What is Spec Chain?
 
 Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.

@@ -1,0 +1,45 @@
+{
+  "name": "claude-spec-chain",
+  "version": "1.0.0",
+  "description": "AI-powered documentation generator for Claude Code - generates comprehensive software documentation from a single app idea",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "documentation",
+    "generator",
+    "ai",
+    "spec-chain",
+    "software-documentation",
+    "claude-commands"
+  ],
+  "homepage": "https://github.com/yourusername/spec-chain#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/spec-chain/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/spec-chain.git"
+  },
+  "license": "MIT",
+  "author": "Your Name <your.email@example.com>",
+  "main": "lib/index.js",
+  "bin": {
+    "claude-spec-chain": "./bin/claude-spec-chain.js"
+  },
+  "files": [
+    ".claude/",
+    "bin/",
+    "lib/",
+    "README.md",
+    "LICENSE",
+    "INSTALL.md"
+  ],
+  "scripts": {
+    "postinstall": "node lib/postinstall.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "preferGlobal": true
+}

@@ -1,0 +1,165 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION_NUMBER=${VERSION#v}" >> $GITHUB_OUTPUT
+      
+      - name: Update package.json version
+        run: |
+          npm version ${{ steps.get_version.outputs.VERSION_NUMBER }} --no-git-tag-version
+      
+      - name: Create release archives
+        run: |
+          # Create claude-commands.zip (just .claude directory)
+          zip -r claude-commands.zip .claude/
+          
+          # Create claude-commands.tar.gz
+          tar -czf claude-commands.tar.gz .claude/
+          
+          # Create full release archive with install scripts
+          mkdir -p release-temp
+          cp -r .claude release-temp/
+          cp install.sh release-temp/
+          cp install.ps1 release-temp/
+          cp README.md release-temp/
+          cp LICENSE release-temp/ 2>/dev/null || echo "No LICENSE file"
+          
+          cd release-temp
+          zip -r ../spec-chain-${{ steps.get_version.outputs.VERSION }}.zip .
+          tar -czf ../spec-chain-${{ steps.get_version.outputs.VERSION }}.tar.gz .
+          cd ..
+          rm -rf release-temp
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Installation
+            
+            ### Quick Install
+            
+            **npm (recommended):**
+            ```bash
+            npm install -g claude-spec-chain
+            claude-spec-chain install
+            ```
+            
+            **Shell script:**
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
+            ```
+            
+            **PowerShell:**
+            ```powershell
+            irm https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 | iex
+            ```
+            
+            ### Manual Installation
+            
+            1. Download `claude-commands.zip` or `claude-commands.tar.gz`
+            2. Extract the `.claude` directory to your project root
+            3. Open your project in Claude Code
+            
+            ## What's Changed
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+      
+      - name: Upload Release Assets
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const files = [
+              'claude-commands.zip',
+              'claude-commands.tar.gz',
+              'spec-chain-${{ steps.get_version.outputs.VERSION }}.zip',
+              'spec-chain-${{ steps.get_version.outputs.VERSION }}.tar.gz'
+            ];
+            
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: ${{ steps.create_release.outputs.id }},
+                name: file,
+                data: fs.readFileSync(file)
+              });
+            }
+      
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
+
+  update-documentation:
+    needs: create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      
+      - name: Update installation URLs in files
+        run: |
+          # Update README.md
+          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" README.md
+          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" install.sh
+          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" install.ps1
+          sed -i "s|yourusername/spec-chain|${{ github.repository }}|g" package.json
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore: Update repository URLs for release ${{ needs.create-release.outputs.VERSION }}"
+          git push
+        continue-on-error: true
