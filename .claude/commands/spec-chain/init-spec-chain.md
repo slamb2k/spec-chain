@@ -5,11 +5,12 @@ This command initializes a new Spec Chain project by creating the required direc
 ## What This Command Does
 
 1. Creates the required directory structure:
-   - `specs/` - Where all generated documentation will be stored
-   - `assets/inspiration/visual/` - For visual design references
-   - `assets/inspiration/functional/` - For functional design references
+   - `.spec-chain/` - Root directory for all spec-chain files
+   - `.spec-chain/specs/` - Where all generated documentation will be stored
+   - `.spec-chain/assets/inspiration/visual/` - For visual design references
+   - `.spec-chain/assets/inspiration/functional/` - For functional design references
 
-2. Copies `APP_DETAILS.md.template` to create `APP_DETAILS.md` with:
+2. Copies `.spec-chain/APP_DETAILS.md.template` to create `.spec-chain/APP_DETAILS.md` with:
    - Detailed comments explaining each section
    - Clear marking of required vs optional fields
    - Guidance on what information to provide
@@ -20,12 +21,12 @@ This command initializes a new Spec Chain project by creating the required direc
 ### 1. Create Directory Structure
 
 ```bash
-# Create main documentation output directory
-mkdir -p specs
+# Create main spec-chain directory and subdirectories
+mkdir -p .spec-chain/specs
 
 # Create inspiration directories
-mkdir -p assets/inspiration/visual
-mkdir -p assets/inspiration/functional
+mkdir -p .spec-chain/assets/inspiration/visual
+mkdir -p .spec-chain/assets/inspiration/functional
 
 # Create placeholder files in inspiration directories
 echo "# Visual Inspiration Assets
@@ -43,7 +44,7 @@ Visual elements to capture:
 - Spacing and padding systems
 - Border styles and shadows
 - Button and form styling
-- Animation and transition effects" > assets/inspiration/visual/README.md
+- Animation and transition effects" > .spec-chain/assets/inspiration/visual/README.md
 
 echo "# Functional Inspiration Assets
 
@@ -60,62 +61,70 @@ Functional elements to capture:
 - Form structures and field arrangements
 - Multi-step processes and wizards
 - Data tables and list views
-- Modal dialogs and overlays" > assets/inspiration/functional/README.md
+- Modal dialogs and overlays" > .spec-chain/assets/inspiration/functional/README.md
 ```
 
-### 2. Create APP_DETAILS.md from Template
+### 2. Create .spec-chain/APP_DETAILS.md from Template
 
-Check if APP_DETAILS.md.template exists and copy it, with validation:
+Check if template exists in spec-chain package and copy it, with validation:
 
 ```bash
-# Check if the template file exists
-if [ -f "APP_DETAILS.md.template" ]; then
-    # If APP_DETAILS.md doesn't exist, copy the template
-    if [ ! -f "APP_DETAILS.md" ]; then
-        # Remove the warning comment block from template when copying
-        sed '/^<!--$/,/^-->$/d' APP_DETAILS.md.template > APP_DETAILS.md
-        echo "✅ Created APP_DETAILS.md from APP_DETAILS.md.template"
-        echo "📝 Please fill out the required sections in APP_DETAILS.md"
+# First, ensure we have a template file in .spec-chain
+if [ ! -f ".spec-chain/APP_DETAILS.md.template" ]; then
+    # Try to copy from package location
+    PACKAGE_TEMPLATE="$(dirname "$(readlink -f "$0")")/../../APP_DETAILS.md.template"
+    if [ -f "$PACKAGE_TEMPLATE" ]; then
+        cp "$PACKAGE_TEMPLATE" .spec-chain/APP_DETAILS.md.template
+        echo "📋 Copied template from package to .spec-chain/"
     else
-        echo "⚠️  APP_DETAILS.md already exists"
-        echo "🔍 Validating APP_DETAILS.md structure against template..."
+        # Create a basic template if not found
+        echo "⚠️ Creating basic APP_DETAILS.md.template..."
+        # [Template content would be created here]
+    fi
+fi
+
+# Now check if APP_DETAILS.md needs to be created
+if [ ! -f ".spec-chain/APP_DETAILS.md" ]; then
+    # Remove the warning comment block from template when copying
+    sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template > .spec-chain/APP_DETAILS.md
+    echo "✅ Created .spec-chain/APP_DETAILS.md from template"
+    echo "📝 Please fill out the required sections in .spec-chain/APP_DETAILS.md"
+else
+        echo "⚠️  .spec-chain/APP_DETAILS.md already exists"
+        echo "🔍 Validating .spec-chain/APP_DETAILS.md structure against template..."
 
         # Validate that all required sections exist
         # Extract section headers from template (excluding warning block)
-        TEMPLATE_SECTIONS=$(sed '/^<!--$/,/^-->$/d' APP_DETAILS.md.template | grep -E '^##|^###' | sort)
-        CURRENT_SECTIONS=$(grep -E '^##|^###' APP_DETAILS.md | sort)
+        TEMPLATE_SECTIONS=$(sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template | grep -E '^##|^###' | sort)
+        CURRENT_SECTIONS=$(grep -E '^##|^###' .spec-chain/APP_DETAILS.md | sort)
 
         # Find missing sections
         MISSING_SECTIONS=$(comm -23 <(echo "$TEMPLATE_SECTIONS") <(echo "$CURRENT_SECTIONS"))
 
         if [ -n "$MISSING_SECTIONS" ]; then
-            echo "❌ Missing sections found in APP_DETAILS.md:"
+            echo "❌ Missing sections found in .spec-chain/APP_DETAILS.md:"
             echo "$MISSING_SECTIONS"
             echo ""
             echo "🔧 Adding missing sections from template..."
 
             # Backup current file
-            cp APP_DETAILS.md APP_DETAILS.md.backup
+            cp .spec-chain/APP_DETAILS.md .spec-chain/APP_DETAILS.md.backup
 
             # Merge missing sections from template
             # This is a simplified approach - in practice, you'd want more sophisticated merging
-            echo "" >> APP_DETAILS.md
-            echo "# Missing sections added from template:" >> APP_DETAILS.md
-            sed '/^<!--$/,/^-->$/d' APP_DETAILS.md.template | grep -A 10 -E '^##|^###' >> APP_DETAILS.md
+            echo "" >> .spec-chain/APP_DETAILS.md
+            echo "# Missing sections added from template:" >> .spec-chain/APP_DETAILS.md
+            sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template | grep -A 10 -E '^##|^###' >> .spec-chain/APP_DETAILS.md
 
-            echo "✅ Missing sections added. Please review and fill out APP_DETAILS.md"
-            echo "📄 Backup saved as APP_DETAILS.md.backup"
+            echo "✅ Missing sections added. Please review and fill out .spec-chain/APP_DETAILS.md"
+            echo "📄 Backup saved as .spec-chain/APP_DETAILS.md.backup"
         else
-            echo "✅ APP_DETAILS.md structure is complete"
+            echo "✅ .spec-chain/APP_DETAILS.md structure is complete"
         fi
-    fi
-else
-    echo "❌ APP_DETAILS.md.template not found. Creating basic template..."
-    # Create a basic template if template doesn't exist
 fi
 ```
 
-If APP_DETAILS.md.example doesn't exist, create `APP_DETAILS.md` with the following content:
+If template doesn't exist, create `.spec-chain/APP_DETAILS.md` with the following content:
 
 ```markdown
 # App Details
@@ -358,8 +367,8 @@ Example:
 
 ### Inspiration Directory
 [Note about the inspiration directories]
-- Visual inspiration materials are in `assets/inspiration/visual/`
-- Functional inspiration materials are in `assets/inspiration/functional/`
+- Visual inspiration materials are in `.spec-chain/assets/inspiration/visual/`
+- Functional inspiration materials are in `.spec-chain/assets/inspiration/functional/`
 
 ### Development Team
 [Describe your team structure.
@@ -404,22 +413,23 @@ After creating all files and directories, display:
 ✅ Spec Chain project initialized successfully!
 
 Created directories:
-- specs/ (for generated documentation)
-- assets/inspiration/visual/ (for visual design references)
-- assets/inspiration/functional/ (for functional design references)
+- .spec-chain/ (root directory for all spec-chain files)
+- .spec-chain/specs/ (for generated documentation)
+- .spec-chain/assets/inspiration/visual/ (for visual design references)
+- .spec-chain/assets/inspiration/functional/ (for functional design references)
 
 Created files:
-- APP_DETAILS.md (application details template)
-- assets/inspiration/visual/README.md (visual inspiration guide)
-- assets/inspiration/functional/README.md (functional inspiration guide)
+- .spec-chain/APP_DETAILS.md (application details template)
+- .spec-chain/assets/inspiration/visual/README.md (visual inspiration guide)
+- .spec-chain/assets/inspiration/functional/README.md (functional inspiration guide)
 
 Next steps:
-1. Fill out APP_DETAILS.md with your application details
+1. Fill out .spec-chain/APP_DETAILS.md with your application details
    - The interactive information gathering will guide you through completing any missing fields
    - Fill out as many sections as possible for the most detailed generation
 2. Add inspiration materials to the appropriate directories:
-   - Visual designs → assets/inspiration/visual/
-   - Functional examples → assets/inspiration/functional/
+   - Visual designs → .spec-chain/assets/inspiration/visual/
+   - Functional examples → .spec-chain/assets/inspiration/functional/
 3. Run the spec-chain generator to create your comprehensive documentation
 
 To generate documentation after setup:
@@ -430,9 +440,9 @@ To generate documentation after setup:
 ## Error Handling
 
 Check if files/directories already exist before creating:
-- If `APP_DETAILS.md` exists, validate structure against template and add missing sections
+- If `.spec-chain/APP_DETAILS.md` exists, validate structure against template and add missing sections
 - If directories exist, skip creation but note they already existed
 - Always prefer copying from `APP_DETAILS.md.template` if it exists
 - Validate APP_DETAILS.md structure and restore missing sections from template
-- Create backup before modifying existing APP_DETAILS.md
+- Create backup before modifying existing .spec-chain/APP_DETAILS.md
 - Report what was created vs what already existed vs what was validated/updated
