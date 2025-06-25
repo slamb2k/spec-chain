@@ -33,7 +33,6 @@ The following directories are validated:
 ### 2. Required Files Check
 
 Validates the existence and quality of:
-- **.spec-chain/APP_DETAILS.md.template** - The template file for project configuration
 - **.spec-chain/APP_DETAILS.md** - The actual project configuration file
 - **Spec-chain prompts** (9 files in `.claude/commands/spec-chain/`)
 

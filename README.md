@@ -29,7 +29,7 @@ Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 cor
    This creates the required directory structure and APP_DETAILS.md template.
 
 2. **Create your APP_DETAILS.md**:
-   - Copy `APP_DETAILS.md.template` to `APP_DETAILS.md`
+   - The template is automatically created by `/init-spec-chain`
    - Fill out the required fields (App Name, App Idea, MVP Features, Target Users)
    - Optional fields can be left blank - they will be auto-researched
    - **Note**: If APP_DETAILS.md is incomplete, `/run-spec-chain` will interactively gather missing information
@@ -132,7 +132,6 @@ Phase 5: Planning & Implementation Rules (2 steps - sequential)
 any-directory/                      # Any directory where you run /init-spec-chain
 ├── .spec-chain/                    # Created by /init-spec-chain
 │   ├── APP_DETAILS.md              # Your application details
-│   ├── APP_DETAILS.md.template     # Template for new projects
 │   ├── assets/
 │   │   ├── inspiration/
 │   │   │   ├── visual/            # Visual design references
@@ -161,7 +160,7 @@ spec-chain package:
 ### 🎲 init-spec-chain
 Initializes spec-chain in the current directory:
 - Creates `.spec-chain/` directory structure
-- Generates `.spec-chain/APP_DETAILS.md` template with detailed instructions
+- Generates `.spec-chain/APP_DETAILS.md` from embedded template with detailed instructions
 - Sets up `.spec-chain/assets/inspiration/` directories with guides
 - Works in any directory - transforms it into a spec-chain enabled project
 

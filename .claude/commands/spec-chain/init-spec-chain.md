@@ -10,7 +10,7 @@ This command initializes a new Spec Chain project by creating the required direc
    - `.spec-chain/assets/inspiration/visual/` - For visual design references
    - `.spec-chain/assets/inspiration/functional/` - For functional design references
 
-2. Copies `.spec-chain/APP_DETAILS.md.template` to create `.spec-chain/APP_DETAILS.md` with:
+2. Creates `.spec-chain/APP_DETAILS.md` from the embedded template with:
    - Detailed comments explaining each section
    - Clear marking of required vs optional fields
    - Guidance on what information to provide
@@ -64,345 +64,174 @@ Functional elements to capture:
 - Modal dialogs and overlays" > .spec-chain/assets/inspiration/functional/README.md
 ```
 
-### 2. Create .spec-chain/APP_DETAILS.md from Template
+### 2. Create .spec-chain/APP_DETAILS.md
 
-Check if template exists in spec-chain package and copy it, with validation:
+Create `.spec-chain/APP_DETAILS.md` if it doesn't exist, using the embedded template content below:
 
 ```bash
-# First, ensure we have a template file in .spec-chain
-if [ ! -f ".spec-chain/APP_DETAILS.md.template" ]; then
-    # Try to copy from package location
-    PACKAGE_TEMPLATE="$(dirname "$(readlink -f "$0")")/../../APP_DETAILS.md.template"
-    if [ -f "$PACKAGE_TEMPLATE" ]; then
-        cp "$PACKAGE_TEMPLATE" .spec-chain/APP_DETAILS.md.template
-        echo "📋 Copied template from package to .spec-chain/"
-    else
-        # Create a basic template if not found
-        echo "⚠️ Creating basic APP_DETAILS.md.template..."
-        # [Template content would be created here]
-    fi
-fi
-
-# Now check if APP_DETAILS.md needs to be created
+# Check if APP_DETAILS.md needs to be created
 if [ ! -f ".spec-chain/APP_DETAILS.md" ]; then
-    # Remove the warning comment block from template when copying
-    sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template > .spec-chain/APP_DETAILS.md
-    echo "✅ Created .spec-chain/APP_DETAILS.md from template"
+    echo "✅ Creating .spec-chain/APP_DETAILS.md from template"
     echo "📝 Please fill out the required sections in .spec-chain/APP_DETAILS.md"
+    # Create the file with the template content (see below)
 else
-        echo "⚠️  .spec-chain/APP_DETAILS.md already exists"
-        echo "🔍 Validating .spec-chain/APP_DETAILS.md structure against template..."
-
-        # Validate that all required sections exist
-        # Extract section headers from template (excluding warning block)
-        TEMPLATE_SECTIONS=$(sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template | grep -E '^##|^###' | sort)
-        CURRENT_SECTIONS=$(grep -E '^##|^###' .spec-chain/APP_DETAILS.md | sort)
-
-        # Find missing sections
-        MISSING_SECTIONS=$(comm -23 <(echo "$TEMPLATE_SECTIONS") <(echo "$CURRENT_SECTIONS"))
-
-        if [ -n "$MISSING_SECTIONS" ]; then
-            echo "❌ Missing sections found in .spec-chain/APP_DETAILS.md:"
-            echo "$MISSING_SECTIONS"
-            echo ""
-            echo "🔧 Adding missing sections from template..."
-
-            # Backup current file
-            cp .spec-chain/APP_DETAILS.md .spec-chain/APP_DETAILS.md.backup
-
-            # Merge missing sections from template
-            # This is a simplified approach - in practice, you'd want more sophisticated merging
-            echo "" >> .spec-chain/APP_DETAILS.md
-            echo "# Missing sections added from template:" >> .spec-chain/APP_DETAILS.md
-            sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template | grep -A 10 -E '^##|^###' >> .spec-chain/APP_DETAILS.md
-
-            echo "✅ Missing sections added. Please review and fill out .spec-chain/APP_DETAILS.md"
-            echo "📄 Backup saved as .spec-chain/APP_DETAILS.md.backup"
-        else
-            echo "✅ .spec-chain/APP_DETAILS.md structure is complete"
-        fi
+    echo "⚠️  .spec-chain/APP_DETAILS.md already exists"
+    echo "✅ Keeping existing .spec-chain/APP_DETAILS.md"
 fi
 ```
 
-If template doesn't exist, create `.spec-chain/APP_DETAILS.md` with the following content:
+When creating `.spec-chain/APP_DETAILS.md`, use the following template content:
 
 ```markdown
-# App Details
+# APP_DETAILS.md
 
-This file contains all the input data needed for generating comprehensive documentation using the Spec Chain tool.
+This file contains the core information needed to generate comprehensive documentation for your application.
+Fields marked as (REQUIRED) must be filled out. Fields marked as (OPTIONAL) can be left blank and will be auto-researched or use sensible defaults.
 
-<!-- 
-INSTRUCTIONS:
-1. Fill out each section below with details about your application
-2. Be as specific as possible - the more detail you provide, the better the generated documentation
-3. Examples are provided in brackets [...] - replace these with your actual content
-4. Feel free to add additional context in any section
-5. Once complete, run the spec-chain documentation generator
--->
+## Basic Information (REQUIRED)
 
-## Basic Information
+**App Name:**
+[Your app name here]
 
-### App Name
-[Enter your application name here, e.g., "TaskMaster Pro"]
+**App Idea:**
+[Brief description of what your app does and what problem it solves]
 
-### App Idea
-[Provide a comprehensive description of your application concept. Include:
-- What problem it solves
-- Who it's for
-- What makes it unique
-- Core value proposition
-Example: "A project management tool designed specifically for creative agencies that combines visual task boards with time tracking and client collaboration features. It replaces complex enterprise tools with an intuitive, design-focused interface."]
+**MVP Features:**
+[List the core features for your minimum viable product]
+- Feature 1: [description]
+- Feature 2: [description]
+- Feature 3: [description]
 
-### MVP Features
-[List the minimum features needed for your first release. Be specific about functionality.
-Example:
-- User authentication with email/password and social login
-- Create and manage projects with custom workflows
-- Kanban-style task boards with drag-and-drop
-- Time tracking with automatic timers
-- Basic reporting dashboard
-- Email notifications for task updates]
-
-## Target Users
+## Target Users (REQUIRED)
 
 ### Primary Users
-[Describe your main user groups, their roles, and their needs.
-Example:
-- **Project Managers**: Need to oversee multiple projects, assign tasks, track budgets
-  - Pain points: Current tools are too complex, poor visualization
-  - Goals: Streamline workflows, improve team communication
-- **Creative Directors**: Need to review work, provide feedback, track progress
-  - Pain points: Scattered feedback across multiple tools
-  - Goals: Centralized creative reviews, clear approval workflows]
+[Who are the main users of your app?]
+- User type 1: [description]
+- User type 2: [description]
 
-### Secondary Users
-[Describe additional user types who will use the system less frequently.
-Example:
-- **Clients**: View project progress, approve deliverables, communicate with team
-- **Freelancers**: Access assigned tasks, track time, submit work]
+### Secondary Users (OPTIONAL)
+[Any additional user types - leave blank if none]
 
-## Business Context
+## Business Context (OPTIONAL - will be auto-researched if not provided)
 
 ### Market Context
-[Describe the market landscape and opportunity.
-Example: "The project management market is worth $5.37B and growing 10% annually. Current solutions are either too complex (Monday, Asana) or too simple (Trello). There's a gap for industry-specific solutions that understand creative workflows."]
+(Optional - will research competitors and market landscape if left blank)
 
 ### Competition
-[List main competitors and their strengths/weaknesses.
-Example:
-- **Asana**: Great for general project management but lacks creative-specific features
-- **Monday.com**: Highly customizable but steep learning curve and expensive
-- **Basecamp**: Simple but missing modern features like real-time collaboration]
+(Optional - will find similar solutions automatically if left blank)
 
 ### Business Model
-[Describe how you'll make money.
-Example: "SaaS subscription with three tiers:
-- Starter: $15/user/month (up to 10 users)
-- Professional: $25/user/month (unlimited users, advanced features)
-- Enterprise: Custom pricing (SSO, dedicated support, custom integrations)"]
+(Optional - will suggest based on app type if left blank)
 
 ### Constraints
-[List any limitations or requirements.
-Example:
-- Must comply with GDPR and CCPA
-- Need to support data export in standard formats
-- Must work on mobile devices
-- Integration with Adobe Creative Cloud required]
+(Optional - list any specific constraints or requirements)
 
-## Technical Requirements
+## Technical Requirements (OPTIONAL - will use modern defaults if not provided)
 
 ### Platform
-[Specify target platforms: Web, iOS, Android, Desktop, etc.
-Example: "Web (responsive design for mobile), with native iOS and Android apps planned for Phase 2"]
+(Optional - will suggest one or more of the following: Web, Mobile, Desktop, Terminal/CLI based on app type and features if left blank)
 
 ### Technology Preferences
-[List any preferred technologies or constraints.
-Example:
-- Frontend: React or Vue.js preferred
-- Backend: Node.js with TypeScript
-- Database: PostgreSQL for relational data, Redis for caching
-- Hosting: AWS or Google Cloud
-- Must support REST API for integrations]
+(Optional - will recommend modern stack if left blank)
 
 ### Performance Requirements
-[Specify performance targets.
-Example:
-- Page load time: < 3 seconds on 3G connection
-- API response time: < 200ms for 95% of requests
-- Support 10,000 concurrent users
-- 99.9% uptime SLA]
+(Optional - will use industry standards if left blank)
 
 ### Scale Requirements
-[Describe expected growth.
-Example:
-- Launch: 100 users, 1,000 projects
-- Year 1: 5,000 users, 50,000 projects
-- Year 3: 50,000 users, 500,000 projects]
+(Optional - will estimate based on user base if left blank)
 
-## Design Requirements
+## Design Requirements (OPTIONAL - will use best practices if not provided)
 
 ### Brand Personality
-[Describe the personality and feeling of your brand.
-Example: "Professional but approachable, modern, creative, efficient, trustworthy, innovative"]
+(Optional - will generate based on app type and users if left blank)
 
 ### Visual Style
-[Describe the visual direction.
-Example:
-- Clean, minimalist interface with plenty of white space
-- Bright accent colors for important actions
-- Playful illustrations for empty states
-- Modern typography with excellent readability
-- Dark mode support required]
+(Optional - will use modern, clean design if left blank)
 
 ### Key Emotions
-[What should users feel when using your app?
-Example: "Confident, in control, creative, productive, delighted"]
+(Optional - will infer from app purpose if left blank)
 
 ### Accessibility Requirements
-[Specify accessibility standards.
-Example: "WCAG 2.1 Level AA compliance required, with Level AAA for critical user flows"]
+(Optional - defaults to WCAG 2.1 AA compliance if left blank)
 
-## Feature Details
+## Feature Details (OPTIONAL - will be inferred from MVP if not provided)
 
 ### Core Workflows
-[Describe the main user workflows in detail.
-Example:
-1. **Project Creation Flow**:
-   - User clicks "New Project"
-   - Selects project template or starts from scratch
-   - Enters project details (name, client, deadline)
-   - Invites team members
-   - Sets up initial task structure
-
-2. **Task Management Flow**:
-   - Create tasks with title, description, assignee
-   - Set due dates and priorities
-   - Add attachments and comments
-   - Move tasks between workflow stages
-   - Track time spent on tasks]
+(Optional - will be derived from MVP features if left blank)
 
 ### Content Types
-[List the main types of content/data in your system.
-Example:
-- **Projects**: Name, description, client, status, timeline, budget
-- **Tasks**: Title, description, assignee, due date, priority, attachments
-- **Users**: Name, email, role, avatar, preferences
-- **Comments**: Text, author, timestamp, attachments
-- **Time Entries**: Duration, task, user, date, description]
+(Optional - will be inferred from app description if left blank)
 
-### Key Features Priority
-[Rank features by importance.
-Example:
-1. **Critical (MVP)**: User auth, project creation, task management, basic reporting
-2. **High (Phase 1)**: Time tracking, file sharing, notifications, team chat
-3. **Medium (Phase 2)**: Advanced reporting, invoicing, resource planning
-4. **Low (Future)**: AI suggestions, workflow automation, white-labeling]
+### Feature Priorities
+(Optional - will prioritize based on MVP list if left blank)
 
-## Integration Requirements
+## Integration Requirements (OPTIONAL)
 
 ### External Services
-[List third-party services you need to integrate with.
-Example:
-- **Google Workspace**: Calendar sync, Drive integration
-- **Slack**: Notifications and chat integration
-- **Stripe**: Payment processing
-- **SendGrid**: Transactional emails
-- **Cloudinary**: Image optimization and delivery]
+[List any third-party services or APIs you need to integrate]
 
 ### API Requirements
-[Describe API needs.
-Example:
-- RESTful API for all core operations
-- GraphQL API for complex queries (optional)
-- Webhook support for real-time events
-- API rate limiting: 1000 requests/hour
-- OAuth 2.0 for authentication]
+(Optional - will generate standard REST API if left blank)
 
-## Success Metrics
+## Success Metrics (OPTIONAL - will generate standard KPIs if not provided)
 
 ### Business Metrics
-[How will you measure business success?
-Example:
-- 80% user activation rate within first week
-- 50% of users create at least 3 projects in first month
-- < 5% monthly churn rate
-- Average of 5 team members per account]
+(Optional - will suggest relevant metrics based on app type)
 
 ### Technical Metrics
-[How will you measure technical success?
-Example:
-- 99.9% uptime
-- < 3 second page load time (P95)
-- < 200ms API response time (P95)
-- < 1% error rate]
+(Optional - will use industry standard metrics)
 
 ### User Satisfaction
-[How will you measure user satisfaction?
-Example:
-- NPS score > 50
-- App store rating > 4.5 stars
-- Support ticket volume < 5% of MAU
-- Feature adoption rate > 60% within 30 days]
+(Optional - will include standard UX metrics)
 
-## Go-to-Market Strategy
+## Go-to-Market Strategy (OPTIONAL - will be researched if not provided)
 
 ### Target Market
-[Define your initial target market specifically.
-Example: "Small to medium creative agencies (10-100 employees) in the US and UK, starting with digital marketing agencies who already use modern tools and are looking for better creative workflow management."]
+(Optional - will be inferred from users and app type)
 
 ### Value Proposition
-[Concise statement of your unique value.
-Example: "The only project management tool built specifically for creative teams - beautiful, intuitive, and powerful enough to handle complex creative workflows."]
+(Optional - will be generated from app idea and benefits)
 
 ### Launch Strategy
-[Describe your go-to-market approach.
-Example:
-- Private beta with 20 hand-picked agencies
-- Gather feedback and iterate for 3 months
-- Public launch with Product Hunt campaign
-- Content marketing focused on creative workflow best practices
-- Partner with creative tools (Figma, Adobe) for integrations]
+(Optional - will suggest phased approach)
 
-## Additional Context
+## Development Team (OPTIONAL - will use standard team if not provided)
 
-### Inspiration Directory
-[Note about the inspiration directories]
-- Visual inspiration materials are in `.spec-chain/assets/inspiration/visual/`
-- Functional inspiration materials are in `.spec-chain/assets/inspiration/functional/`
+### Team Structure
+(Optional - will suggest appropriate team size and roles)
 
-### Development Team
-[Describe your team structure.
-Example:
-- 1 Product Manager
-- 2 Frontend Developers
-- 2 Backend Developers
-- 1 UI/UX Designer
-- 1 QA Engineer
-- 1 DevOps Engineer (part-time)]
+### Timeline Estimates
+(Optional - will estimate based on feature complexity)
 
-### Timeline Expectations
-[Provide rough timeline estimates.
-Example:
-- MVP: 4 months
-- Beta Launch: Month 5
-- Public Launch: Month 6
-- Mobile Apps: Month 9-12]
+## Additional Context (OPTIONAL)
 
-### Special Considerations
-[Any other important information.
-Example:
-- Building on top of existing codebase from previous project
-- Need to migrate 10,000 users from old system
-- Must maintain backward compatibility with v1 API
-- Requires integration with proprietary internal tool]
+### Migration Strategy
+[If replacing existing system, describe migration needs]
 
-<!-- 
-NEXT STEPS:
-1. Fill out all sections above with your specific details
-2. Add any additional context that might be helpful
-3. Place inspiration materials in the appropriate directories
-4. Run the spec-chain generator to create comprehensive documentation
--->
+### Training Requirements
+(Optional - will suggest based on user types and complexity)
+
+### Security Considerations
+(Optional - will apply standard security best practices)
+
+### Future Roadmap
+[Any long-term vision or future features]
+
+---
+
+## Instructions for Use
+
+1. **Fill out all REQUIRED sections** - These are essential for generating documentation
+2. **OPTIONAL sections can be left blank** - The system will:
+   - Research market context and competitors
+   - Suggest appropriate technology stacks
+   - Generate design guidelines
+   - Create standard metrics and KPIs
+   - Propose go-to-market strategies
+
+3. **The more detail you provide, the more tailored the output** - While optional fields will be auto-filled, providing your specific requirements will result in more customized documentation
+
+4. **Save this file as APP_DETAILS.md** in your project root directory
 ```
 
 ### 3. Create Success Message
@@ -442,7 +271,7 @@ To generate documentation after setup:
 Check if files/directories already exist before creating:
 - If `.spec-chain/APP_DETAILS.md` exists, validate structure against template and add missing sections
 - If directories exist, skip creation but note they already existed
-- Always prefer copying from `APP_DETAILS.md.template` if it exists
+- Always use the embedded template content defined in this command
 - Validate APP_DETAILS.md structure and restore missing sections from template
 - Create backup before modifying existing .spec-chain/APP_DETAILS.md
 - Report what was created vs what already existed vs what was validated/updated

@@ -73,7 +73,6 @@ Before proceeding with any operations, verify that this command is being run fro
 
 1. **Check for required project indicators:**
    - Use LS tool to check if `.spec-chain/` directory exists
-   - Use Read tool to verify `.spec-chain/APP_DETAILS.md.template` file exists
    - Use LS tool to check if `.spec-chain/specs/` directory exists
 
 2. **If any indicators are missing:**
@@ -101,13 +100,13 @@ Before proceeding with any operations, verify that this command is being run fro
 1. **Check for existing .spec-chain/APP_DETAILS.md:**
    - Check if `.spec-chain/APP_DETAILS.md` exists
    - If it doesn't exist:
-     - Copy `.spec-chain/APP_DETAILS.md.template` to `.spec-chain/APP_DETAILS.md`
-     - Log: "Created .spec-chain/APP_DETAILS.md from template"
+     - Create `.spec-chain/APP_DETAILS.md` using the embedded template from init-spec-chain.md
+     - Log: "Created .spec-chain/APP_DETAILS.md from embedded template"
 
 2. **Parse .spec-chain/APP_DETAILS.md structure:**
    - Read the .spec-chain/APP_DETAILS.md file
    - Extract all sections and their current values
-   - Identify REQUIRED vs OPTIONAL fields based on template annotations
+   - Identify REQUIRED vs OPTIONAL fields based on the embedded template structure
    - Determine which fields are empty or contain placeholder text
 
 ### Step 2: Show Current Status Summary
@@ -340,16 +339,15 @@ All input data is read from the `.spec-chain/APP_DETAILS.md` file which contains
      - If directory exists and contains files, log: "Overwriting existing spec directory: $OUTPUT_DIR"
    - **Initialize Data Sources:**
      - **Validate .spec-chain/APP_DETAILS.md Structure:**
-       - Check if `.spec-chain/APP_DETAILS.md.template` exists
-       - If template exists, validate `.spec-chain/APP_DETAILS.md` structure against template
-       - Extract section headers from template (excluding warning block): `sed '/^<!--$/,/^-->$/d' .spec-chain/APP_DETAILS.md.template | grep -E '^##|^###' | sort`
+       - Use the embedded template structure from init-spec-chain.md as reference
+       - Extract expected section headers from the known template structure
        - Extract section headers from current APP_DETAILS.md: `grep -E '^##|^###' .spec-chain/APP_DETAILS.md | sort`
-       - Find missing sections: `comm -23 <(template_sections) <(current_sections)`
+       - Compare against expected sections from embedded template
        - If missing sections found:
          - Log: "⚠️ Missing sections detected in .spec-chain/APP_DETAILS.md"
          - Create backup: `cp .spec-chain/APP_DETAILS.md .spec-chain/APP_DETAILS.md.backup`
-         - Append missing sections from template to .spec-chain/APP_DETAILS.md
-         - Log: "✅ Missing sections restored from template. Backup saved as .spec-chain/APP_DETAILS.md.backup"
+         - Append missing sections from embedded template structure to .spec-chain/APP_DETAILS.md
+         - Log: "✅ Missing sections restored from embedded template. Backup saved as .spec-chain/APP_DETAILS.md.backup"
        - If no missing sections: Log: "✅ .spec-chain/APP_DETAILS.md structure is complete"
      - Read APP_DETAILS from either `$OUTPUT_DIR/APP_DETAILS.md` (if newly created) or `APP_DETAILS.md` (if existing)
      - Extract all sections for use in subsequent prompts
