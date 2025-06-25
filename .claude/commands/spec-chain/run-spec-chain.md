@@ -28,37 +28,37 @@ Execute the complete specification chain to generate comprehensive documentation
 ```
 /run-spec-chain
 ```
-Creates: `/specs/20240120_143052/` with all documents
+Creates: `specs/20240120_143052/` with all documents
 
 **Named spec (full generation):**
 ```
 /run-spec-chain my-app
 ```
-Creates: `/specs/my-app/` with all documents
+Creates: `specs/my-app/` with all documents
 
 **Resume from specific phase:**
 ```
 /run-spec-chain my-app 3
 ```
-Resumes generation from Phase 3 (Technical Architecture) in `/specs/my-app/`
+Resumes generation from Phase 3 (Technical Architecture) in `specs/my-app/`
 
 **Update existing spec from Phase 3:**
 ```
 /run-spec-chain existing-spec 3
 ```
-Overwrites Phase 3+ documents in `/specs/existing-spec/`
+Overwrites Phase 3+ documents in `specs/existing-spec/`
 
 **Specify number of parallel UI design agents:**
 ```
 /run-spec-chain my-app 1 8
 ```
-Generates 8 different UI design approaches in `/specs/my-app/`
+Generates 8 different UI design approaches in `specs/my-app/`
 
 ## Overview
 
 This runner orchestrates the execution of 9 specification chain prompts that generate 8 core documents, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
 
-Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/specs/20240120_143052/`) to:
+Each execution creates a directory under `specs/` (e.g., `specs/my-app/` or `specs/20240120_143052/`) to:
 - Preserve historical documentation versions
 - Enable comparison between different generations
 - Support iterative refinement without overwriting previous work
@@ -67,12 +67,42 @@ Each execution creates a directory under `/specs/` (e.g., `/specs/my-app/` or `/
 
 ## Execution Flow
 
+### Step 0: Verify Project Root
+
+Before proceeding with any operations, verify that this command is being run from the spec-chain project root:
+
+1. **Check for required project indicators:**
+   - Use LS tool to check if `.claude/commands/spec-chain/` directory exists
+   - Use Read tool to verify `APP_DETAILS.md.template` file exists
+   - Use LS tool to check if `.claude/CLAUDE.md` file exists
+
+2. **If any indicators are missing:**
+   - Display error message:
+     ```
+     ❌ Error: This command must be run from the spec-chain project root directory.
+     
+     Missing required project files/directories:
+     - [list specific missing items]
+     
+     Please ensure you are in the correct directory that contains:
+     - .claude/ directory with spec-chain commands
+     - APP_DETAILS.md.template file
+     - specs/ directory (or it will be created)
+     
+     Current working directory: [show current path using pwd]
+     ```
+   - Exit the command without proceeding
+
+3. **If all indicators are present:**
+   - Log: "✅ Project root verified. Proceeding with spec-chain generation..."
+   - Continue to Step 1
+
 ### Step 1: Initialize APP_DETAILS.md
 
 1. **Check for existing APP_DETAILS.md:**
-   - Check if `/APP_DETAILS.md` exists in the project root
+   - Check if `APP_DETAILS.md` exists in the project root
    - If it doesn't exist:
-     - Copy `/APP_DETAILS.md.template` to `/APP_DETAILS.md`
+     - Copy `APP_DETAILS.md.template` to `APP_DETAILS.md`
      - Log: "Created APP_DETAILS.md from template"
 
 2. **Parse APP_DETAILS.md structure:**
@@ -239,11 +269,11 @@ For each empty optional field, ask ONE AT A TIME:
 
 4. **Offer to Update Root File:**
    - Ask: "Would you like to update the APP_DETAILS.md file in your project root directory with this complete information? (yes/no)"
-   - If yes: Save the updated content to `/APP_DETAILS.md`
+   - If yes: Save the updated content to `APP_DETAILS.md`
    - If no: Keep the complete version only in the output directory
    - Log the user's choice and file locations
 
-### Step 5: Proceed with Documentation Generation
+### Step 6: Proceed with Documentation Generation
 
 The runner then uses **parallel Task agents** to execute independent prompts concurrently, significantly reducing total generation time:
 
@@ -274,12 +304,12 @@ Total: 8+ documents generated across 5 phases (includes Implementation Plan + va
 
 1. Ensure all doc-prompt-*.md prompt files are present in the `.claude/commands/spec-chain/` directory
 2. APP_DETAILS.md is optional - the system will:
-   - Use existing `/APP_DETAILS.md` if present
+   - Use existing `APP_DETAILS.md` if present
    - Ask questions to gather missing information
    - Auto-research optional fields if not provided
 3. Optionally, organize inspiration materials:
-   - Place visual references in `/assets/inspiration/visual/` (colors, styles, typography, effects)
-   - Place functional references in `/assets/inspiration/functional/` (layouts, workflows, interactions)
+   - Place visual references in `assets/inspiration/visual/` (colors, styles, typography, effects)
+   - Place functional references in `assets/inspiration/functional/` (layouts, workflows, interactions)
 
 ## Input Source
 
@@ -306,23 +336,23 @@ All input data is read from the `APP_DETAILS.md` file which contains:
      - `START_PHASE`: Second argument (phase number) or default to 1 if not provided
      - `PARALLEL_AGENTS`: Third argument (number of UI preview agents) or default to 5 if not provided
    - **Set Output Directory:**
-     - Set `OUTPUT_DIR=/specs/$SPEC_NAME`
+     - Set `OUTPUT_DIR=specs/$SPEC_NAME`
      - Create output directory: `mkdir -p $OUTPUT_DIR`
      - If directory exists and contains files, log: "Overwriting existing spec directory: $OUTPUT_DIR"
    - **Initialize Data Sources:**
      - **Validate APP_DETAILS.md Structure:**
-       - Check if `/APP_DETAILS.md.template` exists
-       - If template exists, validate `/APP_DETAILS.md` structure against template
-       - Extract section headers from template (excluding warning block): `sed '/^<!--$/,/^-->$/d' /APP_DETAILS.md.template | grep -E '^##|^###' | sort`
-       - Extract section headers from current APP_DETAILS.md: `grep -E '^##|^###' /APP_DETAILS.md | sort`
+       - Check if `APP_DETAILS.md.template` exists
+       - If template exists, validate `APP_DETAILS.md` structure against template
+       - Extract section headers from template (excluding warning block): `sed '/^<!--$/,/^-->$/d' APP_DETAILS.md.template | grep -E '^##|^###' | sort`
+       - Extract section headers from current APP_DETAILS.md: `grep -E '^##|^###' APP_DETAILS.md | sort`
        - Find missing sections: `comm -23 <(template_sections) <(current_sections)`
        - If missing sections found:
          - Log: "⚠️ Missing sections detected in APP_DETAILS.md"
-         - Create backup: `cp /APP_DETAILS.md /APP_DETAILS.md.backup`
+         - Create backup: `cp APP_DETAILS.md APP_DETAILS.md.backup`
          - Append missing sections from template to APP_DETAILS.md
          - Log: "✅ Missing sections restored from template. Backup saved as APP_DETAILS.md.backup"
        - If no missing sections: Log: "✅ APP_DETAILS.md structure is complete"
-     - Read APP_DETAILS from either `$OUTPUT_DIR/APP_DETAILS.md` (if newly created) or `/APP_DETAILS.md` (if existing)
+     - Read APP_DETAILS from either `$OUTPUT_DIR/APP_DETAILS.md` (if newly created) or `APP_DETAILS.md` (if existing)
      - Extract all sections for use in subsequent prompts
 
 0.1. **Document Relevance Analysis**
@@ -379,9 +409,9 @@ All input data is read from the `APP_DETAILS.md` file which contains:
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load APP_DETAILS.md from `/specs/$SPEC_NAME/APP_DETAILS.md`
+     - Load APP_DETAILS.md from `specs/$SPEC_NAME/APP_DETAILS.md`
      - Generate comprehensive PRD based on complete application details
-     - Save PRD to `/specs/$SPEC_NAME/PRD.md`
+     - Save PRD to `specs/$SPEC_NAME/PRD.md`
      - Handle all file persistence internally
 
    **Note**: This document becomes the foundation for all subsequent documents
@@ -421,9 +451,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Generate comprehensive feature stories based on PRD
-     - Save output to `/specs/$SPEC_NAME/FEATURE_STORIES.md`
+     - Save output to `specs/$SPEC_NAME/FEATURE_STORIES.md`
      - Handle all file persistence internally
 
 2. **Generate Technical Overview** (Depends on PRD + APP_DETAILS)
@@ -432,9 +462,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Generate comprehensive technical overview based on PRD and APP_DETAILS
-     - Save output to `/specs/$SPEC_NAME/TECHNICAL_OVERVIEW.md`
+     - Save output to `specs/$SPEC_NAME/TECHNICAL_OVERVIEW.md`
      - Handle all file persistence internally
 
 3. **Generate Style Guide** (Depends on PRD + APP_DETAILS) - **PARALLEL EXECUTION**
@@ -443,9 +473,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Generate comprehensive style guide based on PRD and APP_DETAILS
-     - Save output to `/specs/$SPEC_NAME/STYLE_GUIDE.md`
+     - Save output to `specs/$SPEC_NAME/STYLE_GUIDE.md`
      - Handle all file persistence internally
 
 **Note**: Tasks 1, 2, and 3 can run simultaneously as they only depend on Phase 1 outputs
@@ -463,9 +493,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Generate comprehensive UI states based on PRD, Feature Stories, and Style Guide
-     - Save output to `/specs/$SPEC_NAME/UI_STATES.md`
+     - Save output to `specs/$SPEC_NAME/UI_STATES.md`
      - Handle all file persistence internally
 
 2. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
@@ -476,7 +506,7 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the second instance of `$ARGUMENTS` in the Variables section with `$PARALLEL_AGENTS` (defaults to 5 if not provided)
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Deploy `$PARALLEL_AGENTS` sub-agents to generate multiple UI design approaches
      - Generate `$PARALLEL_AGENTS` interactive UI preview files (UI_PREVIEW_1.html through UI_PREVIEW_N.html)
      - Handle all file persistence internally
@@ -491,9 +521,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `/specs/$SPEC_NAME/` directory
+     - Load all required documents from `specs/$SPEC_NAME/` directory
      - Generate comprehensive technical specification based on all previous documents
-     - Save output to `/specs/$SPEC_NAME/TECHNICAL_SPEC.md`
+     - Save output to `specs/$SPEC_NAME/TECHNICAL_SPEC.md`
      - Handle all file persistence internally
 
 ### Phase 5: Planning & Implementation Rules (Sequential after Phase 4)
@@ -502,12 +532,12 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 5.1. **Load Playbooks and Rules**
    - **Check for Playbook Directory:**
-     - If `/assets/playbooks/` directory exists, proceed with loading
+     - If `assets/playbooks/` directory exists, proceed with loading
      - If directory doesn't exist, log: "No playbooks directory found, skipping rule loading"
      - Continue to Post-Generation phase
 
    - **Scan Playbook Files:**
-     - List all files in `/assets/playbooks/` directory
+     - List all files in `assets/playbooks/` directory
      - Include subdirectories and organize by category
      - Supported file types: `.md`, `.txt`, `.json`, `.yaml`, `.yml`
      - Log: "Found playbook files: [list of files with paths]"
@@ -530,27 +560,27 @@ Phase 5: Implementation Planning (depends on Technical Spec)
      **Playbooks and Rules Loaded for Planning/Implementation:**
 
      **Planning Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional planning rule sets...]
 
      **Implementation Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional implementation rule sets...]
 
      **Quality Assurance Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional quality rule sets...]
 
      **Deployment & Operations Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional deployment rule sets...]
 
      **Team & Collaboration Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional team rule sets...]
 
      **Custom/Specialized Rules:**
-     - [Rule Set Name]: [Brief description] (Source: /assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: assets/playbooks/[filename])
      - [Additional custom rule sets...]
 
      **Total Rule Sets Loaded**: [Number] rule sets from [Number] files
@@ -579,11 +609,11 @@ Phase 5: Implementation Planning (depends on Technical Spec)
        - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
        - Execute the updated command as a prompt
        - The prompt will:
-         - Load all required documents from `/specs/$SPEC_NAME/` directory
-         - Load playbooks from `/assets/playbooks/` directory
+         - Load all required documents from `specs/$SPEC_NAME/` directory
+         - Load playbooks from `assets/playbooks/` directory
          - Load previous plan and validation feedback if ITERATION_COUNT > 1
          - Generate comprehensive implementation plan
-         - Save output to `/specs/$SPEC_NAME/IMPLEMENTATION_PLAN.md`
+         - Save output to `specs/$SPEC_NAME/IMPLEMENTATION_PLAN.md`
          - Handle all file persistence internally
 
        // Validate Implementation Plan
@@ -591,11 +621,11 @@ Phase 5: Implementation Planning (depends on Technical Spec)
        - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
        - Execute the updated command as a prompt
        - The prompt will:
-         - Load all required documents from `/specs/$SPEC_NAME/` directory
+         - Load all required documents from `specs/$SPEC_NAME/` directory
          - Load the current implementation plan
          - Determine current iteration number from existing validation reports
          - Generate comprehensive validation report
-         - Save output to `/specs/$SPEC_NAME/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
+         - Save output to `specs/$SPEC_NAME/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
          - Handle all file persistence internally
 
        // Check Validation Results
@@ -638,7 +668,7 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 ### Post-Generation: Clarification Aggregation
 
-6. **Aggregate Clarification Requests**
+7. **Aggregate Clarification Requests**
     - After all documents have been generated, scan each document for clarification requests
     - For each generated document in `$OUTPUT_DIR`:
       - Read the document content
@@ -654,7 +684,7 @@ Upon completion, provide a summary including the following information. This sum
 
 1. **Generation Details**:
    - Spec name: `$SPEC_NAME`
-   - Output directory: `$OUTPUT_DIR` (e.g., `/specs/my-app` or `/specs/20240120_143052`)
+   - Output directory: `$OUTPUT_DIR` (e.g., `specs/my-app` or `specs/20240120_143052`)
    - Generation mode: Interactive with Auto-Research
    - Start phase: `$START_PHASE`
    - Generation timestamp: `$TIMESTAMP`
@@ -712,7 +742,7 @@ Upon completion, provide a summary including the following information. This sum
 
    **Implementation Phase:**
    - Begin implementation using the Implementation Plan
-   - Follow any loaded playbook rules from `/assets/playbooks/`
+   - Follow any loaded playbook rules from `assets/playbooks/`
    - Use validation reports to ensure comprehensive coverage
 
    **Iterative Improvement:**
@@ -740,7 +770,7 @@ Output Directory: $OUTPUT_DIR
 This documentation was generated by the Spec Chain system. All files in this directory represent a complete application specification suite based on the APP_DETAILS.md input file.
 ```
 
-3. **Create Symlink**: Execute `ln -sfn $OUTPUT_DIR /specs/latest` to create a symlink pointing to this generation
+3. **Create Symlink**: Execute `ln -sfn $OUTPUT_DIR specs/latest` to create a symlink pointing to this generation
 
 ## Error Handling
 
@@ -859,12 +889,12 @@ The runner extracts the following information from APP_DETAILS.md:
 - **Development Team**: Used for implementation planning
 
 ### Inspiration Directories:
-- If `/assets/inspiration/visual/` exists, its contents are passed to visual design prompts:
+- If `assets/inspiration/visual/` exists, its contents are passed to visual design prompts:
   - Style Guide (visual aspects)
   - Component Library (visual styling)
   - Interactive Preview (visual implementation)
   
-- If `/assets/inspiration/functional/` exists, its contents are passed to functional design prompts:
+- If `assets/inspiration/functional/` exists, its contents are passed to functional design prompts:
   - Technical Overview (architecture and implementation patterns)
   - Component Library (behaviors and interactions)
   - User Flows (navigation and workflows)
