@@ -1,18 +1,27 @@
-# Claude Commands Directory
+# Spec Chain Commands Technical Reference
 
-This directory contains custom Claude Code commands for the Spec Chain project. These commands provide specialized functionality for AI-powered documentation generation and project management.
+> **User Guide**: For getting started, see [README.md](../../README.md)
 
-## Directory Structure
+This document provides technical implementation details for the Spec Chain command system.
+
+## Technical Architecture
 
 ```
-.claude/commands/
-├── prime.md                     # Context priming command
-└── spec-chain/                  # Spec Chain documentation system
-    ├── COMMANDS.md                  # This file
-    ├── init-spec-chain.md           # Project initialization
-    ├── validate-spec-chain.md       # Setup validation
-    ├── run-spec-chain.md           # Documentation generation pipeline
-    └── [9 doc-prompt files]        # Document generation prompts
+.claude/commands/spec-chain/
+├── COMMANDS.md                      # This technical reference
+├── init-spec-chain.md              # Project initialization command
+├── validate-spec-chain.md          # Setup validation command
+├── run-spec-chain.md               # Main generation pipeline
+└── [9 doc-prompt files]            # Document generation prompts
+    ├── doc-prompt-prd.md           # Product Requirements Document
+    ├── doc-prompt-feature-stories.md # Feature stories
+    ├── doc-prompt-technical-overview.md # Technical overview
+    ├── doc-prompt-style.md         # UI/UX style guide
+    ├── doc-prompt-states.md        # UI states
+    ├── doc-prompt-ui-preview.md    # Interactive preview
+    ├── doc-prompt-technical.md     # Technical specification
+    ├── doc-prompt-planner.md       # Implementation planning
+    └── doc-prompt-planner-validator.md # Plan validation
 ```
 
 ## Available Commands

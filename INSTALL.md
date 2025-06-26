@@ -1,11 +1,12 @@
-# Installing Spec Chain Claude Commands
+# Installation Guide
 
-This guide provides detailed instructions for installing the spec-chain commands for Claude Code. Choose the method that works best for your setup.
+> **Quick Start**: For basic installation, see [README.md](README.md#installation)
+
+This guide provides detailed installation options, troubleshooting, and advanced configurations for the spec-chain commands.
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Quick Install](#quick-install)
 - [Installation Methods](#installation-methods)
   - [npm (Recommended)](#npm-recommended)
   - [Shell Script](#shell-script)
@@ -16,6 +17,7 @@ This guide provides detailed instructions for installing the spec-chain commands
 - [Updating](#updating)
 - [Uninstalling](#uninstalling)
 - [Troubleshooting](#troubleshooting)
+- [Advanced Configuration](#advanced-configuration)
 
 ## Prerequisites
 

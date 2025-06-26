@@ -12,4 +12,4 @@ README.md
 .claude/CLAUDE.md
 .claude/commands/spec-chain/COMMANDS.md
 ai_docs/AI_DOCS.md
-specs/SPECS.md
+.spec-chain/specs/SPECS.md

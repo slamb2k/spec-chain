@@ -92,24 +92,34 @@ ai_docs/
 - System prompt reuse across sessions
 - Cost optimization for production systems
 
-## Integration with Spec Chain
+## 🔗 Integration with Spec Chain
 
-These AI documentation files complement the Spec Chain system by providing:
+These AI documentation files directly enhance the Spec Chain system capabilities:
 
-### 🎯 Enhanced Prompt Engineering
-- **Extended Thinking**: Spec Chain prompts can leverage extended thinking for complex analysis
-- **Tool Use**: Document generation prompts can integrate external tools and APIs
-- **Caching**: Optimization strategies for faster spec generation
+### 🧠 Enhanced Documentation Generation
+- **Extended Thinking**: Complex architectural analysis for `doc-prompt-technical.md`
+- **Tool Integration**: External data fetching for market research in `doc-prompt-prd.md`
+- **Performance Optimization**: Faster generation through prompt caching strategies
 
-### 🔄 Advanced Features
-- **Complex Reasoning**: Extended thinking enhances technical specification generation
-- **External Integration**: Tool use enables dynamic data fetching and validation
-- **Performance**: Caching reduces latency for repeated documentation generation
+### 🚀 Spec Chain Command Enhancements
 
-### 📊 Implementation Guidance
-- **Best Practices**: Proven patterns for AI-powered documentation systems
-- **Error Handling**: Robust error management for production use
-- **Optimization**: Performance tuning for large-scale documentation generation
+#### `/run-spec-chain` with Extended Thinking
+```bash
+# Enhanced technical analysis with step-by-step reasoning
+/run-spec-chain my-app --thinking-enabled --budget-tokens 15000
+```
+
+#### Tool-Enhanced PRD Generation
+```bash
+# Market research integration for competitive analysis
+/doc-prompt-prd my-app --tools market-research,competitor-analysis
+```
+
+#### Optimized Parallel Execution
+```bash
+# Cached system prompts for faster parallel generation
+/run-spec-chain my-app --cache-system-prompts --parallel-agents 8
+```
 
 ## Usage Examples
 

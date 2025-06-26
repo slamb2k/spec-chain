@@ -378,6 +378,102 @@ The spec-chain prompts generate various visual elements within the documentation
 - These permissions allow spec-chain to create and manage its isolated `.spec-chain/` directory structure
 - You can also just run spec-chain without pre-configuring - Claude will ask for each permission as needed
 
+## ❓ FAQ
+
+### General Questions
+
+**Q: What is the difference between spec-chain and other documentation generators?**
+A: Spec-chain is specifically designed for Claude Code and uses AI prompts that work together to generate comprehensive, consistent documentation from a single APP_DETAILS.md file. It includes parallel execution, iterative validation, and isolated project structure.
+
+**Q: Can I use spec-chain with other AI systems besides Claude?**
+A: Spec-chain is optimized for Claude Code, but the prompts could potentially be adapted for other AI systems. However, features like parallel execution and Claude Code integration would need to be reimplemented.
+
+**Q: Do I need to fill out every field in APP_DETAILS.md?**
+A: No! Only the basic information fields are required. Optional fields can be left blank and will be auto-researched or use sensible defaults. The `/run-spec-chain` command can interactively gather missing information.
+
+### Technical Questions
+
+**Q: Why does spec-chain use a `.spec-chain/` directory?**
+A: This keeps all spec-chain files isolated from your project, making it portable and ensuring your existing project structure remains clean. You can initialize spec-chain in any directory without affecting existing files.
+
+**Q: Can I customize the generated documentation?**
+A: Yes! You can:
+- Modify APP_DETAILS.md and regenerate
+- Add inspiration materials to influence output
+- Edit individual prompts in `.claude/commands/spec-chain/`
+- Add custom playbooks in `.spec-chain/assets/playbooks/`
+
+**Q: How does parallel execution work?**
+A: Independent documents (like feature stories and technical overview) generate simultaneously using Claude's Task agents, reducing total generation time by 25-33%.
+
+### Installation Questions
+
+**Q: Which installation method should I use?**
+A: For most users, the npm method (`npm install -g claude-spec-chain`) is recommended as it provides easy updates and a consistent experience across platforms.
+
+**Q: Can I install spec-chain on Windows?**
+A: Yes, but you must use WSL (Windows Subsystem for Linux) since Claude Code only runs on Linux. Install WSL first, then use any Linux installation method.
+
+**Q: What if I get permission errors?**
+A: Claude Code will ask for permissions as needed. You can approve them individually, or pre-configure permissions in `.claude/settings.local.json` for a smoother experience.
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### Permission Denied Errors
+**Problem**: Cannot create `.spec-chain/` directory or files
+**Solution**: 
+1. Let Claude Code ask for permissions and approve them
+2. Or pre-configure permissions in `.claude/settings.local.json` (see [Permissions Configuration](#permissions-configuration))
+3. Restart Claude Code after adding permissions
+
+#### Commands Not Recognized
+**Problem**: `/init-spec-chain` or other commands not found
+**Solution**:
+1. Ensure `.claude/commands/spec-chain/` directory exists
+2. Check that command files are present in the directory
+3. Restart Claude Code
+4. Verify you're in the correct project directory
+
+#### Generation Fails or Produces Poor Results
+**Problem**: Documentation generation stops or produces low-quality output
+**Solution**:
+1. Run `/validate-spec-chain` to check setup
+2. Ensure APP_DETAILS.md is properly filled out
+3. Add inspiration materials to `.spec-chain/assets/inspiration/`
+4. Check that all required fields in APP_DETAILS.md are completed
+5. Try regenerating individual documents to isolate issues
+
+#### Installation Issues
+**Problem**: Installation fails or commands not available after installation
+**Solution**:
+1. **npm method**: Ensure Node.js is installed and npm is working
+2. **Shell script**: Check that curl/wget is available and working
+3. **Manual**: Verify file permissions and directory structure
+4. **Global PATH**: Ensure `~/.local/bin` is in your PATH for global installations
+
+#### Performance Issues
+**Problem**: Generation takes too long or times out
+**Solution**:
+1. Reduce parallel agents: `/run-spec-chain my-app 1 3`
+2. Resume from specific phase: `/run-spec-chain my-app 3`
+3. Generate documents individually to identify bottlenecks
+4. Check system resources and Claude Code performance
+
+### Getting Help
+
+If you're still experiencing issues:
+
+1. **Check Documentation**: Review [INSTALL.md](INSTALL.md) for detailed installation help
+2. **Search Issues**: Look through [existing GitHub issues](https://github.com/yourusername/spec-chain/issues)
+3. **Create Issue**: Open a [new issue](https://github.com/yourusername/spec-chain/issues/new) with:
+   - Your operating system and version
+   - Installation method used
+   - Error messages (full text)
+   - Steps to reproduce the problem
+4. **Community**: Join discussions in [GitHub Discussions](https://github.com/yourusername/spec-chain/discussions)
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit pull requests with:
@@ -385,6 +481,15 @@ Contributions are welcome! Please feel free to submit pull requests with:
 - Improvements to existing prompts
 - Additional examples
 - Bug fixes
+- Documentation improvements
+
+### Development Setup
+1. Fork the repository
+2. Clone your fork: `git clone https://github.com/yourusername/spec-chain.git`
+3. Install dependencies: `npm install`
+4. Make your changes
+5. Test thoroughly with `/run-spec-chain`
+6. Submit a pull request
 
 ## 📄 License
 
@@ -392,4 +497,4 @@ This project is open source and available under the MIT License.
 
 ---
 
-**Note**: This repository serves both as a tool (the spec-chain prompts) and as an example (the Brave New Projects documentation). Feel free to use either or both for your projects!
+**Note**: This repository serves both as a tool (the spec-chain prompts) and as an example (comprehensive AI-powered documentation generation). Feel free to use either or both for your projects!
