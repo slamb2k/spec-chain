@@ -169,32 +169,88 @@ Phase 5: Planning & Implementation Rules (2 steps - sequential)
 
 ## 📁 Project Structure
 
+### Spec Chain Repository Structure
+
+This is the complete structure of the Spec Chain repository - the source code and all files that make up this project:
+
 ```
-any-directory/                      # Any directory where you run /init-spec-chain
+spec-chain/                         # This repository
+├── .claude/                        # Claude Code integration
+│   ├── CLAUDE.md                   # Claude Code guidance and project context
+│   ├── settings.local.json         # Claude Code permissions
+│   └── commands/
+│       ├── prime.md                # Context priming command (dev-specific)
+│       └── spec-chain/             # Core spec-chain commands
+│           ├── COMMANDS.md         # Command documentation
+│           ├── init-spec-chain.md  # Initialize project command
+│           ├── validate-spec-chain.md # Validate setup command
+│           ├── run-spec-chain.md   # Main generation pipeline
+│           ├── doc-prompt-prd.md   # Product Requirements Document
+│           ├── doc-prompt-feature-stories.md # Feature stories
+│           ├── doc-prompt-technical-overview.md # Technical overview
+│           ├── doc-prompt-style.md # UI/UX style guide
+│           ├── doc-prompt-states.md # UI states and mockups
+│           ├── doc-prompt-ui-preview.md # Interactive UI preview
+│           ├── doc-prompt-technical.md # Technical specification
+│           ├── doc-prompt-planner.md # Implementation planning
+│           └── doc-prompt-planner-validator.md # Plan validation
+├── .github/                        # GitHub Actions workflows
+│   └── workflows/
+│       ├── claude-code-review.yml  # Code review automation
+│       ├── claude.yml              # Claude integration
+│       └── release.yml             # Release automation
+├── bin/                            # CLI executable
+│   └── claude-spec-chain.js        # npm CLI tool
+├── lib/                            # Library code
+│   └── postinstall.js             # Post-installation script
+├── .gitignore                      # Git ignore rules
+├── .npmignore                      # npm ignore rules
+├── package.json                    # npm package configuration
+├── README.md                       # This file
+├── INSTALL.md                      # Installation instructions
+├── install.sh                      # Shell installation script
+└── LICENSE                         # MIT license
+```
+
+### Your Project Directory (After Running `/init-spec-chain`)
+
+This is what any project directory will look like after you initialize spec-chain. This structure is created when you run `/init-spec-chain` in any directory:
+
+```
+your-project/                       # Any existing project directory
 ├── .spec-chain/                    # Created by /init-spec-chain
-│   ├── APP_DETAILS.md              # Your application details
+│   ├── APP_DETAILS.md              # Your application details and requirements
 │   ├── assets/
 │   │   ├── inspiration/
-│   │   │   ├── visual/            # Visual design references
-│   │   │   └── functional/        # Functional/UX references
-│   │   └── playbooks/             # Development playbooks
+│   │   │   ├── visual/            # Visual design references (images, mockups)
+│   │   │   └── functional/        # Functional/UX references (workflows, layouts)
+│   │   └── playbooks/             # Development playbooks and rules
 │   └── specs/
 │       ├── SPECS.md               # Generated documentation guide
-│       └── [timestamp]/           # Each run creates timestamped folder
-└── [your existing files]          # Your existing project files remain untouched
-
-spec-chain package:
-├── .claude/
-│   ├── CLAUDE.md                   # Claude Code guidance
+│       └── [timestamp]/           # Each /run-spec-chain creates timestamped folder
+│           ├── PRD.md             # Product Requirements Document
+│           ├── FEATURE_STORIES.md # Detailed feature stories
+│           ├── TECHNICAL_OVERVIEW.md # High-level architecture
+│           ├── STYLE_GUIDE.md     # UI/UX design system
+│           ├── UI_STATES.md       # Screen mockups and states
+│           ├── UI_PREVIEW.html    # Interactive UI preview
+│           ├── TECHNICAL_SPEC.md  # Detailed technical specification
+│           ├── IMPLEMENTATION_PLAN.md # AI-optimized development plan
+│           └── VALIDATION_REPORT_v*.md # Plan validation reports
+├── .claude/                        # Claude Code commands (installed separately)
 │   └── commands/
-│       ├── prime.md                # Context priming
-│       └── spec-chain/             # All spec-chain commands
-│           ├── COMMANDS.md             # Command documentation
-│           ├── init-spec-chain.md      # Initialize project
-│           ├── validate-spec-chain.md  # Validate setup
-│           ├── run-spec-chain.md       # Generate docs
-│           └── [9 doc-prompt files]    # Document generation prompts
-└── [documentation files]
+│       └── spec-chain/            # Only the core commands (no prime.md or CLAUDE.md)
+│           └── [command files]     # The 12 spec-chain command files
+└── [your existing files]          # Your original project files remain untouched
+```
+
+### Key Differences:
+
+- **Repository Structure**: The complete Spec Chain project with source code, workflows, and development files
+- **User Project Structure**: Clean, isolated spec-chain functionality added to any existing project
+- **Installation Content**: Only the core `spec-chain/` commands are deployed to user projects
+- **Development vs. Production**: Repository contains development files (`prime.md`, `CLAUDE.md`) that aren't deployed
+- **Clean Separation**: User projects get only what they need, keeping their directory structure clean
 
 ## 🛠️ Key Commands
 
@@ -293,9 +349,9 @@ The spec-chain prompts generate various visual elements within the documentation
 
 ## 🔐 Permissions Configuration
 
-If you encounter permission errors when spec-chain tries to create the `.spec-chain` directory, you'll need to update your Claude Code permissions:
+**Claude Code will automatically ask for permissions as spec-chain runs** - you can simply approve each request as it appears. However, if you prefer to set up permissions in advance for a smoother experience, here's a sample `.claude/settings.local.json` configuration that covers the initial permissions required to make spec-chain run smoothly:
 
-1. **Add to your `.claude/settings.local.json`:**
+**Optional: Pre-configure permissions in `.claude/settings.local.json`:**
 ```json
 {
   "permissions": {
@@ -316,9 +372,11 @@ If you encounter permission errors when spec-chain tries to create the `.spec-ch
 }
 ```
 
-2. **Restart Claude Code** after adding permissions
-
-This gives spec-chain the necessary permissions to create and manage its isolated directory structure.
+**Note:** 
+- If this file doesn't exist, create it in your project's `.claude/` directory
+- Restart Claude Code after adding permissions for them to take effect
+- These permissions allow spec-chain to create and manage its isolated `.spec-chain/` directory structure
+- You can also just run spec-chain without pre-configuring - Claude will ask for each permission as needed
 
 ## 🤝 Contributing
 
