@@ -43,5 +43,4 @@
 .gitignore
 
 # Ignore generated documentation and assets
-specs/**
-assets/**
+spec-chain/**
