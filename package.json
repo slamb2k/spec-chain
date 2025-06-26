@@ -27,7 +27,7 @@
     "claude-spec-chain": "./bin/claude-spec-chain.js"
   },
   "files": [
-    ".claude/",
+    ".claude/commands/spec-chain/",
     "bin/",
     "lib/",
     "README.md",

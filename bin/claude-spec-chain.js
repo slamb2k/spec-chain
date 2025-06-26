@@ -85,12 +85,12 @@ const commands = {
             process.exit(1);
         }
         
-        // Get source directory
+        // Get source directory (only spec-chain subfolder)
         const packagePath = getPackagePath();
-        const sourceDir = path.join(packagePath, '.claude');
+        const sourceSpecChainDir = path.join(packagePath, '.claude', 'commands', 'spec-chain');
         
-        if (!fs.existsSync(sourceDir)) {
-            log.error('Could not find .claude directory in package installation');
+        if (!fs.existsSync(sourceSpecChainDir)) {
+            log.error('Could not find .claude/commands/spec-chain directory in package installation');
             log.error(`Looked in: ${packagePath}`);
             process.exit(1);
         }
@@ -102,8 +102,11 @@ const commands = {
                 log.success('Removed existing installation');
             }
             
-            // Copy files, skipping CLAUDE.md and prime.md to avoid conflicts
-            copyRecursive(sourceDir, claudeDir, ['CLAUDE.md', 'prime.md']);
+            // Ensure parent directories exist
+            fs.mkdirSync(path.join(claudeDir, 'commands'), { recursive: true });
+            
+            // Copy only the spec-chain directory
+            copyRecursive(sourceSpecChainDir, specChainDir);
             log.success('Spec-chain commands installed successfully!');
             
             console.log('\nAvailable commands in Claude Code:');

@@ -31,15 +31,11 @@ tests/
 .DS_Store
 Thumbs.db
 
-# Exclude CLAUDE.md and prime.md from .claude directory
-.claude/CLAUDE.md
-.claude/commands/prime.md
-
-# Keep only necessary files for npm package
-# .claude/ directory is included by default (except CLAUDE.md)
-# bin/ directory is included by default  
-# lib/ directory is included by default
-# README.md is included by default
-# LICENSE is included by default
-# package.json is included by default
-# INSTALL.md is included by default
+# Note: package.json "files" field explicitly includes only:
+# - .claude/commands/spec-chain/
+# - bin/
+# - lib/
+# - README.md
+# - LICENSE
+# - INSTALL.md
+# Everything else is automatically excluded

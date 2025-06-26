@@ -43,11 +43,17 @@ jobs:
       
       - name: Create release archives
         run: |
-          # Create claude-commands.zip (just .claude directory, excluding CLAUDE.md and prime.md)
-          zip -r claude-commands.zip .claude/ -x ".claude/CLAUDE.md" ".claude/commands/prime.md"
+          # Create temporary directory structure for clean archives
+          mkdir -p temp-archive/.claude/commands
+          cp -r .claude/commands/spec-chain temp-archive/.claude/commands/
           
-          # Create claude-commands.tar.gz (excluding CLAUDE.md and prime.md)
-          tar -czf claude-commands.tar.gz --exclude=".claude/CLAUDE.md" --exclude=".claude/commands/prime.md" .claude/
+          # Create claude-commands.zip (only spec-chain directory in proper structure)
+          cd temp-archive
+          zip -r ../claude-commands.zip .claude/
+          cd ..
+          
+          # Create claude-commands.tar.gz (only spec-chain directory in proper structure)
+          tar -czf claude-commands.tar.gz -C temp-archive .claude/
           
           # Create full release archive with install script
           mkdir -p release-temp
