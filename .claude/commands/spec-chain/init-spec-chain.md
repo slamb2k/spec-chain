@@ -22,7 +22,24 @@ This command initializes a new Spec Chain project by creating the required direc
 
 ```bash
 # Create main spec-chain directory and subdirectories
-mkdir -p .spec-chain/specs
+mkdir -p .spec-chain/specs 2>&1 || {
+    echo "❌ Permission denied creating .spec-chain directory"
+    echo ""
+    echo "To fix this, add the following to your .claude/settings.local.json:"
+    echo '{'
+    echo '  "permissions": {'
+    echo '    "allow": ['
+    echo '      "Read(.spec-chain/**)",'
+    echo '      "Write(.spec-chain/**)",'
+    echo '      "Edit(.spec-chain/**)",'
+    echo '      "MultiEdit(.spec-chain/**)"'
+    echo '    ]'
+    echo '  }'
+    echo '}'
+    echo ""
+    echo "Then restart Claude Code and run /init-spec-chain again."
+    exit 1
+}
 
 # Create inspiration directories
 mkdir -p .spec-chain/assets/inspiration/visual

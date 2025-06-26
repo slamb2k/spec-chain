@@ -243,10 +243,43 @@ The global command might not be in your PATH. Add to your shell configuration:
 # Bash/Zsh
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
-
 ```
 
-#### "Permission denied" errors
+#### "Permission denied" errors when creating .spec-chain directory
+Claude Code requires explicit permissions for new directories. If you get permission errors:
+
+1. **Add permissions to your .claude/settings.local.json:**
+```json
+{
+  "permissions": {
+    "allow": [
+      "Read(.spec-chain/**)",
+      "Write(.spec-chain/**)",
+      "Edit(.spec-chain/**)",
+      "MultiEdit(.spec-chain/**)"
+    ]
+  }
+}
+```
+
+2. **If settings.local.json doesn't exist, create it:**
+```bash
+mkdir -p .claude
+echo '{
+  "permissions": {
+    "allow": [
+      "Read(.spec-chain/**)",
+      "Write(.spec-chain/**)",
+      "Edit(.spec-chain/**)",
+      "MultiEdit(.spec-chain/**)"
+    ]
+  }
+}' > .claude/settings.local.json
+```
+
+3. **Restart Claude Code** after adding permissions
+
+#### "Permission denied" for executable files
 ```bash
 # Make scripts executable
 chmod +x ~/.local/bin/claude-spec-chain

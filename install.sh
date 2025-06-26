@@ -317,6 +317,18 @@ main() {
     echo "specific context about spec-chain, you can add notes to your project's"
     echo ".claude/CLAUDE.md file."
     echo ""
+    print_warning "Permission Configuration (if needed):"
+    echo "If you encounter permission errors when spec-chain tries to create the .spec-chain"
+    echo "directory, add this to your .claude/settings.local.json:"
+    echo ""
+    echo '  "permissions": {'
+    echo '    "allow": ['
+    echo '      "Read(.spec-chain/**)",'
+    echo '      "Write(.spec-chain/**)",'
+    echo '      "Edit(.spec-chain/**)"'
+    echo '    ]'
+    echo '  }'
+    echo ""
     echo "For more information, visit: $REPO_URL"
 }
 

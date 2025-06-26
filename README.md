@@ -289,6 +289,28 @@ The spec-chain prompts generate various visual elements within the documentation
 - **Flexibility**: Customize prompts for your specific needs
 - **Performance**: Parallel execution using Task agents for independent prompts
 
+## 🔐 Permissions Configuration
+
+If you encounter permission errors when spec-chain tries to create the `.spec-chain` directory, you'll need to update your Claude Code permissions:
+
+1. **Add to your `.claude/settings.local.json`:**
+```json
+{
+  "permissions": {
+    "allow": [
+      "Read(.spec-chain/**)",
+      "Write(.spec-chain/**)",
+      "Edit(.spec-chain/**)",
+      "MultiEdit(.spec-chain/**)"
+    ]
+  }
+}
+```
+
+2. **Restart Claude Code** after adding permissions
+
+This gives spec-chain the necessary permissions to create and manage its isolated directory structure.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit pull requests with:
