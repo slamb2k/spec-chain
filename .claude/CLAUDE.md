@@ -11,36 +11,77 @@ Spec Chain is an AI-powered documentation generator that creates comprehensive s
 - **v2.0**: File-based architecture with parallel execution using Task agents
 - **Deployment**: Only core commands deployed - development files (prime.md, CLAUDE.md) excluded from packages
 
-## Project Structure
+## Repository Structure (Development Context)
+
+This is the complete structure of the Spec Chain repository that you'll be working with as a developer:
 
 ```
-your-project/                        # Any project using spec-chain
-├── .spec-chain/                    # All spec-chain files (created by init)
-│   ├── APP_DETAILS.md              # Project configuration
-│   ├── APP_DETAILS.md.template     # Template for new projects
-│   ├── assets/
-│   │   ├── inspiration/
-│   │   │   ├── visual/            # Visual references
-│   │   │   └── functional/        # Functional references
-│   │   └── playbooks/             # Development playbooks
-│   └── specs/
-│       ├── SPECS.md               # Generated documentation guide
-│       └── [timestamp]/           # Timestamped outputs
-└── [your project files]            # Your project remains clean
-
-spec-chain package:
-├── .claude/
-│   ├── CLAUDE.md                   # Claude Code guidance (this file)
+spec-chain/                         # This repository
+├── .claude/                        # Claude Code integration
+│   ├── CLAUDE.md                   # This file - development guidance
+│   ├── settings.local.json         # Development permissions
 │   └── commands/
-│       ├── prime.md                # Context priming
-│       └── spec-chain/             # All spec-chain commands
-│           ├── COMMANDS.md         # Command documentation
-│           ├── init-spec-chain.md      # Initialize project
-│           ├── validate-spec-chain.md  # Validate setup
-│           ├── run-spec-chain.md       # Generate docs
-│           └── [9 doc-prompt files]    # Document generation prompts
-└── [documentation files]
+│       ├── prime.md                # Dev-specific context priming
+│       └── spec-chain/             # Core deployable commands
+│           ├── COMMANDS.md         # User documentation
+│           ├── init-spec-chain.md  # Project initialization
+│           ├── validate-spec-chain.md # Setup validation
+│           ├── run-spec-chain.md   # Main generation pipeline
+│           ├── doc-prompt-prd.md   # Product Requirements
+│           ├── doc-prompt-feature-stories.md # Feature stories
+│           ├── doc-prompt-technical-overview.md # Technical overview
+│           ├── doc-prompt-style.md # UI/UX style guide
+│           ├── doc-prompt-states.md # UI states
+│           ├── doc-prompt-ui-preview.md # Interactive preview
+│           ├── doc-prompt-technical.md # Technical spec
+│           ├── doc-prompt-planner.md # Implementation planning
+│           └── doc-prompt-planner-validator.md # Plan validation
+├── .github/                        # CI/CD automation
+│   └── workflows/
+│       ├── claude-code-review.yml  # Automated code review
+│       ├── claude.yml              # Claude integration
+│       └── release.yml             # Package releases
+├── bin/                            # CLI executable
+│   └── claude-spec-chain.js        # npm command-line tool
+├── lib/                            # Supporting code
+│   └── postinstall.js             # npm post-install script
+├── .gitignore                      # Git exclusions
+├── .npmignore                      # npm package exclusions
+├── package.json                    # npm configuration
+├── README.md                       # User documentation
+├── INSTALL.md                      # Installation guide
+├── install.sh                      # Shell installation script
+└── LICENSE                         # MIT license
 ```
+
+### Key Development Areas:
+
+- **`.claude/commands/spec-chain/`** - Core prompts and commands (main development focus)
+- **`bin/claude-spec-chain.js`** - CLI tool for npm installations
+- **`install.sh`** - Shell script installation method
+- **`.github/workflows/`** - Automated testing and releases
+- **`package.json`** - npm package configuration and deployment settings
+
+### Testing Context (User Project Structure)
+
+When testing changes, you'll work with this structure that gets created in user projects:
+
+```
+test-project/                       # Any directory for testing
+├── .spec-chain/                    # Created by /init-spec-chain
+│   ├── APP_DETAILS.md              # Test application details
+│   ├── assets/inspiration/         # Test reference materials
+│   └── specs/                      # Generated documentation output
+│       └── [timestamp]/            # Test generation results
+├── .claude/commands/spec-chain/    # Installed commands (testing deployment)
+└── [existing files]                # Simulated user project files
+```
+
+**Testing Workflow:**
+1. Make changes to prompts in `.claude/commands/spec-chain/`
+2. Test installation: `claude-spec-chain install` or `./install.sh`
+3. Test commands: `/init-spec-chain`, `/validate-spec-chain`, `/run-spec-chain`
+4. Verify output quality in `.spec-chain/specs/[timestamp]/`
 
 ## Key Commands
 
