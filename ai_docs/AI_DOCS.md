@@ -1,6 +1,24 @@
 # AI Documentation Directory
 
-This directory contains documentation and guides for working with AI systems, particularly Claude and advanced AI features. These documents provide technical guidance, implementation patterns, and best practices for AI-powered development.
+This directory contains **AI coding tool reference materials** that help Claude Code and other AI assistants work more effectively on this repository. These documents explain how to use advanced AI capabilities for development tasks.
+
+## 🎯 Purpose: AI Tool Enhancement
+
+**This directory is for**: Helping AI coding tools understand how to use their own capabilities effectively when working on code, debugging, refactoring, and development tasks.
+
+**This directory is NOT for**: Rules about how to generate user documentation (those belong in `.spec-chain/assets/playbooks/`).
+
+## 🔄 Architecture Distinction
+
+### `ai_docs/` - AI Tool Capabilities (This Directory)
+- **Purpose**: Help AI coding tools be more effective developers
+- **Audience**: Claude Code when working on repository code
+- **Examples**: Extended thinking for code analysis, prompt caching for performance, tool use for development
+
+### `.spec-chain/assets/playbooks/` - Generation Standards  
+- **Purpose**: Rules for generating high-quality user documentation
+- **Audience**: AI when running `/run-spec-chain` for users
+- **Examples**: Documentation standards, React patterns, architecture guidelines
 
 ## Directory Structure
 

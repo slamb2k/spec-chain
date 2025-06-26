@@ -13,3 +13,8 @@ README.md
 .claude/commands/spec-chain/COMMANDS.md
 ai_docs/AI_DOCS.md
 .spec-chain/specs/SPECS.md
+
+## Context Notes
+- ai_docs/ contains AI coding tool reference materials for development work
+- .spec-chain/assets/playbooks/ contains generation standards for user documentation
+- These serve different purposes: tool capabilities vs. generation rules
