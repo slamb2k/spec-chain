@@ -8,19 +8,13 @@ Execute the complete specification chain to generate comprehensive documentation
 - The name of the spec to create/update
 - This becomes the output folder `spec-chain/specs/<spec name>`
 - If not supplied, defaults to timestamp format ("%Y%m%d_%H%M%S")
-- If the folder already exists, its contents will be overwritten with newly generated documentation
+- If the folder already exists, missing documents will be generated and dependent documents will be regenerated as needed
 
-**Argument 2: Start Phase (Optional)**
-- The phase number to start execution from (1-5)
-- Defaults to Phase 1 if not specified
-- The system validates that all previous phase documents exist before proceeding
-- If validation fails, the system will prompt to start from an earlier phase
-
-**Argument 3: Parallel Agents (Optional)**
+**Argument 2: Parallel Agents (Optional)**
 - The number of parallel agents to use for UI Preview generation
 - Defaults to 5 if not specified
 - Valid range: 1-10 agents
-- Only affects Phase 3b (UI Preview generation)
+- Only affects Phase 3.3 (UI Preview generation)
 
 ## Usage Examples
 
@@ -36,21 +30,15 @@ Creates: `spec-chain/specs/20240120_143052/` with all documents
 ```
 Creates: `spec-chain/specs/my-app/` with all documents
 
-**Resume from specific phase:**
+**Update existing spec (automatic detection):**
 ```
-/run-spec-chain my-app 3
+/run-spec-chain my-app
 ```
-Resumes generation from Phase 3 (Technical Architecture) in `spec-chain/specs/my-app/`
-
-**Update existing spec from Phase 3:**
-```
-/run-spec-chain existing-spec 3
-```
-Overwrites Phase 3+ documents in `spec-chain/specs/existing-spec/`
+Analyzes existing documents in `spec-chain/specs/my-app/` and generates only missing documents
 
 **Specify number of parallel UI design agents:**
 ```
-/run-spec-chain my-app 1 8
+/run-spec-chain my-app 8
 ```
 Generates 8 different UI design approaches in `spec-chain/specs/my-app/`
 
@@ -276,24 +264,25 @@ For each empty optional field, ask ONE AT A TIME:
 The runner then uses **parallel Task agents** to execute independent prompts concurrently, significantly reducing total generation time:
 
 ```
-Phase 1: Foundation (1 prompt)
-    └── PRD.md
+Phase 1.0: Foundation (1 prompt)
+    └── 1_PRD.md
 
-Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
-    ├── FEATURE_STORIES.md
-    └── TECHNICAL_OVERVIEW.md (depends on PRD)
+Phase 2.0: Feature Analysis & Technical Overview (2 prompts - parallel)
+    ├── 2.1_FEATURE_STORIES.md
+    └── 2.2_TECHNICAL_OVERVIEW.md (depends on PRD)
 
-Phase 3: Design & UI/UX (3 prompts - sequential)
-    ├── STYLE_GUIDE.md
-    ├── UI_STATES.md (depends on Style Guide)
-    └── UI_PREVIEW.html (depends on Style Guide and UI States)
+Phase 3.0: Design & UI/UX (3 prompts - sequential)
+    ├── 3.1_STYLE_GUIDE.md
+    ├── 3.2_UI_STATES.md (depends on Style Guide)
+    └── 3.3_UI_PREVIEW.html (depends on Style Guide and UI States)
 
-Phase 4: Technical Architecture (1 prompt - sequential)
-    └── TECHNICAL_SPEC.md (depends on Technical Overview)
+Phase 4.0: Technical Architecture (1 prompt - sequential)
+    └── 4_TECHNICAL_SPEC.md (depends on Technical Overview)
 
-Phase 5: Planning & Implementation Rules (2 steps - sequential)
+Phase 5.0: Planning & Implementation Rules (2 steps - sequential)
     ├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
     └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
+         └── 5_IMPLEMENTATION_PLAN.md + 5_VALIDATION_REPORT_v*.md
 ```
 
 Total: 8+ documents generated across 5 phases (includes Implementation Plan + validation reports)
@@ -331,12 +320,10 @@ All input data is read from the `spec-chain/APP_DETAILS.md` file which contains:
    - **Process Arguments:**
      - Generate timestamp once: `TIMESTAMP=$(date +"%Y%m%d_%H%M%S")`
      - `SPEC_NAME`: First argument (spec name) or use `$TIMESTAMP` if not provided
-     - `START_PHASE`: Second argument (phase number) or default to 1 if not provided
-     - `PARALLEL_AGENTS`: Third argument (number of UI preview agents) or default to 5 if not provided
+     - `PARALLEL_AGENTS`: Second argument (number of UI preview agents) or default to 5 if not provided
    - **Set Output Directory:**
      - Set `OUTPUT_DIR=spec-chain/specs/$SPEC_NAME`
      - Create output directory: `mkdir -p $OUTPUT_DIR`
-     - If directory exists and contains files, log: "Overwriting existing spec directory: $OUTPUT_DIR"
    - **Initialize Data Sources:**
      - **Validate spec-chain/APP_DETAILS.md Structure:**
        - Use the embedded template structure from init-spec-chain.md as reference
@@ -395,7 +382,177 @@ All input data is read from the `spec-chain/APP_DETAILS.md` file which contains:
      - If validation fails, display missing documents and prompt: "Missing required documents for Phase X. Would you like to start from Phase Y instead? (y/n)"
      - If user chooses 'n', exit with error. If 'y', update `START_PHASE` to the suggested phase.
 
-   - Log: "Starting documentation generation in $OUTPUT_DIR from Phase $START_PHASE (timestamp: $TIMESTAMP)"
+0.2. **Automatic Document Detection and Dependency Management**
+   - **Analyze Existing Documents:**
+     ```
+     # Define document dependencies
+     declare -A DEPENDENCIES
+     DEPENDENCIES["1_PRD"]=""  # No dependencies
+     DEPENDENCIES["2.1_FEATURE_STORIES"]="1_PRD"
+     DEPENDENCIES["2.2_TECHNICAL_OVERVIEW"]="1_PRD"
+     DEPENDENCIES["3.1_STYLE_GUIDE"]="1_PRD"
+     DEPENDENCIES["3.2_UI_STATES"]="2.1_FEATURE_STORIES 3.1_STYLE_GUIDE"
+     DEPENDENCIES["3.3_UI_PREVIEW"]="3.1_STYLE_GUIDE 3.2_UI_STATES"
+     DEPENDENCIES["4_TECHNICAL_SPEC"]="2.2_TECHNICAL_OVERVIEW"
+     DEPENDENCIES["5_IMPLEMENTATION_PLAN"]="4_TECHNICAL_SPEC"
+     
+     # Check which documents exist
+     EXISTING_DOCS=()
+     MISSING_DOCS=()
+     
+     for doc in "${REQUIRED_DOCS[@]}"; do
+         # Convert to filename format
+         case $doc in
+             "PRD") filename="1_PRD.md" ;;
+             "FEATURE_STORIES") filename="2.1_FEATURE_STORIES.md" ;;
+             "TECHNICAL_OVERVIEW") filename="2.2_TECHNICAL_OVERVIEW.md" ;;
+             "STYLE_GUIDE") filename="3.1_STYLE_GUIDE.md" ;;
+             "UI_STATES") filename="3.2_UI_STATES.md" ;;
+             "UI_PREVIEW") filename="3.3_UI_PREVIEW.html" ;;
+             "TECHNICAL_SPEC") filename="4_TECHNICAL_SPEC.md" ;;
+             "IMPLEMENTATION_PLAN") filename="5_IMPLEMENTATION_PLAN.md" ;;
+         esac
+         
+         if [[ -f "$OUTPUT_DIR/$filename" ]]; then
+             EXISTING_DOCS+=("$doc")
+         else
+             MISSING_DOCS+=("$doc")
+         fi
+     done
+     ```
+
+   - **Determine Generation Strategy:**
+     ```
+     if [[ ${#MISSING_DOCS[@]} -eq 0 ]]; then
+         echo "✅ All required documents exist. No generation needed."
+         echo "Output directory: $OUTPUT_DIR"
+         exit 0
+     fi
+     
+     # Find the first missing document to determine start point
+     FIRST_MISSING=""
+     for doc in "PRD" "FEATURE_STORIES" "TECHNICAL_OVERVIEW" "STYLE_GUIDE" "UI_STATES" "UI_PREVIEW" "TECHNICAL_SPEC" "IMPLEMENTATION_PLAN"; do
+         if [[ " ${MISSING_DOCS[@]} " =~ " $doc " ]]; then
+             FIRST_MISSING="$doc"
+             break
+         fi
+     done
+     ```
+
+   - **Identify Documents to Delete (Dependency Management):**
+     ```
+     DOCS_TO_DELETE=()
+     
+     # For each missing document, find all documents that depend on it (directly or indirectly)
+     for missing_doc in "${MISSING_DOCS[@]}"; do
+         for doc in "${EXISTING_DOCS[@]}"; do
+             # Convert to dependency key format
+             case $missing_doc in
+                 "PRD") missing_key="1_PRD" ;;
+                 "FEATURE_STORIES") missing_key="2.1_FEATURE_STORIES" ;;
+                 "TECHNICAL_OVERVIEW") missing_key="2.2_TECHNICAL_OVERVIEW" ;;
+                 "STYLE_GUIDE") missing_key="3.1_STYLE_GUIDE" ;;
+                 "UI_STATES") missing_key="3.2_UI_STATES" ;;
+                 "UI_PREVIEW") missing_key="3.3_UI_PREVIEW" ;;
+                 "TECHNICAL_SPEC") missing_key="4_TECHNICAL_SPEC" ;;
+                 "IMPLEMENTATION_PLAN") missing_key="5_IMPLEMENTATION_PLAN" ;;
+             esac
+             
+             case $doc in
+                 "PRD") doc_key="1_PRD" ;;
+                 "FEATURE_STORIES") doc_key="2.1_FEATURE_STORIES" ;;
+                 "TECHNICAL_OVERVIEW") doc_key="2.2_TECHNICAL_OVERVIEW" ;;
+                 "STYLE_GUIDE") doc_key="3.1_STYLE_GUIDE" ;;
+                 "UI_STATES") doc_key="3.2_UI_STATES" ;;
+                 "UI_PREVIEW") doc_key="3.3_UI_PREVIEW" ;;
+                 "TECHNICAL_SPEC") doc_key="4_TECHNICAL_SPEC" ;;
+                 "IMPLEMENTATION_PLAN") doc_key="5_IMPLEMENTATION_PLAN" ;;
+             esac
+             
+             # Check if doc depends on missing_doc (directly or indirectly)
+             if [[ "${DEPENDENCIES[$doc_key]}" == *"$missing_key"* ]]; then
+                 if [[ ! " ${DOCS_TO_DELETE[@]} " =~ " $doc " ]]; then
+                     DOCS_TO_DELETE+=("$doc")
+                 fi
+             fi
+         done
+     done
+     ```
+
+   - **User Confirmation for Dependent Document Deletion:**
+     ```
+     if [[ ${#DOCS_TO_DELETE[@]} -gt 0 ]]; then
+         echo "⚠️  Dependency Analysis: The following existing documents depend on missing documents and need to be regenerated:"
+         echo ""
+         for doc in "${DOCS_TO_DELETE[@]}"; do
+             case $doc in
+                 "PRD") filename="1_PRD.md" ;;
+                 "FEATURE_STORIES") filename="2.1_FEATURE_STORIES.md" ;;
+                 "TECHNICAL_OVERVIEW") filename="2.2_TECHNICAL_OVERVIEW.md" ;;
+                 "STYLE_GUIDE") filename="3.1_STYLE_GUIDE.md" ;;
+                 "UI_STATES") filename="3.2_UI_STATES.md" ;;
+                 "UI_PREVIEW") filename="3.3_UI_PREVIEW.html" ;;
+                 "TECHNICAL_SPEC") filename="4_TECHNICAL_SPEC.md" ;;
+                 "IMPLEMENTATION_PLAN") filename="5_IMPLEMENTATION_PLAN.md" ;;
+             esac
+             echo "  - $filename (depends on missing documents)"
+         done
+         echo ""
+         echo "These documents will be backed up (with .backup extension) and regenerated."
+         echo ""
+         read -p "Continue with regeneration? (y/n): " -n 1 -r
+         echo ""
+         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+             echo "❌ Generation cancelled by user."
+             exit 1
+         fi
+         
+         # Backup and remove dependent documents
+         echo "📦 Backing up dependent documents..."
+         for doc in "${DOCS_TO_DELETE[@]}"; do
+             case $doc in
+                 "PRD") filename="1_PRD.md" ;;
+                 "FEATURE_STORIES") filename="2.1_FEATURE_STORIES.md" ;;
+                 "TECHNICAL_OVERVIEW") filename="2.2_TECHNICAL_OVERVIEW.md" ;;
+                 "STYLE_GUIDE") filename="3.1_STYLE_GUIDE.md" ;;
+                 "UI_STATES") filename="3.2_UI_STATES.md" ;;
+                 "UI_PREVIEW") filename="3.3_UI_PREVIEW.html" ;;
+                 "TECHNICAL_SPEC") filename="4_TECHNICAL_SPEC.md" ;;
+                 "IMPLEMENTATION_PLAN") filename="5_IMPLEMENTATION_PLAN.md" ;;
+             esac
+             if [[ -f "$OUTPUT_DIR/$filename" ]]; then
+                 cp "$OUTPUT_DIR/$filename" "$OUTPUT_DIR/$filename.backup"
+                 rm "$OUTPUT_DIR/$filename"
+                 echo "  ✅ Backed up and removed: $filename"
+             fi
+         done
+         
+         # Add deleted documents back to missing list
+         for doc in "${DOCS_TO_DELETE[@]}"; do
+             if [[ ! " ${MISSING_DOCS[@]} " =~ " $doc " ]]; then
+                 MISSING_DOCS+=("$doc")
+             fi
+         done
+     fi
+     ```
+
+   - **Determine Execution Phases:**
+     ```
+     # Create ordered list of documents to generate
+     DOCS_TO_GENERATE=()
+     for doc in "PRD" "FEATURE_STORIES" "TECHNICAL_OVERVIEW" "STYLE_GUIDE" "UI_STATES" "UI_PREVIEW" "TECHNICAL_SPEC" "IMPLEMENTATION_PLAN"; do
+         if [[ " ${MISSING_DOCS[@]} " =~ " $doc " ]] && [[ " ${REQUIRED_DOCS[@]} " =~ " $doc " ]]; then
+             DOCS_TO_GENERATE+=("$doc")
+         fi
+     done
+     
+     echo "📋 Generation Plan:"
+     echo "  Documents to generate (${#DOCS_TO_GENERATE[@]}): ${DOCS_TO_GENERATE[*]}"
+     echo "  Output directory: $OUTPUT_DIR"
+     echo ""
+     ```
+
+   - Log: "Starting documentation generation in $OUTPUT_DIR (timestamp: $TIMESTAMP)"
 
 ### Phase 1: Foundation (Required)
 

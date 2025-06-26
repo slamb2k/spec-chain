@@ -144,25 +144,25 @@ The `doc-prompt-planner.md` prompt is specifically optimized for AI-assisted dev
 The Spec Chain runner executes prompts in optimized phases with parallel execution:
 
 ```
-Phase 1: Foundation (1 prompt)
-    └── PRD.md
+Phase 1.1: Foundation (1 prompt)
+    └── 1_PRD.md
 
 Phase 2: Feature Analysis & Technical Overview (2 prompts - parallel)
-    ├── FEATURE_STORIES.md
-    └── TECHNICAL_OVERVIEW.md (depends on PRD)
+    ├── 2.1_FEATURE_STORIES.md
+    └── 2.2_TECHNICAL_OVERVIEW.md (depends on PRD)
 
 Phase 3: Design & UI/UX (3 prompts - sequential)
-    ├── STYLE_GUIDE.md
-    ├── UI_STATES.md (depends on Style Guide)
-    └── UI_PREVIEW.html (depends on Style Guide and UI States)
+    ├── 3.1_STYLE_GUIDE.md
+    ├── 3.2_UI_STATES.md (depends on Style Guide)
+    └── 3.3_UI_PREVIEW.html (depends on Style Guide and UI States)
 
-Phase 4: Technical Architecture (1 prompt - sequential)
-    └── TECHNICAL_SPEC.md (depends on Technical Overview)
+Phase 4.1: Technical Architecture (1 prompt - sequential)
+    └── 4_TECHNICAL_SPEC.md (depends on Technical Overview)
 
 Phase 5: Planning & Implementation Rules (2 steps - sequential)
     ├── 5.1: Load Playbooks and Rules (depends on Technical Spec)
     └── 5.2: Generate Implementation Plan with Iterative Validation (depends on Playbooks)
-         └── IMPLEMENTATION_PLAN.md (with up to 5 validation iterations)
+         └── 5_IMPLEMENTATION_PLAN.md (with up to 5 validation iterations)
 ```
 
 **Key:** Prompts marked as PARALLEL execute concurrently using Task agents
@@ -228,14 +228,14 @@ your-project/                       # Any existing project directory
 │   └── specs/
 │       ├── SPECS.md               # Generated documentation guide
 │       └── [timestamp]/           # Each /run-spec-chain creates timestamped folder
-│           ├── PRD.md             # Product Requirements Document
-│           ├── FEATURE_STORIES.md # Detailed feature stories
-│           ├── TECHNICAL_OVERVIEW.md # High-level architecture
-│           ├── STYLE_GUIDE.md     # UI/UX design system
-│           ├── UI_STATES.md       # Screen mockups and states
-│           ├── UI_PREVIEW.html    # Interactive UI preview
-│           ├── TECHNICAL_SPEC.md  # Detailed technical specification
-│           ├── IMPLEMENTATION_PLAN.md # AI-optimized development plan
+│           ├── 1_PRD.md           # Product Requirements Document
+│           ├── 2.1_FEATURE_STORIES.md # Detailed feature stories
+│           ├── 2.2_TECHNICAL_OVERVIEW.md # High-level architecture
+│           ├── 3.1_STYLE_GUIDE.md # UI/UX design system
+│           ├── 3.2_UI_STATES.md   # Screen mockups and states
+│           ├── 3.3_UI_PREVIEW.html # Interactive UI preview
+│           ├── 4_TECHNICAL_SPEC.md # Detailed technical specification
+│           ├── 5_IMPLEMENTATION_PLAN.md # AI-optimized development plan
 │           └── VALIDATION_REPORT_v*.md # Plan validation reports
 ├── .claude/                        # Claude Code commands (installed separately)
 │   └── commands/
@@ -277,10 +277,11 @@ Generates complete documentation suite:
 - Manages dependencies between documents
 - Produces comprehensive documentation set
 
-**Usage**: `/run-spec-chain [spec-name] [start-phase] [parallel-agents]`
+**Usage**: `/run-spec-chain [spec-name] [parallel-agents]`
 - `spec-name`: Optional - Output directory name (defaults to timestamp)
-- `start-phase`: Optional - Resume from specific phase (1-5, defaults to 1)
 - `parallel-agents`: Optional - Number of UI preview agents (defaults to 5)
+- **Automatic Detection**: Analyzes existing documents and generates only what's missing
+- **Dependency Management**: Backs up and regenerates documents that depend on missing documents
 
 ## 📋 APP_DETAILS.md Structure
 
@@ -334,7 +335,7 @@ The implementation planning process now includes iterative validation:
 
 ### Visual Documentation
 The spec-chain prompts generate various visual elements within the documentation:
-- ASCII art representations in UI_STATES.md
+- ASCII art representations in 3.2_UI_STATES.md
 - Structured diagrams in technical specifications
 - Clear hierarchical representations of system architecture
 
