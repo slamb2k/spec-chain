@@ -34,7 +34,7 @@ This document provides technical implementation details for the Spec Chain comma
 **Usage**: `/prime`
 **Description**: 
 - Runs `eza . --tree --git-ignore` to show project structure
-- Reads key documentation files (README.md, COMMANDS.md, AI_DOCS.md, SPECS.md)
+- Reads key documentation files (README.md, COMMANDS.md, SPECS.md)
 - Provides comprehensive project context for better assistance
 
 ### 🚀 Spec Chain System

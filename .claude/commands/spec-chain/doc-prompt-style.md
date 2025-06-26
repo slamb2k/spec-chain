@@ -36,10 +36,34 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
   </design_requirements>
 
   <visual_inspiration>
-  Check the `/assets/inspiration/visual/` directory for VISUAL design reference materials:
-  - HTML files: Extract visual styling including typography, color schemes, spacing, borders, shadows, button styling, and animations
-  - Images (PNG/JPG): Analyze color palettes, visual tone, textures, icon styles, and photography treatment
-  - PDF files: Review typography hierarchy, professional color usage, white space, and brand element styling
+  Check the `/assets/inspiration/visual/` directory and analyze all files:
+  
+  **Images (PNG/JPG/GIF)**:
+  - Look at these images directly and extract:
+    - Color relationships and emotional tone (not exact hex codes to copy)
+    - Design principles and visual hierarchy concepts
+    - Spatial harmony and breathing room approaches
+    - Typography personality and weight distribution (not specific fonts)
+    - Animation timing and motion principles from GIFs
+    - Innovation opportunities to adapt and improve
+  
+  **HTML Files**:
+  - Read and analyze the code/CSS for:
+    - Interaction patterns and state management approaches
+    - CSS animation techniques and timing functions (as inspiration)
+    - Component structure and modularity concepts
+    - Responsive design strategies and breakpoint philosophy
+    - Performance optimization techniques to learn from
+  
+  **PDF Files**:
+  - Review document content for:
+    - Design system organization and documentation approaches
+    - Color theory application and rationale
+    - Typography hierarchies and systematic approaches
+    - Component relationship documentation methods
+    - Brand guideline structures (adapt for our brand)
+  
+  IMPORTANT: All files are creative springboards. Extract principles, not implementations.
   </visual_inspiration>
 </user_data>
 
@@ -451,6 +475,41 @@ When generating the functional UX/UI style guide, ensure:
 8. **Scalable System** - Style guide supports product growth and feature expansion
 9. **Implementation Ready** - Specifications are detailed enough for precise development
 10. **Brand Aligned** - Visual choices reflect brand personality while prioritizing usability
+
+## Inspiration File Processing Guidelines
+
+When processing files for visual or functional inspiration:
+
+**For All File Types**:
+1. **Understand Intent**: Why does this design/implementation work?
+2. **Extract Principles**: What universal concepts can we learn?
+3. **Consider Context**: How do our users and requirements differ?
+4. **Innovate Forward**: How can we improve upon what we see?
+5. **Synthesize Uniquely**: Combine insights into something original
+
+**Images (Direct Vision Analysis)**:
+- Claude can see and analyze images directly
+- Extract emotional and design principles, not exact visuals
+- Note what feelings and responses the design evokes
+- Consider accessibility and inclusivity improvements
+
+**HTML Files (Code Analysis)**:
+- Read for patterns and approaches, not code to copy
+- Understand the "why" behind implementation choices
+- Extract architectural concepts and apply to our stack
+- Learn from performance optimizations and accessibility
+
+**PDF Files (Document Analysis)**:
+- Study organization and communication methods
+- Extract documentation and specification approaches
+- Learn from systematic thinking and completeness
+- Adapt formats and structures to our needs
+
+**Creative Transformation Required**:
+- Never replicate designs or code directly
+- Always ask "How can this be better for our specific users?"
+- Combine multiple inspirations into cohesive original direction
+- Ensure legal and ethical distinctiveness
 
 ### Functional Style Guide Requirements
 

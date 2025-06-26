@@ -40,13 +40,37 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
 
 ## Instructions
 
-**PHASE 1: SPECIFICATION ANALYSIS**
+**PHASE 1: SPECIFICATION ANALYSIS & INSPIRATION SYNTHESIS**
 Read and deeply understand all specification files in the OUTPUT_FOLDER:
 - APP_DETAILS.md - Core application concept and requirements
 - PRD.md - Product requirements and user journeys
 - FEATURE_STORIES.md - Detailed user stories and UX considerations
 - STYLE_GUIDE.md - Design system and visual language
 - UI_STATES.md - Screen definitions and state variations
+
+**Visual Inspiration Analysis** (`/assets/inspiration/visual/`):
+- **Images**: Look at each image and extract:
+  - Design emotions and energy levels
+  - Spatial relationships and visual flow
+  - Color psychology and mood creation
+  - Interaction hints and micro-animations
+  - What makes each design successful (principles, not pixels)
+  
+- **HTML Files**: Analyze code for:
+  - Component architecture approaches
+  - Animation implementation strategies  
+  - Responsive design techniques
+  - Performance optimization patterns
+  - Accessibility implementation methods
+
+- **PDF Files**: Study for:
+  - Design system philosophy and structure
+  - Documentation approaches for components
+  - Visual language systematization
+  - Brand expression methods
+
+**Synthesis for Agent Directions**:
+Create PARALLEL_AGENTS unique approaches by combining extracted principles (not copying implementations) into original design philosophies.
 
 Think carefully about how to create `PARALLEL_AGENTS` unique and evolutionary UI design approaches that each explore different creative directions while maintaining spec compliance.
 
@@ -177,6 +201,41 @@ Each Sub Agent must create a self-contained HTML file that includes:
 - Ensure all `PARALLEL_AGENTS` previews provide different perspectives on the same application
 
 Begin execution by launching all `PARALLEL_AGENTS` Sub Agents simultaneously, each with their specific creative direction and file assignment. The goal is to provide the product team with a comprehensive range of UI design approaches to experience and evaluate.
+
+## Inspiration File Processing Guidelines
+
+When processing files for visual or functional inspiration:
+
+**For All File Types**:
+1. **Understand Intent**: Why does this design/implementation work?
+2. **Extract Principles**: What universal concepts can we learn?
+3. **Consider Context**: How do our users and requirements differ?
+4. **Innovate Forward**: How can we improve upon what we see?
+5. **Synthesize Uniquely**: Combine insights into something original
+
+**Images (Direct Vision Analysis)**:
+- Claude can see and analyze images directly
+- Extract emotional and design principles, not exact visuals
+- Note what feelings and responses the design evokes
+- Consider accessibility and inclusivity improvements
+
+**HTML Files (Code Analysis)**:
+- Read for patterns and approaches, not code to copy
+- Understand the "why" behind implementation choices
+- Extract architectural concepts and apply to our stack
+- Learn from performance optimizations and accessibility
+
+**PDF Files (Document Analysis)**:
+- Study organization and communication methods
+- Extract documentation and specification approaches
+- Learn from systematic thinking and completeness
+- Adapt formats and structures to our needs
+
+**Creative Transformation Required**:
+- Never replicate designs or code directly
+- Always ask "How can this be better for our specific users?"
+- Combine multiple inspirations into cohesive original direction
+- Ensure legal and ethical distinctiveness
 
 ## Output Format
 

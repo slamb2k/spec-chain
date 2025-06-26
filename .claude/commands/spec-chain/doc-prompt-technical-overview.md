@@ -35,13 +35,6 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
   <style_guide>
   Read the `OUTPUT_FOLDER/STYLE_GUIDE.md` to understand UI/UX technical requirements (if available).
   </style_guide>
-
-  <functional_inspiration>
-  Check the `/assets/inspiration/functional/` directory for technical architecture reference materials:
-  - HTML files: Study technical implementations including frontend architecture patterns, component structure, state management, API integration, and performance optimization
-  - Documentation files: Analyze architecture diagrams, technology stack decisions, scalability patterns, and security implementation strategies
-  - Code examples: Review best practices, framework usage, and integration approaches
-  </functional_inspiration>
 </user_data>
 
 ## Instructions
@@ -50,7 +43,6 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
 1. **Private reasoning:** Open a `<technical_planning>` tag. Inside it follow the <analysis_checklist>.
     • Analyze PRD features and extract technical requirements for each feature
     • Study technical requirements from APP_DETAILS for platform, performance, scale, and security needs
-    • Analyze files in /assets/inspiration/functional/ for technical architecture patterns and implementations
     • Map features to technology choices and architectural patterns
     • Consider platform-specific technical constraints and opportunities
     • Identify main technologies required for each feature based on requirements
@@ -95,35 +87,28 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
    - Assess real-time vs batch processing needs
    - Evaluate authentication and authorization requirements
 
-4. Analyze technical inspiration materials in /assets/inspiration/functional/:
-   - Study architecture patterns and system designs
-   - Review technology stack decisions and implementations
-   - Identify scalability and performance optimization approaches
-   - Extract security implementation strategies
-   - Note integration patterns and API designs
-
-5. Design system architecture:
+4. Design system architecture:
    - Plan overall system structure and service relationships
    - Design data flow and communication patterns
    - Consider microservices vs monolithic architecture
    - Plan for scalability and performance requirements
    - Design security architecture and access controls
 
-6. Identify technical considerations and questions:
+5. Identify technical considerations and questions:
    - Architecture decisions that need clarification
    - Technology choices that require validation
    - Performance bottlenecks and optimization strategies
    - Security risks and mitigation approaches
    - Integration challenges and solutions
 
-7. Create system diagram:
+6. Create system diagram:
    - Design clean Mermaid diagram showing service relationships
    - Include data flow and communication patterns
    - Show external integrations and dependencies
    - Illustrate security boundaries and access controls
    - Document key architectural decisions
 
-8. Document technical requirements for each feature:
+7. Document technical requirements for each feature:
    - Specify technology stack and frameworks
    - Define performance and scalability requirements
    - Outline security and compliance needs

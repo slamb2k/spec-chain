@@ -32,10 +32,34 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
   </style_guide>
 
   <visual_inspiration>
-  Check the `/assets/inspiration/visual/` directory for VISUAL design reference materials:
-  - HTML files: Study interface states and transitions including loading states, form validation, interactive states, modal behaviors, navigation changes, and data visualization states
-  - Images (PNG/JPG): Analyze state transition examples, UI component variations, visual feedback patterns, animation examples, and screen layout variations
-  - PDF files: Review state documentation patterns, UI specification formats, interaction design examples, and user flow state diagrams
+  Check the `/assets/inspiration/visual/` directory for state design inspiration:
+  
+  **Images (PNG/JPG/GIF)**:
+  - Analyze images directly to understand:
+    - State transition patterns and visual flow
+    - Loading state creativity and user feedback approaches
+    - Error state communication psychology
+    - Success state celebration methods
+    - Empty state engagement strategies
+    - Animated GIFs showing transition timing and easing
+  
+  **HTML Files**:
+  - Study code structure for:
+    - State management implementation patterns
+    - CSS transition and animation approaches
+    - JavaScript state handling concepts
+    - Accessibility state indicators
+    - Performance-conscious state updates
+  
+  **PDF Files**:
+  - Extract state documentation insights:
+    - State diagram organization methods
+    - User flow visualization techniques
+    - Interaction specification formats
+    - State relationship documentation
+  
+  Apply: "Learn the why, create your own how"
+  Generate original state designs inspired by these concepts, never copying directly.
   </visual_inspiration>
 </user_data>
 
@@ -281,6 +305,41 @@ When generating UI states documentation, ensure:
 8. **Animation Purpose** - Use motion to enhance understanding and provide feedback, not decoration
 9. **Platform Conventions** - Follow established patterns for the target platforms
 10. **Implementation Clarity** - Provide detailed specifications that developers can implement precisely
+
+## Inspiration File Processing Guidelines
+
+When processing files for visual or functional inspiration:
+
+**For All File Types**:
+1. **Understand Intent**: Why does this design/implementation work?
+2. **Extract Principles**: What universal concepts can we learn?
+3. **Consider Context**: How do our users and requirements differ?
+4. **Innovate Forward**: How can we improve upon what we see?
+5. **Synthesize Uniquely**: Combine insights into something original
+
+**Images (Direct Vision Analysis)**:
+- Claude can see and analyze images directly
+- Extract emotional and design principles, not exact visuals
+- Note what feelings and responses the design evokes
+- Consider accessibility and inclusivity improvements
+
+**HTML Files (Code Analysis)**:
+- Read for patterns and approaches, not code to copy
+- Understand the "why" behind implementation choices
+- Extract architectural concepts and apply to our stack
+- Learn from performance optimizations and accessibility
+
+**PDF Files (Document Analysis)**:
+- Study organization and communication methods
+- Extract documentation and specification approaches
+- Learn from systematic thinking and completeness
+- Adapt formats and structures to our needs
+
+**Creative Transformation Required**:
+- Never replicate designs or code directly
+- Always ask "How can this be better for our specific users?"
+- Combine multiple inspirations into cohesive original direction
+- Ensure legal and ethical distinctiveness
 
 ### UI States Documentation Requirements
 

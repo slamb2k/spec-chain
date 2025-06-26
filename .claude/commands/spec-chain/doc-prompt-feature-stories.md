@@ -32,10 +32,34 @@ OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
   </style_guide>
 
   <functional_inspiration>
-  Check the `/assets/inspiration/functional/` directory for feature design reference materials:
-  - HTML files: Study feature implementations including user interaction patterns, workflows, navigation, state management, and onboarding flows
-  - Documentation files: Analyze feature specification patterns, user story formats, UX/UI design considerations, and best practices
-  - Screenshots: Review feature interaction patterns, interface layouts, and user experience design patterns
+  Check the `/assets/inspiration/functional/` directory for feature design patterns:
+  
+  **HTML Files**:
+  - Study feature implementations for:
+    - User interaction flow patterns
+    - Form design and validation approaches
+    - Navigation and wayfinding strategies
+    - Progressive disclosure techniques
+    - Accessibility implementation patterns
+    - Error prevention and recovery flows
+  
+  **Images (PNG/JPG)**:
+  - Analyze screenshots and wireframes for:
+    - Feature layout principles
+    - Information hierarchy approaches
+    - User journey visualization methods
+    - Interaction pattern documentation
+    - Mobile vs desktop adaptation strategies
+  
+  **PDF Files**:
+  - Extract feature specification insights:
+    - User story documentation formats
+    - Acceptance criteria structuring
+    - Feature prioritization methods
+    - UX documentation approaches
+    - Workflow diagram techniques
+  
+  Transform these insights into original feature designs suited to our users.
   </functional_inspiration>
 </user_data>
 
@@ -224,6 +248,41 @@ When generating feature stories and UX considerations, ensure:
 8. **Error Prevention** - Potential user errors are anticipated and prevented
 9. **Performance Consideration** - Loading states and performance impacts are planned
 10. **Consistency** - Features work together as a cohesive user experience
+
+## Inspiration File Processing Guidelines
+
+When processing files for visual or functional inspiration:
+
+**For All File Types**:
+1. **Understand Intent**: Why does this design/implementation work?
+2. **Extract Principles**: What universal concepts can we learn?
+3. **Consider Context**: How do our users and requirements differ?
+4. **Innovate Forward**: How can we improve upon what we see?
+5. **Synthesize Uniquely**: Combine insights into something original
+
+**Images (Direct Vision Analysis)**:
+- Claude can see and analyze images directly
+- Extract emotional and design principles, not exact visuals
+- Note what feelings and responses the design evokes
+- Consider accessibility and inclusivity improvements
+
+**HTML Files (Code Analysis)**:
+- Read for patterns and approaches, not code to copy
+- Understand the "why" behind implementation choices
+- Extract architectural concepts and apply to our stack
+- Learn from performance optimizations and accessibility
+
+**PDF Files (Document Analysis)**:
+- Study organization and communication methods
+- Extract documentation and specification approaches
+- Learn from systematic thinking and completeness
+- Adapt formats and structures to our needs
+
+**Creative Transformation Required**:
+- Never replicate designs or code directly
+- Always ask "How can this be better for our specific users?"
+- Combine multiple inspirations into cohesive original direction
+- Ensure legal and ethical distinctiveness
 
 ### Feature Story Requirements
 
