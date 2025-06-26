@@ -279,6 +279,7 @@ Generates complete documentation suite:
 
 **Usage**: `/run-spec-chain [spec-name] [parallel-agents]`
 - `spec-name`: Optional - Output directory name (defaults to timestamp)
+  - Use `_` or `auto` as placeholder to force timestamp naming while specifying other arguments
 - `parallel-agents`: Optional - Number of UI preview agents (defaults to 5)
 - **Automatic Detection**: Analyzes existing documents and generates only what's missing
 - **Dependency Management**: Backs up and regenerates documents that depend on missing documents

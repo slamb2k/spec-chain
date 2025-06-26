@@ -8,6 +8,7 @@ Execute the complete specification chain to generate comprehensive documentation
 - The name of the spec to create/update
 - This becomes the output folder `spec-chain/specs/<spec name>`
 - If not supplied, defaults to timestamp format ("%Y%m%d_%H%M%S")
+- Use `_` or `auto` as placeholder to force timestamp naming while specifying other arguments
 - If the folder already exists, missing documents will be generated and dependent documents will be regenerated as needed
 
 **Argument 2: Parallel Agents (Optional)**
@@ -41,6 +42,18 @@ Analyzes existing documents in `spec-chain/specs/my-app/` and generates only mis
 /run-spec-chain my-app 8
 ```
 Generates 8 different UI design approaches in `spec-chain/specs/my-app/`
+
+**Use timestamp naming with custom parallel agents:**
+```
+/run-spec-chain _ 8
+```
+Generates 8 different UI design approaches in `spec-chain/specs/20240120_143052/` (timestamp-based)
+
+**Alternative placeholder syntax:**
+```
+/run-spec-chain auto 8
+```
+Generates 8 different UI design approaches in `spec-chain/specs/20240120_143052/` (timestamp-based)
 
 ## Overview
 
@@ -320,6 +333,8 @@ All input data is read from the `spec-chain/APP_DETAILS.md` file which contains:
    - **Process Arguments:**
      - Generate timestamp once: `TIMESTAMP=$(date +"%Y%m%d_%H%M%S")`
      - `SPEC_NAME`: First argument (spec name) or use `$TIMESTAMP` if not provided
+       - If first argument is `_` or `auto`, use `$TIMESTAMP` instead
+       - This allows users to force timestamp naming while specifying other arguments
      - `PARALLEL_AGENTS`: Second argument (number of UI preview agents) or default to 5 if not provided
    - **Set Output Directory:**
      - Set `OUTPUT_DIR=spec-chain/specs/$SPEC_NAME`
