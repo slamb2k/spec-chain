@@ -4,7 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Repository Overview
 
-Spec Chain is a Claude Code custom command system that generates comprehensive software documentation from a single APP_DETAILS.md file. It uses 9 specialized prompts that work together to generate 8 core documents with iterative validation for implementation planning. All generated content is isolated in a `.spec-chain` directory for clean project organization and portability.
+Spec Chain is an AI-powered documentation generator that creates comprehensive software documentation from a single APP_DETAILS.md file. It uses 9 specialized prompts that work together to generate 8 core documents with optimized parallel execution and iterative validation for implementation planning. All generated content is isolated in a `.spec-chain` directory for clean project organization and portability.
+
+**Key Features:**
+- **v3.0**: Isolated project structure with `.spec-chain/` directory
+- **v2.0**: File-based architecture with parallel execution using Task agents
+- **Deployment**: Only core commands deployed - development files (prime.md, CLAUDE.md) excluded from packages
 
 ## Project Structure
 
@@ -223,8 +228,60 @@ This ensures the implementation plan comprehensively covers all requirements and
 - **Project Examples**: `.spec-chain/specs/` directory
 - **Implementation Guides**: Individual prompt documentation
 
-## Current Configuration
+## Deployment Strategy
 
-The repository has Claude Code permissions configured in `.claude/settings.local.json` allowing:
-- `ls` command
-- `find` command
+Spec Chain uses a clean deployment approach:
+
+### What Gets Deployed
+- **npm Package**: Only `.claude/commands/spec-chain/` directory
+- **GitHub Releases**: Only spec-chain commands in proper structure
+- **Shell Script**: Downloads only core command files
+- **Manual Installation**: Archives contain only spec-chain functionality
+
+### What Stays in Repository
+- **prime.md**: Development-specific context priming
+- **CLAUDE.md**: This guidance file for repository development
+- **settings.local.json**: Development environment permissions
+- **GitHub workflows**: CI/CD automation
+- **Source files**: README.md, package.json, install scripts
+
+### Deployment Methods
+1. **npm**: `npm install -g claude-spec-chain && claude-spec-chain install`
+2. **Shell script**: `curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/install.sh | bash`
+3. **GitHub releases**: Manual download and extraction
+4. **Git clone**: Full repository for development
+
+## Permissions Configuration
+
+### Dynamic Permissions (Recommended)
+Claude Code will automatically request permissions as spec-chain runs. Users can simply approve each request as it appears.
+
+### Pre-configured Permissions (Optional)
+For a smoother experience, users can pre-configure permissions in their project's `.claude/settings.local.json`:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Read(.spec-chain/**)",
+      "Write(.spec-chain/**)",
+      "Edit(.spec-chain/**)",
+      "MultiEdit(.spec-chain/**)",
+      "Bash(mkdir:.spec-chain/**)",
+      "Bash(ls:.spec-chain/**)",
+      "Bash(pwd)",
+      "Bash(cp:.spec-chain/**)",
+      "Bash(echo:*)",
+      "Bash(date)",
+      "Bash(test:.spec-chain/**)"
+    ]
+  }
+}
+```
+
+### Repository Development Permissions
+This repository has Claude Code permissions configured in `.claude/settings.local.json` for development work:
+- File system operations (`ls`, `find`, `mkdir`, etc.)
+- Read/write access to all project files
+- Git operations for version control
+- Command execution for testing and validation
