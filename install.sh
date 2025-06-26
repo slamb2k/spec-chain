@@ -148,7 +148,6 @@ install_files() {
     
     # List of files to download
     local files=(
-        "commands/prime.md"
         "commands/spec-chain/COMMANDS.md"
         "commands/spec-chain/init-spec-chain.md"
         "commands/spec-chain/validate-spec-chain.md"
@@ -303,7 +302,6 @@ main() {
         echo "  /init-spec-chain    - Initialize a new spec-chain project"
         echo "  /validate-spec-chain - Validate project setup"
         echo "  /run-spec-chain     - Generate documentation"
-        echo "  /prime             - Prime Claude with project context"
         echo ""
         echo "To get started:"
         echo "  1. Open this directory in Claude Code"
@@ -326,7 +324,14 @@ main() {
     echo '      "Read(.spec-chain/**)",'
     echo '      "Write(.spec-chain/**)",'
     echo '      "Edit(.spec-chain/**)",'
-    echo '      "MultiEdit(.spec-chain/**)"'
+    echo '      "MultiEdit(.spec-chain/**)",'
+    echo '      "Bash(mkdir:.spec-chain/**)",'
+    echo '      "Bash(ls:.spec-chain/**)",'
+    echo '      "Bash(pwd)",'
+    echo '      "Bash(cp:.spec-chain/**)",'
+    echo '      "Bash(echo:*)",'
+    echo '      "Bash(date)",'
+    echo '      "Bash(test:.spec-chain/**)"'
     echo '    ]'
     echo '  }'
     echo ""

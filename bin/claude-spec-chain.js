@@ -110,7 +110,6 @@ const commands = {
             console.log('  /init-spec-chain     - Initialize a new spec-chain project');
             console.log('  /validate-spec-chain - Validate project setup');
             console.log('  /run-spec-chain      - Generate documentation');
-            console.log('  /prime              - Prime Claude with project context');
             
             console.log('\nNote: Spec-chain commands are self-documenting. If you want Claude to have');
             console.log('specific context about spec-chain, you can add notes to your project\'s');

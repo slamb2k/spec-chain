@@ -21,6 +21,8 @@ curl -fsSL https://raw.githubusercontent.com/yourusername/spec-chain/main/instal
 
 **Note:** Claude Code runs on Linux. Windows users should use WSL (Windows Subsystem for Linux).
 
+**Security Note:** For security and customization purposes, `CLAUDE.md` and `prime.md` are excluded from all deployment packages. The `prime.md` command contains project-specific context priming and should be customized per project.
+
 ### Other Installation Methods
 
 **Download and extract:**
@@ -301,7 +303,14 @@ If you encounter permission errors when spec-chain tries to create the `.spec-ch
       "Read(.spec-chain/**)",
       "Write(.spec-chain/**)",
       "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)"
+      "MultiEdit(.spec-chain/**)",
+      "Bash(mkdir:.spec-chain/**)",
+      "Bash(ls:.spec-chain/**)",
+      "Bash(pwd)",
+      "Bash(cp:.spec-chain/**)",
+      "Bash(echo:*)",
+      "Bash(date)",
+      "Bash(test:.spec-chain/**)"
     ]
   }
 }

@@ -256,7 +256,14 @@ Claude Code requires explicit permissions for new directories. If you get permis
       "Read(.spec-chain/**)",
       "Write(.spec-chain/**)",
       "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)"
+      "MultiEdit(.spec-chain/**)",
+      "Bash(mkdir:.spec-chain/**)",
+      "Bash(ls:.spec-chain/**)",
+      "Bash(pwd)",
+      "Bash(cp:.spec-chain/**)",
+      "Bash(echo:*)",
+      "Bash(date)",
+      "Bash(test:.spec-chain/**)"
     ]
   }
 }
@@ -271,7 +278,14 @@ echo '{
       "Read(.spec-chain/**)",
       "Write(.spec-chain/**)",
       "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)"
+      "MultiEdit(.spec-chain/**)",
+      "Bash(mkdir:.spec-chain/**)",
+      "Bash(ls:.spec-chain/**)",
+      "Bash(pwd)",
+      "Bash(cp:.spec-chain/**)",
+      "Bash(echo:*)",
+      "Bash(date)",
+      "Bash(test:.spec-chain/**)"
     ]
   }
 }' > .claude/settings.local.json
