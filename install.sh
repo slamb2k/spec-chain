@@ -325,7 +325,8 @@ main() {
     echo '    "allow": ['
     echo '      "Read(.spec-chain/**)",'
     echo '      "Write(.spec-chain/**)",'
-    echo '      "Edit(.spec-chain/**)"'
+    echo '      "Edit(.spec-chain/**)",'
+    echo '      "MultiEdit(.spec-chain/**)"'
     echo '    ]'
     echo '  }'
     echo ""
