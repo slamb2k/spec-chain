@@ -74,26 +74,56 @@ Create PARALLEL_AGENTS unique approaches by combining extracted principles (not 
 
 Think carefully about how to create `PARALLEL_AGENTS` unique and evolutionary UI design approaches that each explore different creative directions while maintaining spec compliance.
 
-**PHASE 2: DYNAMIC CREATIVE DIRECTION PLANNING**
-Dynamically generate `PARALLEL_AGENTS` distinct creative directions for UI preview generation by selecting from and combining these design elements:
+**PHASE 2: CONTEXTUAL CREATIVE DIRECTION MATRIX**
 
-**Design Philosophy Options:**
-- Minimalist Precision, Organic Innovation, Retro-Future Hybrid, Playful Interaction, Professional Elegance
-- Industrial Design, Glass Morphism, Cyberpunk Future, Zen Philosophy, Handcrafted Paper
-- Architectural Brutalism, Digital Minimalism, Neon Synthwave, Art Deco Revival, Scandinavian Simplicity
+Generate truly distinct design directions by grounding each approach in the actual business context, target audience, brand personality, and design requirements extracted from the specification files (APP_DETAILS.md ➞ *Design Requirements* section, PRD user-journeys, FEATURE_STORIES personas, STYLE_GUIDE tokens, etc.).
 
-**Interaction Paradigms:**
-- Gesture-based, Voice-controlled, Haptic feedback, Micro-animations, Parallax scrolling
-- Command-line inspired, Touch-first, Keyboard-centric, Eye-tracking, Motion-sensing
+### 2.1  Derive Core Context
+For each agent, derive the following from the spec files:
+1. **User Persona Archetype** (e.g. "Busy CFO", "College Creator", "Field Technician")
+2. **Brand Personality Keywords** (e.g. "Professional & Calm", "Playful & Bold", "Trustworthy & Secure")
+3. **Primary Usage Environment** (Web Desktop, Mobile Touch-first, Tablet Dashboard, etc.)
+4. **Accessibility Priority** (low-vision, motor-impairment, cognitive load, etc.)
 
-**Visual Themes:**
-- Nature-inspired, Geometric patterns, Vintage aesthetics, Futuristic elements, Cultural motifs
-- Scientific precision, Artistic expression, Gaming influences, Enterprise polish, Social warmth
+### 2.2  Create Direction Matrix
+Build a matrix that combines:
+- **Layout Archetype** (Grid Dashboard, Wizard Flow, Master-Detail, Command Palette, Feed Timeline, Card Kanban)
+- **Interaction Focus** (Data Dense, Workflow Guided, Visual Story, Realtime Control, Form Intensive)
+- **Visual Tone** (chromatic, monochrome, duotone, muted pastel, dark elevated, vibrant gradient)
+- **Motion Vocabulary** (Subtle micro-interactions, Expressive physics, Minimal static, Data-driven anim)
 
-**Technical Approaches:**
-- Component-driven, Animation-heavy, Data-visualization focused, Accessibility-first, Performance-optimized
+Randomly (but deterministically) generate **PARALLEL_AGENTS** unique combinations **with these constraints**:
+1. No two agents share the exact same combination of the four axes.
+2. Each combination must align with **User Persona** & **Brand Personality** (e.g. corporate finance persona ✘ "Playful & Comic Sans").
+3. Each combination must comply with STYLE_GUIDE color / typography unless the brief explicitly allows exploratory deviations.
+4. If inspiration assets exist, bias selection toward patterns extracted in Phase 1 (e.g. if images show “Card Kanban” use that archetype in at least one combination).
 
-For each of the `PARALLEL_AGENTS` agents, intelligently combine 2-3 elements from different categories to create truly unique and innovative design approaches that haven't been explored before. Ensure each combination is distinct and serves the application's specific needs.
+Document the resulting table:
+| Agent | Persona & Brand | Layout | Interaction Focus | Visual Tone | Motion |
+|-------|-----------------|--------|-------------------|-------------|--------|
+| 1 |  |  |  |  |  |
+| … |  |  |  |  |  |
+
+### 2.3  Assign Rationales
+For each agent include a one-paragraph **Rationale** that explains *why* this direction serves the persona and business goals, referencing at least one insight from the inspiration analysis (but **not** copying the design).
+
+### 2.4  Output Brief for Each Agent
+Provide every agent with a concise creative brief containing:
+- **Design Goals** (functional + emotional)
+- **Key References** (which extracted inspiration principles to lean on)
+- **Must-Follow Tokens** (specific colors / typography from STYLE_GUIDE)
+- **Differentiators** (what makes this design distinct from siblings)
+
+Only after the matrix and briefs are produced, proceed to Phase 3.
+Focus on the matrix-derived combinations only—do **not** rely on predefined lists that could lead to repetitive directions. Use real context (persona, brand, environment, accessibility) and inspiration insights to craft each unique creative direction.
+
+For each of the `PARALLEL_AGENTS` agents, derive a distinct combination directly from:
+- **User Persona & Brand Personality** insights
+- **Layout Archetype** possibilities relevant to the app's workflows
+- **Interaction Focus** that best serves key tasks
+- **Visual Tone & Motion Vocabulary** aligned to the emotional goals
+
+Avoid re-using directions from previous runs unless specifications force similarity. Each agent must justify any overlap by context (e.g. strict brand guidelines).
 
 **PHASE 3: PARALLEL AGENT COORDINATION**
 Deploy `PARALLEL_AGENTS` Sub Agents to generate UI previews in parallel for maximum creative diversity and comprehensive design exploration.
