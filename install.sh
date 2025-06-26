@@ -306,7 +306,7 @@ main() {
         echo "To get started:"
         echo "  1. Open this directory in Claude Code"
         echo "  2. Run /init-spec-chain to set up your project"
-        echo "  3. Fill out .spec-chain/APP_DETAILS.md"
+        echo "  3. Fill out spec-chain/APP_DETAILS.md"
         echo "  4. Run /run-spec-chain to generate documentation"
     fi
     
@@ -316,22 +316,22 @@ main() {
     echo ".claude/CLAUDE.md file."
     echo ""
     print_warning "Permission Configuration (if needed):"
-    echo "If you encounter permission errors when spec-chain tries to create the .spec-chain"
+    echo "If you encounter permission errors when spec-chain tries to create the spec-chain"
     echo "directory, add this to your .claude/settings.local.json:"
     echo ""
     echo '  "permissions": {'
     echo '    "allow": ['
-    echo '      "Read(.spec-chain/**)",'
-    echo '      "Write(.spec-chain/**)",'
-    echo '      "Edit(.spec-chain/**)",'
-    echo '      "MultiEdit(.spec-chain/**)",'
-    echo '      "Bash(mkdir:.spec-chain/**)",'
-    echo '      "Bash(ls:.spec-chain/**)",'
+    echo '      "Read(spec-chain/**)",'
+    echo '      "Write(spec-chain/**)",'
+    echo '      "Edit(spec-chain/**)",'
+    echo '      "MultiEdit(spec-chain/**)",'
+    echo '      "Bash(mkdir:spec-chain/**)",'
+    echo '      "Bash(ls:spec-chain/**)",'
     echo '      "Bash(pwd)",'
-    echo '      "Bash(cp:.spec-chain/**)",'
+    echo '      "Bash(cp:spec-chain/**)",'
     echo '      "Bash(echo:*)",'
     echo '      "Bash(date)",'
-    echo '      "Bash(test:.spec-chain/**)"'
+    echo '      "Bash(test:spec-chain/**)"'
     echo '    ]'
     echo '  }'
     echo ""

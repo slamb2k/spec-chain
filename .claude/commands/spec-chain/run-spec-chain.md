@@ -6,7 +6,7 @@ Execute the complete specification chain to generate comprehensive documentation
 
 **Argument 1: Spec Name (Optional)**
 - The name of the spec to create/update
-- This becomes the output folder `.spec-chain/specs/<spec name>`
+- This becomes the output folder `spec-chain/specs/<spec name>`
 - If not supplied, defaults to timestamp format ("%Y%m%d_%H%M%S")
 - If the folder already exists, its contents will be overwritten with newly generated documentation
 
@@ -28,37 +28,37 @@ Execute the complete specification chain to generate comprehensive documentation
 ```
 /run-spec-chain
 ```
-Creates: `.spec-chain/specs/20240120_143052/` with all documents
+Creates: `spec-chain/specs/20240120_143052/` with all documents
 
 **Named spec (full generation):**
 ```
 /run-spec-chain my-app
 ```
-Creates: `.spec-chain/specs/my-app/` with all documents
+Creates: `spec-chain/specs/my-app/` with all documents
 
 **Resume from specific phase:**
 ```
 /run-spec-chain my-app 3
 ```
-Resumes generation from Phase 3 (Technical Architecture) in `.spec-chain/specs/my-app/`
+Resumes generation from Phase 3 (Technical Architecture) in `spec-chain/specs/my-app/`
 
 **Update existing spec from Phase 3:**
 ```
 /run-spec-chain existing-spec 3
 ```
-Overwrites Phase 3+ documents in `.spec-chain/specs/existing-spec/`
+Overwrites Phase 3+ documents in `spec-chain/specs/existing-spec/`
 
 **Specify number of parallel UI design agents:**
 ```
 /run-spec-chain my-app 1 8
 ```
-Generates 8 different UI design approaches in `.spec-chain/specs/my-app/`
+Generates 8 different UI design approaches in `spec-chain/specs/my-app/`
 
 ## Overview
 
 This runner orchestrates the execution of 9 specification chain prompts that generate 8 core documents, managing dependencies and passing outputs between phases. The process transforms a single app idea into a complete documentation suite.
 
-Each execution creates a directory under `.spec-chain/specs/` (e.g., `.spec-chain/specs/my-app/` or `.spec-chain/specs/20240120_143052/`) to:
+Each execution creates a directory under `spec-chain/specs/` (e.g., `spec-chain/specs/my-app/` or `spec-chain/specs/20240120_143052/`) to:
 - Preserve historical documentation versions
 - Enable comparison between different generations
 - Support iterative refinement without overwriting previous work
@@ -72,8 +72,8 @@ Each execution creates a directory under `.spec-chain/specs/` (e.g., `.spec-chai
 Before proceeding with any operations, verify that this command is being run from a directory initialized with spec-chain:
 
 1. **Check for required project indicators:**
-   - Use LS tool to check if `.spec-chain/` directory exists
-   - Use LS tool to check if `.spec-chain/specs/` directory exists
+   - Use LS tool to check if `spec-chain/` directory exists
+   - Use LS tool to check if `spec-chain/specs/` directory exists
 
 2. **If any indicators are missing:**
    - Display error message:
@@ -84,7 +84,7 @@ Before proceeding with any operations, verify that this command is being run fro
      - [list specific missing items]
      
      Please ensure you are in the correct directory that contains:
-     - .spec-chain/ directory (initialized spec-chain project)
+     - spec-chain/ directory (initialized spec-chain project)
      - Run '/init-spec-chain' to initialize a new project
      
      Current working directory: [show current path using pwd]
@@ -95,26 +95,26 @@ Before proceeding with any operations, verify that this command is being run fro
    - Log: "✅ Project root verified. Proceeding with spec-chain generation..."
    - Continue to Step 1
 
-### Step 1: Initialize .spec-chain/APP_DETAILS.md
+### Step 1: Initialize spec-chain/APP_DETAILS.md
 
-1. **Check for existing .spec-chain/APP_DETAILS.md:**
-   - Check if `.spec-chain/APP_DETAILS.md` exists
+1. **Check for existing spec-chain/APP_DETAILS.md:**
+   - Check if `spec-chain/APP_DETAILS.md` exists
    - If it doesn't exist:
-     - Create `.spec-chain/APP_DETAILS.md` using the embedded template from init-spec-chain.md
-     - Log: "Created .spec-chain/APP_DETAILS.md from embedded template"
+     - Create `spec-chain/APP_DETAILS.md` using the embedded template from init-spec-chain.md
+     - Log: "Created spec-chain/APP_DETAILS.md from embedded template"
 
-2. **Parse .spec-chain/APP_DETAILS.md structure:**
-   - Read the .spec-chain/APP_DETAILS.md file
+2. **Parse spec-chain/APP_DETAILS.md structure:**
+   - Read the spec-chain/APP_DETAILS.md file
    - Extract all sections and their current values
    - Identify REQUIRED vs OPTIONAL fields based on the embedded template structure
    - Determine which fields are empty or contain placeholder text
 
 ### Step 2: Show Current Status Summary
 
-Display a summary of the current .spec-chain/APP_DETAILS.md status:
+Display a summary of the current spec-chain/APP_DETAILS.md status:
 
 ```
-**.spec-chain/APP_DETAILS.md Status Summary:**
+**spec-chain/APP_DETAILS.md Status Summary:**
 
 **REQUIRED Fields:**
 ✅ App Name: [Current value or "❌ Missing"]
@@ -235,7 +235,7 @@ For each empty optional field, ask ONE AT A TIME:
 - If user types 'skipall': Mark all remaining fields for auto-research and proceed to Step 5
 - Any other input: Use as the field value
 
-### Step 5: Auto-Research and Finalize .spec-chain/APP_DETAILS.md
+### Step 5: Auto-Research and Finalize spec-chain/APP_DETAILS.md
 
 1. **Perform Auto-Research for Marked Fields:**
    - If any fields were marked for auto-research, notify user: "Performing auto-research for skipped fields. This may take a moment..."
@@ -258,7 +258,7 @@ For each empty optional field, ask ONE AT A TIME:
 
 2. **Combine and Format Data:**
    - Merge existing data with newly gathered information and auto-researched content
-   - Format according to the .spec-chain/APP_DETAILS.md template structure
+   - Format according to the spec-chain/APP_DETAILS.md template structure
    - Ensure all sections are complete and properly formatted
 
 3. **Save to Output Directory:**
@@ -266,8 +266,8 @@ For each empty optional field, ask ONE AT A TIME:
    - This ensures all generation steps use the same comprehensive data
 
 4. **Offer to Update Root File:**
-   - Ask: "Would you like to update the .spec-chain/APP_DETAILS.md file with this complete information? (yes/no)"
-   - If yes: Save the updated content to `.spec-chain/APP_DETAILS.md`
+   - Ask: "Would you like to update the spec-chain/APP_DETAILS.md file with this complete information? (yes/no)"
+   - If yes: Save the updated content to `spec-chain/APP_DETAILS.md`
    - If no: Keep the complete version only in the output directory
    - Log the user's choice and file locations
 
@@ -301,17 +301,17 @@ Total: 8+ documents generated across 5 phases (includes Implementation Plan + va
 ## Prerequisites
 
 1. Ensure all doc-prompt-*.md prompt files are present in the `.claude/commands/spec-chain/` directory
-2. .spec-chain/APP_DETAILS.md is optional - the system will:
-   - Use existing `.spec-chain/APP_DETAILS.md` if present
+2. spec-chain/APP_DETAILS.md is optional - the system will:
+   - Use existing `spec-chain/APP_DETAILS.md` if present
    - Ask questions to gather missing information
    - Auto-research optional fields if not provided
 3. Optionally, organize inspiration materials:
-   - Place visual references in `.spec-chain/assets/inspiration/visual/` (colors, styles, typography, effects)
-   - Place functional references in `.spec-chain/assets/inspiration/functional/` (layouts, workflows, interactions)
+   - Place visual references in `spec-chain/assets/inspiration/visual/` (colors, styles, typography, effects)
+   - Place functional references in `spec-chain/assets/inspiration/functional/` (layouts, workflows, interactions)
 
 ## Input Source
 
-All input data is read from the `.spec-chain/APP_DETAILS.md` file which contains:
+All input data is read from the `spec-chain/APP_DETAILS.md` file which contains:
 - Basic Information (App Name, Idea, MVP Features)
 - Target Users (Primary and Secondary)
 - Business Context (Market, Competition, Model, Constraints)
@@ -334,21 +334,21 @@ All input data is read from the `.spec-chain/APP_DETAILS.md` file which contains
      - `START_PHASE`: Second argument (phase number) or default to 1 if not provided
      - `PARALLEL_AGENTS`: Third argument (number of UI preview agents) or default to 5 if not provided
    - **Set Output Directory:**
-     - Set `OUTPUT_DIR=.spec-chain/specs/$SPEC_NAME`
+     - Set `OUTPUT_DIR=spec-chain/specs/$SPEC_NAME`
      - Create output directory: `mkdir -p $OUTPUT_DIR`
      - If directory exists and contains files, log: "Overwriting existing spec directory: $OUTPUT_DIR"
    - **Initialize Data Sources:**
-     - **Validate .spec-chain/APP_DETAILS.md Structure:**
+     - **Validate spec-chain/APP_DETAILS.md Structure:**
        - Use the embedded template structure from init-spec-chain.md as reference
        - Extract expected section headers from the known template structure
-       - Extract section headers from current APP_DETAILS.md: `grep -E '^##|^###' .spec-chain/APP_DETAILS.md | sort`
+       - Extract section headers from current APP_DETAILS.md: `grep -E '^##|^###' spec-chain/APP_DETAILS.md | sort`
        - Compare against expected sections from embedded template
        - If missing sections found:
-         - Log: "⚠️ Missing sections detected in .spec-chain/APP_DETAILS.md"
-         - Create backup: `cp .spec-chain/APP_DETAILS.md .spec-chain/APP_DETAILS.md.backup`
-         - Append missing sections from embedded template structure to .spec-chain/APP_DETAILS.md
-         - Log: "✅ Missing sections restored from embedded template. Backup saved as .spec-chain/APP_DETAILS.md.backup"
-       - If no missing sections: Log: "✅ .spec-chain/APP_DETAILS.md structure is complete"
+         - Log: "⚠️ Missing sections detected in spec-chain/APP_DETAILS.md"
+         - Create backup: `cp spec-chain/APP_DETAILS.md spec-chain/APP_DETAILS.md.backup`
+         - Append missing sections from embedded template structure to spec-chain/APP_DETAILS.md
+         - Log: "✅ Missing sections restored from embedded template. Backup saved as spec-chain/APP_DETAILS.md.backup"
+       - If no missing sections: Log: "✅ spec-chain/APP_DETAILS.md structure is complete"
      - Read APP_DETAILS from either `$OUTPUT_DIR/APP_DETAILS.md` (if newly created) or `APP_DETAILS.md` (if existing)
      - Extract all sections for use in subsequent prompts
 
@@ -406,9 +406,9 @@ All input data is read from the `.spec-chain/APP_DETAILS.md` file which contains
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load APP_DETAILS.md from `.spec-chain/specs/$SPEC_NAME/APP_DETAILS.md`
+     - Load APP_DETAILS.md from `spec-chain/specs/$SPEC_NAME/APP_DETAILS.md`
      - Generate comprehensive PRD based on complete application details
-     - Save PRD to `.spec-chain/specs/$SPEC_NAME/PRD.md`
+     - Save PRD to `spec-chain/specs/$SPEC_NAME/PRD.md`
      - Handle all file persistence internally
 
    **Note**: This document becomes the foundation for all subsequent documents
@@ -448,9 +448,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Generate comprehensive feature stories based on PRD
-     - Save output to `.spec-chain/specs/$SPEC_NAME/FEATURE_STORIES.md`
+     - Save output to `spec-chain/specs/$SPEC_NAME/FEATURE_STORIES.md`
      - Handle all file persistence internally
 
 2. **Generate Technical Overview** (Depends on PRD + APP_DETAILS)
@@ -459,9 +459,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Generate comprehensive technical overview based on PRD and APP_DETAILS
-     - Save output to `.spec-chain/specs/$SPEC_NAME/TECHNICAL_OVERVIEW.md`
+     - Save output to `spec-chain/specs/$SPEC_NAME/TECHNICAL_OVERVIEW.md`
      - Handle all file persistence internally
 
 3. **Generate Style Guide** (Depends on PRD + APP_DETAILS) - **PARALLEL EXECUTION**
@@ -470,9 +470,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Generate comprehensive style guide based on PRD and APP_DETAILS
-     - Save output to `.spec-chain/specs/$SPEC_NAME/STYLE_GUIDE.md`
+     - Save output to `spec-chain/specs/$SPEC_NAME/STYLE_GUIDE.md`
      - Handle all file persistence internally
 
 **Note**: Tasks 1, 2, and 3 can run simultaneously as they only depend on Phase 1 outputs
@@ -490,9 +490,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Generate comprehensive UI states based on PRD, Feature Stories, and Style Guide
-     - Save output to `.spec-chain/specs/$SPEC_NAME/UI_STATES.md`
+     - Save output to `spec-chain/specs/$SPEC_NAME/UI_STATES.md`
      - Handle all file persistence internally
 
 2. **Generate Interactive UI Preview** (Depends on Style Guide and UI States)
@@ -503,7 +503,7 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the second instance of `$ARGUMENTS` in the Variables section with `$PARALLEL_AGENTS` (defaults to 5 if not provided)
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Deploy `$PARALLEL_AGENTS` sub-agents to generate multiple UI design approaches
      - Generate `$PARALLEL_AGENTS` interactive UI preview files (UI_PREVIEW_1.html through UI_PREVIEW_N.html)
      - Handle all file persistence internally
@@ -518,9 +518,9 @@ Phase 5: Implementation Planning (depends on Technical Spec)
    - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
    - Execute the updated command as a prompt
    - The prompt will:
-     - Load all required documents from `.spec-chain/specs/$SPEC_NAME/` directory
+     - Load all required documents from `spec-chain/specs/$SPEC_NAME/` directory
      - Generate comprehensive technical specification based on all previous documents
-     - Save output to `.spec-chain/specs/$SPEC_NAME/TECHNICAL_SPEC.md`
+     - Save output to `spec-chain/specs/$SPEC_NAME/TECHNICAL_SPEC.md`
      - Handle all file persistence internally
 
 ### Phase 5: Planning & Implementation Rules (Sequential after Phase 4)
@@ -529,12 +529,12 @@ Phase 5: Implementation Planning (depends on Technical Spec)
 
 5.1. **Load Playbooks and Rules**
    - **Check for Playbook Directory:**
-     - If `.spec-chain/assets/playbooks/` directory exists, proceed with loading
+     - If `spec-chain/assets/playbooks/` directory exists, proceed with loading
      - If directory doesn't exist, log: "No playbooks directory found, skipping rule loading"
      - Continue to Post-Generation phase
 
    - **Scan Playbook Files:**
-     - List all files in `.spec-chain/assets/playbooks/` directory
+     - List all files in `spec-chain/assets/playbooks/` directory
      - Include subdirectories and organize by category
      - Supported file types: `.md`, `.txt`, `.json`, `.yaml`, `.yml`
      - Log: "Found playbook files: [list of files with paths]"
@@ -557,27 +557,27 @@ Phase 5: Implementation Planning (depends on Technical Spec)
      **Playbooks and Rules Loaded for Planning/Implementation:**
 
      **Planning Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional planning rule sets...]
 
      **Implementation Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional implementation rule sets...]
 
      **Quality Assurance Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional quality rule sets...]
 
      **Deployment & Operations Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional deployment rule sets...]
 
      **Team & Collaboration Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional team rule sets...]
 
      **Custom/Specialized Rules:**
-     - [Rule Set Name]: [Brief description] (Source: .spec-chain/assets/playbooks/[filename])
+     - [Rule Set Name]: [Brief description] (Source: spec-chain/assets/playbooks/[filename])
      - [Additional custom rule sets...]
 
      **Total Rule Sets Loaded**: [Number] rule sets from [Number] files
@@ -606,11 +606,11 @@ Phase 5: Implementation Planning (depends on Technical Spec)
        - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
        - Execute the updated command as a prompt
        - The prompt will:
-         - Load all required documents from `.spec-chain/.spec-chain/specs/$SPEC_NAME/` directory
-         - Load playbooks from `.spec-chain/.spec-chain/assets/playbooks/` directory
+         - Load all required documents from `spec-chain/spec-chain/specs/$SPEC_NAME/` directory
+         - Load playbooks from `spec-chain/spec-chain/assets/playbooks/` directory
          - Load previous plan and validation feedback if ITERATION_COUNT > 1
          - Generate comprehensive implementation plan
-         - Save output to `.spec-chain/.spec-chain/specs/$SPEC_NAME/IMPLEMENTATION_PLAN.md`
+         - Save output to `spec-chain/spec-chain/specs/$SPEC_NAME/IMPLEMENTATION_PLAN.md`
          - Handle all file persistence internally
 
        // Validate Implementation Plan
@@ -618,11 +618,11 @@ Phase 5: Implementation Planning (depends on Technical Spec)
        - Update the first instance of `$ARGUMENTS` in the Variables section with `$SPEC_NAME`
        - Execute the updated command as a prompt
        - The prompt will:
-         - Load all required documents from `.spec-chain/.spec-chain/specs/$SPEC_NAME/` directory
+         - Load all required documents from `spec-chain/spec-chain/specs/$SPEC_NAME/` directory
          - Load the current implementation plan
          - Determine current iteration number from existing validation reports
          - Generate comprehensive validation report
-         - Save output to `.spec-chain/.spec-chain/specs/$SPEC_NAME/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
+         - Save output to `spec-chain/spec-chain/specs/$SPEC_NAME/VALIDATION_REPORT_v${ITERATION_COUNT}.md`
          - Handle all file persistence internally
 
        // Check Validation Results
@@ -681,7 +681,7 @@ Upon completion, provide a summary including the following information. This sum
 
 1. **Generation Details**:
    - Spec name: `$SPEC_NAME`
-   - Output directory: `$OUTPUT_DIR` (e.g., `.spec-chain/specs/my-app` or `.spec-chain/specs/20240120_143052`)
+   - Output directory: `$OUTPUT_DIR` (e.g., `spec-chain/specs/my-app` or `spec-chain/specs/20240120_143052`)
    - Generation mode: Interactive with Auto-Research
    - Start phase: `$START_PHASE`
    - Generation timestamp: `$TIMESTAMP`
@@ -724,10 +724,10 @@ Upon completion, provide a summary including the following information. This sum
      - [etc.]
    
    If clarification items were found, include this note:
-   > **Note:** The above clarification items indicate areas where additional information in .spec-chain/APP_DETAILS.md would improve the generated documentation. Consider adding these details to .spec-chain/APP_DETAILS.md and re-running the spec-chain process for more comprehensive results.
+   > **Note:** The above clarification items indicate areas where additional information in spec-chain/APP_DETAILS.md would improve the generated documentation. Consider adding these details to spec-chain/APP_DETAILS.md and re-running the spec-chain process for more comprehensive results.
    
    If no clarification items were found:
-   > **Note:** No clarification requests were recorded. The provided .spec-chain/APP_DETAILS.md contained sufficient information for comprehensive documentation generation.
+   > **Note:** No clarification requests were recorded. The provided spec-chain/APP_DETAILS.md contained sufficient information for comprehensive documentation generation.
 
 6. **Next Steps**:
 
@@ -739,13 +739,13 @@ Upon completion, provide a summary including the following information. This sum
 
    **Implementation Phase:**
    - Begin implementation using the Implementation Plan
-   - Follow any loaded playbook rules from `.spec-chain/assets/playbooks/`
+   - Follow any loaded playbook rules from `spec-chain/assets/playbooks/`
    - Use validation reports to ensure comprehensive coverage
 
    **Iterative Improvement:**
    - Address any clarification requests found in the generated documents
-   - Update .spec-chain/APP_DETAILS.md with new insights for future iterations
-   - Re-run spec chain with updated .spec-chain/APP_DETAILS.md for refined documentation
+   - Update spec-chain/APP_DETAILS.md with new insights for future iterations
+   - Re-run spec chain with updated spec-chain/APP_DETAILS.md for refined documentation
 
 ### Summary Output Requirements
 
@@ -764,10 +764,10 @@ Output Directory: $OUTPUT_DIR
 
 ---
 
-This documentation was generated by the Spec Chain system. All files in this directory represent a complete application specification suite based on the .spec-chain/APP_DETAILS.md input file.
+This documentation was generated by the Spec Chain system. All files in this directory represent a complete application specification suite based on the spec-chain/APP_DETAILS.md input file.
 ```
 
-3. **Create Symlink**: Execute `ln -sfn $OUTPUT_DIR .spec-chain/specs/latest` to create a symlink pointing to this generation
+3. **Create Symlink**: Execute `ln -sfn $OUTPUT_DIR spec-chain/specs/latest` to create a symlink pointing to this generation
 
 ## Error Handling
 
@@ -853,9 +853,9 @@ The system automatically determines which documents to generate based on app cha
 
 Remember: The PRD is always required as it feeds all other documents.
 
-## .spec-chain/APP_DETAILS.md Usage Summary
+## spec-chain/APP_DETAILS.md Usage Summary
 
-The runner extracts the following information from .spec-chain/APP_DETAILS.md:
+The runner extracts the following information from spec-chain/APP_DETAILS.md:
 
 ### Direct Extractions:
 - **App Name**: Used in all prompts

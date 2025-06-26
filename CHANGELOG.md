@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.0.0] - 2025-01-XX
 
 ### 🎯 Major Features
-- **Isolated Project Structure**: Complete isolation with `.spec-chain/` directory
+- **Isolated Project Structure**: Complete isolation with `spec-chain/` directory
 - **Clean Deployment Strategy**: Only core commands deployed, development files excluded
 - **Enhanced Documentation**: Comprehensive README, INSTALL, and CLAUDE guidance
 - **Multiple Installation Methods**: npm, shell script, GitHub releases, manual download
 
 ### ✨ Added
-- **Project Isolation**: All spec-chain files now in `.spec-chain/` directory
+- **Project Isolation**: All spec-chain files now in `spec-chain/` directory
 - **Clean Installation**: Only `.claude/commands/spec-chain/` deployed to user projects
 - **Development Separation**: `prime.md`, `CLAUDE.md`, `settings.local.json` excluded from packages
 - **Repository Structure**: Clear separation between development and user experience
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Comprehensive Documentation**: Updated README, INSTALL, CLAUDE, and COMMANDS guides
 
 ### 🔄 Changed
-- **Directory Structure**: Moved from project root to `.spec-chain/` isolation
+- **Directory Structure**: Moved from project root to `spec-chain/` isolation
 - **Deployment Strategy**: Simplified to include only core commands
 - **File Organization**: Moved COMMANDS.md to spec-chain subdirectory
 - **Installation Process**: Streamlined with consistent exclusions across all methods

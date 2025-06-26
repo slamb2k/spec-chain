@@ -4,9 +4,9 @@ This command validates that all required files, directories, and fields are prop
 
 ## What This Command Validates
 
-1. **Directory Structure**: Checks for required .spec-chain directories
-2. **File Existence**: Verifies all necessary files are present in .spec-chain
-3. **.spec-chain/APP_DETAILS.md Completeness**: Validates that all required fields are populated
+1. **Directory Structure**: Checks for required spec-chain directories
+2. **File Existence**: Verifies all necessary files are present in spec-chain
+3. **spec-chain/APP_DETAILS.md Completeness**: Validates that all required fields are populated
 4. **Inspiration Assets**: Checks for presence of inspiration materials
 5. **Previous Generations**: Reviews documentation history
 
@@ -24,19 +24,19 @@ This command uses Claude Code's file system tools (Read, LS, Glob) to perform al
 ### 1. Directory Structure Check
 
 The following directories are validated:
-- `.spec-chain` - Root directory for spec-chain project
-- `.spec-chain/specs` - For generated documentation output
-- `.spec-chain/assets/inspiration/visual` - For visual inspiration materials
-- `.spec-chain/assets/inspiration/functional` - For functional inspiration materials
+- `spec-chain` - Root directory for spec-chain project
+- `spec-chain/specs` - For generated documentation output
+- `spec-chain/assets/inspiration/visual` - For visual inspiration materials
+- `spec-chain/assets/inspiration/functional` - For functional inspiration materials
 - `.claude/commands/spec-chain` - For spec-chain command files (in the spec-chain package)
 
 ### 2. Required Files Check
 
 Validates the existence and quality of:
-- **.spec-chain/APP_DETAILS.md** - The actual project configuration file
+- **spec-chain/APP_DETAILS.md** - The actual project configuration file
 - **Spec-chain prompts** (9 files in `.claude/commands/spec-chain/`)
 
-### 3. .spec-chain/APP_DETAILS.md Content Validation
+### 3. spec-chain/APP_DETAILS.md Content Validation
 
 Examines each required field for:
 - ❌ **Missing**: Field header not found
@@ -52,7 +52,7 @@ Counts and categorizes files in inspiration directories:
 
 ### 5. Readiness Analysis
 
-Based on .spec-chain/APP_DETAILS.md completeness:
+Based on spec-chain/APP_DETAILS.md completeness:
 - **< 50% Complete**: Recommends completing interactive information gathering first
 - **≥ 50% Complete**: Ready for comprehensive documentation generation
 
@@ -76,7 +76,7 @@ The validation report uses:
 
 Validation is successful when:
 - All required directories exist
-- .spec-chain/APP_DETAILS.md exists with substantial content
+- spec-chain/APP_DETAILS.md exists with substantial content
 - All 9 spec-chain prompts are present
 - No critical errors are found
 

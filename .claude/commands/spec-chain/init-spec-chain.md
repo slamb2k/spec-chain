@@ -5,12 +5,12 @@ This command initializes a new Spec Chain project by creating the required direc
 ## What This Command Does
 
 1. Creates the required directory structure:
-   - `.spec-chain/` - Root directory for all spec-chain files
-   - `.spec-chain/specs/` - Where all generated documentation will be stored
-   - `.spec-chain/assets/inspiration/visual/` - For visual design references
-   - `.spec-chain/assets/inspiration/functional/` - For functional design references
+   - `spec-chain/` - Root directory for all spec-chain files
+   - `spec-chain/specs/` - Where all generated documentation will be stored
+   - `spec-chain/assets/inspiration/visual/` - For visual design references
+   - `spec-chain/assets/inspiration/functional/` - For functional design references
 
-2. Creates `.spec-chain/APP_DETAILS.md` from the embedded template with:
+2. Creates `spec-chain/APP_DETAILS.md` from the embedded template with:
    - Detailed comments explaining each section
    - Clear marking of required vs optional fields
    - Guidance on what information to provide
@@ -22,24 +22,24 @@ This command initializes a new Spec Chain project by creating the required direc
 
 ```bash
 # Create main spec-chain directory and subdirectories
-mkdir -p .spec-chain/specs 2>&1 || {
-    echo "❌ Permission denied creating .spec-chain directory"
+mkdir -p spec-chain/specs 2>&1 || {
+    echo "❌ Permission denied creating spec-chain directory"
     echo ""
     echo "To fix this, add the following to your .claude/settings.local.json:"
     echo '{'
     echo '  "permissions": {'
     echo '    "allow": ['
-    echo '      "Read(.spec-chain/**)",'
-    echo '      "Write(.spec-chain/**)",'
-    echo '      "Edit(.spec-chain/**)",'
-    echo '      "MultiEdit(.spec-chain/**)",'
-    echo '      "Bash(mkdir:.spec-chain/**)",'
-    echo '      "Bash(ls:.spec-chain/**)",'
+    echo '      "Read(spec-chain/**)",'
+    echo '      "Write(spec-chain/**)",'
+    echo '      "Edit(spec-chain/**)",'
+    echo '      "MultiEdit(spec-chain/**)",'
+    echo '      "Bash(mkdir:spec-chain/**)",'
+    echo '      "Bash(ls:spec-chain/**)",'
     echo '      "Bash(pwd)",'
-    echo '      "Bash(cp:.spec-chain/**)",'
+    echo '      "Bash(cp:spec-chain/**)",'
     echo '      "Bash(echo:*)",'
     echo '      "Bash(date)",'
-    echo '      "Bash(test:.spec-chain/**)"'
+    echo '      "Bash(test:spec-chain/**)"'
     echo '    ]'
     echo '  }'
     echo '}'
@@ -49,8 +49,8 @@ mkdir -p .spec-chain/specs 2>&1 || {
 }
 
 # Create inspiration directories
-mkdir -p .spec-chain/assets/inspiration/visual
-mkdir -p .spec-chain/assets/inspiration/functional
+mkdir -p spec-chain/assets/inspiration/visual
+mkdir -p spec-chain/assets/inspiration/functional
 
 # Create placeholder files in inspiration directories
 echo "# Visual Inspiration Assets
@@ -68,7 +68,7 @@ Visual elements to capture:
 - Spacing and padding systems
 - Border styles and shadows
 - Button and form styling
-- Animation and transition effects" > .spec-chain/assets/inspiration/visual/README.md
+- Animation and transition effects" > spec-chain/assets/inspiration/visual/README.md
 
 echo "# Functional Inspiration Assets
 
@@ -85,26 +85,26 @@ Functional elements to capture:
 - Form structures and field arrangements
 - Multi-step processes and wizards
 - Data tables and list views
-- Modal dialogs and overlays" > .spec-chain/assets/inspiration/functional/README.md
+- Modal dialogs and overlays" > spec-chain/assets/inspiration/functional/README.md
 ```
 
-### 2. Create .spec-chain/APP_DETAILS.md
+### 2. Create spec-chain/APP_DETAILS.md
 
-Create `.spec-chain/APP_DETAILS.md` if it doesn't exist, using the embedded template content below:
+Create `spec-chain/APP_DETAILS.md` if it doesn't exist, using the embedded template content below:
 
 ```bash
 # Check if APP_DETAILS.md needs to be created
-if [ ! -f ".spec-chain/APP_DETAILS.md" ]; then
-    echo "✅ Creating .spec-chain/APP_DETAILS.md from template"
-    echo "📝 Please fill out the required sections in .spec-chain/APP_DETAILS.md"
+if [ ! -f "spec-chain/APP_DETAILS.md" ]; then
+    echo "✅ Creating spec-chain/APP_DETAILS.md from template"
+    echo "📝 Please fill out the required sections in spec-chain/APP_DETAILS.md"
     # Create the file with the template content (see below)
 else
-    echo "⚠️  .spec-chain/APP_DETAILS.md already exists"
-    echo "✅ Keeping existing .spec-chain/APP_DETAILS.md"
+    echo "⚠️  spec-chain/APP_DETAILS.md already exists"
+    echo "✅ Keeping existing spec-chain/APP_DETAILS.md"
 fi
 ```
 
-When creating `.spec-chain/APP_DETAILS.md`, use the following template content:
+When creating `spec-chain/APP_DETAILS.md`, use the following template content:
 
 ```markdown
 # APP_DETAILS.md
@@ -266,23 +266,23 @@ After creating all files and directories, display:
 ✅ Spec Chain project initialized successfully!
 
 Created directories:
-- .spec-chain/ (root directory for all spec-chain files)
-- .spec-chain/specs/ (for generated documentation)
-- .spec-chain/assets/inspiration/visual/ (for visual design references)
-- .spec-chain/assets/inspiration/functional/ (for functional design references)
+- spec-chain/ (root directory for all spec-chain files)
+- spec-chain/specs/ (for generated documentation)
+- spec-chain/assets/inspiration/visual/ (for visual design references)
+- spec-chain/assets/inspiration/functional/ (for functional design references)
 
 Created files:
-- .spec-chain/APP_DETAILS.md (application details template)
-- .spec-chain/assets/inspiration/visual/README.md (visual inspiration guide)
-- .spec-chain/assets/inspiration/functional/README.md (functional inspiration guide)
+- spec-chain/APP_DETAILS.md (application details template)
+- spec-chain/assets/inspiration/visual/README.md (visual inspiration guide)
+- spec-chain/assets/inspiration/functional/README.md (functional inspiration guide)
 
 Next steps:
-1. Fill out .spec-chain/APP_DETAILS.md with your application details
+1. Fill out spec-chain/APP_DETAILS.md with your application details
    - The interactive information gathering will guide you through completing any missing fields
    - Fill out as many sections as possible for the most detailed generation
 2. Add inspiration materials to the appropriate directories:
-   - Visual designs → .spec-chain/assets/inspiration/visual/
-   - Functional examples → .spec-chain/assets/inspiration/functional/
+   - Visual designs → spec-chain/assets/inspiration/visual/
+   - Functional examples → spec-chain/assets/inspiration/functional/
 3. Run the spec-chain generator to create your comprehensive documentation
 
 To generate documentation after setup:
@@ -293,9 +293,9 @@ To generate documentation after setup:
 ## Error Handling
 
 Check if files/directories already exist before creating:
-- If `.spec-chain/APP_DETAILS.md` exists, validate structure against template and add missing sections
+- If `spec-chain/APP_DETAILS.md` exists, validate structure against template and add missing sections
 - If directories exist, skip creation but note they already existed
 - Always use the embedded template content defined in this command
 - Validate APP_DETAILS.md structure and restore missing sections from template
-- Create backup before modifying existing .spec-chain/APP_DETAILS.md
+- Create backup before modifying existing spec-chain/APP_DETAILS.md
 - Report what was created vs what already existed vs what was validated/updated

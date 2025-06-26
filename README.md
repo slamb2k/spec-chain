@@ -2,7 +2,7 @@
 
 A comprehensive system of AI prompts that work together to generate complete product documentation from a single app idea. This repository contains the spec-chain methodology for creating full documentation suites using AI with optimized parallel execution and simplified file-based operations.
 
-**Use spec-chain in any project:** Simply run `/init-spec-chain` in any directory to initialize it for spec-chain usage. All generated content is isolated in a `.spec-chain` directory for portability and clean project organization.
+**Use spec-chain in any project:** Simply run `/init-spec-chain` in any directory to initialize it for spec-chain usage. All generated content is isolated in a `spec-chain` directory for portability and clean project organization.
 
 ## 📦 Installation
 
@@ -50,9 +50,9 @@ claude-spec-chain install
 Spec Chain is a collection of 9 carefully crafted AI prompts that generate 8 core documents with iterative validation for comprehensive software documentation. Each prompt is designed to produce specific documentation that builds upon previous outputs, creating a complete specification suite. All documentation is generated from a single `APP_DETAILS.md` file and optional inspiration materials.
 
 ### ⚡ **New in v3.0**: Isolated Project Structure
-- **Isolated Generation**: All spec-chain files now live in `.spec-chain/` directory
+- **Isolated Generation**: All spec-chain files now live in `spec-chain/` directory
 - **Portable Commands**: Initialize and run spec-chain in any project directory
-- **Easy Verification**: Simple check for `.spec-chain/` directory confirms initialization
+- **Easy Verification**: Simple check for `spec-chain/` directory confirms initialization
 - **Any Directory**: Works in any folder after running `/init-spec-chain`
 
 ### **v2.0 Features**: Simplified Execution & Parallel Processing
@@ -218,7 +218,7 @@ This is what any project directory will look like after you initialize spec-chai
 
 ```
 your-project/                       # Any existing project directory
-├── .spec-chain/                    # Created by /init-spec-chain
+├── spec-chain/                    # Created by /init-spec-chain
 │   ├── APP_DETAILS.md              # Your application details and requirements
 │   ├── assets/
 │   │   ├── inspiration/
@@ -256,16 +256,16 @@ your-project/                       # Any existing project directory
 
 ### 🎲 init-spec-chain
 Initializes spec-chain in the current directory:
-- Creates `.spec-chain/` directory structure
-- Generates `.spec-chain/APP_DETAILS.md` from embedded template with detailed instructions
-- Sets up `.spec-chain/assets/inspiration/` directories with guides
+- Creates `spec-chain/` directory structure
+- Generates `spec-chain/APP_DETAILS.md` from embedded template with detailed instructions
+- Sets up `spec-chain/assets/inspiration/` directories with guides
 - Works in any directory - transforms it into a spec-chain enabled project
 
 ### ✅ validate-spec-chain
 Validates spec-chain setup in the current directory:
-- Checks `.spec-chain/` directory exists and is properly initialized
-- Validates `.spec-chain/APP_DETAILS.md` completeness
-- Reports on inspiration materials in `.spec-chain/assets/`
+- Checks `spec-chain/` directory exists and is properly initialized
+- Validates `spec-chain/APP_DETAILS.md` completeness
+- Reports on inspiration materials in `spec-chain/assets/`
 - Provides detailed status report with ✅/⚠️/❌ indicators
 - Confirms the directory is ready for documentation generation
 
@@ -330,7 +330,7 @@ The implementation planning process now includes iterative validation:
 - Up to 5 iterations of refinement based on validation feedback
 - Minimum 85% completion score required for approval
 - Session-based task breakdown with clear acceptance criteria
-- Automatic integration of loaded playbook rules from `.spec-chain/assets/playbooks/`
+- Automatic integration of loaded playbook rules from `spec-chain/assets/playbooks/`
 
 ### Visual Documentation
 The spec-chain prompts generate various visual elements within the documentation:
@@ -356,17 +356,17 @@ The spec-chain prompts generate various visual elements within the documentation
 {
   "permissions": {
     "allow": [
-      "Read(.spec-chain/**)",
-      "Write(.spec-chain/**)",
-      "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)",
-      "Bash(mkdir:.spec-chain/**)",
-      "Bash(ls:.spec-chain/**)",
+      "Read(spec-chain/**)",
+      "Write(spec-chain/**)",
+      "Edit(spec-chain/**)",
+      "MultiEdit(spec-chain/**)",
+      "Bash(mkdir:spec-chain/**)",
+      "Bash(ls:spec-chain/**)",
       "Bash(pwd)",
-      "Bash(cp:.spec-chain/**)",
+      "Bash(cp:spec-chain/**)",
       "Bash(echo:*)",
       "Bash(date)",
-      "Bash(test:.spec-chain/**)"
+      "Bash(test:spec-chain/**)"
     ]
   }
 }
@@ -375,7 +375,7 @@ The spec-chain prompts generate various visual elements within the documentation
 **Note:** 
 - If this file doesn't exist, create it in your project's `.claude/` directory
 - Restart Claude Code after adding permissions for them to take effect
-- These permissions allow spec-chain to create and manage its isolated `.spec-chain/` directory structure
+- These permissions allow spec-chain to create and manage its isolated `spec-chain/` directory structure
 - You can also just run spec-chain without pre-configuring - Claude will ask for each permission as needed
 
 ## ❓ FAQ
@@ -393,7 +393,7 @@ A: No! Only the basic information fields are required. Optional fields can be le
 
 ### Technical Questions
 
-**Q: Why does spec-chain use a `.spec-chain/` directory?**
+**Q: Why does spec-chain use a `spec-chain/` directory?**
 A: This keeps all spec-chain files isolated from your project, making it portable and ensuring your existing project structure remains clean. You can initialize spec-chain in any directory without affecting existing files.
 
 **Q: Can I customize the generated documentation?**
@@ -401,7 +401,7 @@ A: Yes! You can:
 - Modify APP_DETAILS.md and regenerate
 - Add inspiration materials to influence output
 - Edit individual prompts in `.claude/commands/spec-chain/`
-- Add custom playbooks in `.spec-chain/assets/playbooks/`
+- Add custom playbooks in `spec-chain/assets/playbooks/`
 
 **Q: How does parallel execution work?**
 A: Independent documents (like feature stories and technical overview) generate simultaneously using Claude's Task agents, reducing total generation time by 25-33%.
@@ -422,7 +422,7 @@ A: Claude Code will ask for permissions as needed. You can approve them individu
 ### Common Issues
 
 #### Permission Denied Errors
-**Problem**: Cannot create `.spec-chain/` directory or files
+**Problem**: Cannot create `spec-chain/` directory or files
 **Solution**: 
 1. Let Claude Code ask for permissions and approve them
 2. Or pre-configure permissions in `.claude/settings.local.json` (see [Permissions Configuration](#permissions-configuration))
@@ -441,7 +441,7 @@ A: Claude Code will ask for permissions as needed. You can approve them individu
 **Solution**:
 1. Run `/validate-spec-chain` to check setup
 2. Ensure APP_DETAILS.md is properly filled out
-3. Add inspiration materials to `.spec-chain/assets/inspiration/`
+3. Add inspiration materials to `spec-chain/assets/inspiration/`
 4. Check that all required fields in APP_DETAILS.md are completed
 5. Try regenerating individual documents to isolate issues
 

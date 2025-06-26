@@ -11,4 +11,4 @@ eza . --tree --git-ignore
 README.md
 .claude/CLAUDE.md
 .claude/commands/spec-chain/COMMANDS.md
-.spec-chain/specs/SPECS.md
+spec-chain/specs/SPECS.md

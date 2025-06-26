@@ -12,7 +12,7 @@ Parse the following arguments from "$ARGUMENTS":
 2. `PARALLEL_AGENTS` - Number of parallel agents to deploy (second argument, defaults to 5 if not provided)
 
 ## Variables
-OUTPUT_FOLDER: `.spec-chain/specs/SPEC_NAME`
+OUTPUT_FOLDER: `spec-chain/specs/SPEC_NAME`
 
 ## State
 

@@ -153,8 +153,8 @@ cp -r spec-chain/.claude your-project/
 
 # Or use as a git submodule
 cd your-project
-git submodule add https://github.com/yourusername/spec-chain .spec-chain-commands
-ln -s .spec-chain-commands/.claude .claude
+git submodule add https://github.com/yourusername/spec-chain spec-chain-commands
+ln -s spec-chain-commands/.claude .claude
 ```
 
 ## Global vs Local Installation
@@ -247,7 +247,7 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-#### "Permission denied" errors when creating .spec-chain directory
+#### "Permission denied" errors when creating spec-chain directory
 Claude Code requires explicit permissions for new directories. If you get permission errors:
 
 1. **Add permissions to your .claude/settings.local.json:**
@@ -255,17 +255,17 @@ Claude Code requires explicit permissions for new directories. If you get permis
 {
   "permissions": {
     "allow": [
-      "Read(.spec-chain/**)",
-      "Write(.spec-chain/**)",
-      "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)",
-      "Bash(mkdir:.spec-chain/**)",
-      "Bash(ls:.spec-chain/**)",
+      "Read(spec-chain/**)",
+      "Write(spec-chain/**)",
+      "Edit(spec-chain/**)",
+      "MultiEdit(spec-chain/**)",
+      "Bash(mkdir:spec-chain/**)",
+      "Bash(ls:spec-chain/**)",
       "Bash(pwd)",
-      "Bash(cp:.spec-chain/**)",
+      "Bash(cp:spec-chain/**)",
       "Bash(echo:*)",
       "Bash(date)",
-      "Bash(test:.spec-chain/**)"
+      "Bash(test:spec-chain/**)"
     ]
   }
 }
@@ -277,17 +277,17 @@ mkdir -p .claude
 echo '{
   "permissions": {
     "allow": [
-      "Read(.spec-chain/**)",
-      "Write(.spec-chain/**)",
-      "Edit(.spec-chain/**)",
-      "MultiEdit(.spec-chain/**)",
-      "Bash(mkdir:.spec-chain/**)",
-      "Bash(ls:.spec-chain/**)",
+      "Read(spec-chain/**)",
+      "Write(spec-chain/**)",
+      "Edit(spec-chain/**)",
+      "MultiEdit(spec-chain/**)",
+      "Bash(mkdir:spec-chain/**)",
+      "Bash(ls:spec-chain/**)",
       "Bash(pwd)",
-      "Bash(cp:.spec-chain/**)",
+      "Bash(cp:spec-chain/**)",
       "Bash(echo:*)",
       "Bash(date)",
-      "Bash(test:.spec-chain/**)"
+      "Bash(test:spec-chain/**)"
     ]
   }
 }' > .claude/settings.local.json
@@ -352,9 +352,9 @@ curl -fsSL --insecure https://... | bash
 After installation:
 
 1. Run `/init-spec-chain` to initialize your project
-2. Fill out `.spec-chain/APP_DETAILS.md`
+2. Fill out `spec-chain/APP_DETAILS.md`
 3. Add inspiration materials (optional)
 4. Run `/run-spec-chain` to generate documentation
-5. Review generated specs in `.spec-chain/specs/`
+5. Review generated specs in `spec-chain/specs/`
 
 For more details, see the [main documentation](https://github.com/yourusername/spec-chain#readme).
