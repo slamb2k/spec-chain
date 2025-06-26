@@ -92,34 +92,41 @@ ai_docs/
 - System prompt reuse across sessions
 - Cost optimization for production systems
 
-## 🔗 Integration with Spec Chain
+## 🔗 Relationship to Spec Chain
 
-These AI documentation files directly enhance the Spec Chain system capabilities:
+These AI documentation files serve as **developer reference materials** for understanding Claude's advanced capabilities that could potentially enhance spec-chain:
 
-### 🧠 Enhanced Documentation Generation
-- **Extended Thinking**: Complex architectural analysis for `doc-prompt-technical.md`
-- **Tool Integration**: External data fetching for market research in `doc-prompt-prd.md`
-- **Performance Optimization**: Faster generation through prompt caching strategies
+### 📚 Development Context
+- **Extended Thinking**: Understanding how Claude's reasoning could improve technical analysis
+- **Tool Integration**: Reference for potentially adding external data fetching capabilities
+- **Performance Optimization**: Knowledge base for optimizing prompt design and caching
 
-### 🚀 Spec Chain Command Enhancements
+### 🔬 Future Enhancement Possibilities
 
-#### `/run-spec-chain` with Extended Thinking
+> **Note**: These are conceptual examples showing how Claude's advanced features could theoretically be integrated into spec-chain in future versions.
+
+#### Potential Extended Thinking Integration
 ```bash
-# Enhanced technical analysis with step-by-step reasoning
+# This is a conceptual example - not currently implemented
 /run-spec-chain my-app --thinking-enabled --budget-tokens 15000
 ```
 
-#### Tool-Enhanced PRD Generation
+#### Potential Tool-Enhanced Generation
 ```bash
-# Market research integration for competitive analysis
+# This is a conceptual example - not currently implemented  
 /doc-prompt-prd my-app --tools market-research,competitor-analysis
 ```
 
-#### Optimized Parallel Execution
+#### Potential Caching Optimization
 ```bash
-# Cached system prompts for faster parallel generation
+# This is a conceptual example - not currently implemented
 /run-spec-chain my-app --cache-system-prompts --parallel-agents 8
 ```
+
+### 🎯 Current Reality
+- **Spec-chain commands** are currently markdown files with embedded instructions
+- **Claude's advanced features** are available at the API/platform level, not in spec-chain commands
+- **These documents** provide reference for developers who want to understand or extend Claude's capabilities
 
 ## Usage Examples
 
